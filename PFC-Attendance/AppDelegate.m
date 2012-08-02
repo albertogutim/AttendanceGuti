@@ -15,7 +15,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    NSLog(@"Esto es una prueba");
+    NSLog(@"Esto es una prueba2");
     return YES;
 }
 							
