@@ -1,0 +1,8 @@
+/* 
+  Localizable.strings
+  PFC-Attendance
+
+  Created by ANA GUTIÉRREZ ESGUEVILLAS GUTIERREZ ESGUEVILLAS on 02/08/12.
+  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+*/
+"NO_CREDENTIALS"= "Configure GoogleDocs credentials";
