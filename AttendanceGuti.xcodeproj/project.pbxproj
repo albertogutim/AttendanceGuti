@@ -26,24 +26,12 @@
 		3AD9502B15C7E3C0005D45D7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9502A15C7E3C0005D45D7 /* AppDelegate.m */; };
 		3AD9502E15C7E3C0005D45D7 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */; };
 		3AD9503115C7E3C0005D45D7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9503015C7E3C0005D45D7 /* ViewController.m */; };
-		3AD9503915C7E3C1005D45D7 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AD9503815C7E3C1005D45D7 /* SenTestingKit.framework */; };
-		3AD9503A15C7E3C1005D45D7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AD9501A15C7E3C0005D45D7 /* UIKit.framework */; };
-		3AD9503B15C7E3C1005D45D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AD9501C15C7E3C0005D45D7 /* Foundation.framework */; };
-		3AD9504315C7E3C1005D45D7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3AD9504115C7E3C1005D45D7 /* InfoPlist.strings */; };
-		3AD9504615C7E3C1005D45D7 /* PFC_AttendanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9504515C7E3C1005D45D7 /* PFC_AttendanceTests.m */; };
 		3AFF0A1515CBDCD000CD01E4 /* libGDataTouchStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A0B15CBDB3700CD01E4 /* libGDataTouchStaticLib.a */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3AD9503C15C7E3C1005D45D7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AD9500D15C7E3BF005D45D7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3AD9501515C7E3C0005D45D7;
-			remoteInfo = "PFC-Attendance";
-		};
 		3AFF0A0815CBDB3700CD01E4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
@@ -115,12 +103,7 @@
 		3AD9502D15C7E3C0005D45D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		3AD9502F15C7E3C0005D45D7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		3AD9503015C7E3C0005D45D7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		3AD9503715C7E3C1005D45D7 /* AttendanceGutiTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AttendanceGutiTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AD9503815C7E3C1005D45D7 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		3AD9504015C7E3C1005D45D7 /* AttendanceGutiTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AttendanceGutiTests-Info.plist"; sourceTree = "<group>"; };
-		3AD9504215C7E3C1005D45D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		3AD9504415C7E3C1005D45D7 /* PFC_AttendanceTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PFC_AttendanceTests.h; sourceTree = "<group>"; };
-		3AD9504515C7E3C1005D45D7 /* PFC_AttendanceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PFC_AttendanceTests.m; sourceTree = "<group>"; };
 		3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GData.xcodeproj; path = "../../gdata-objectivec-client-read-only/Source/GData.xcodeproj"; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -457,16 +440,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AD9503315C7E3C1005D45D7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3AD9503915C7E3C1005D45D7 /* SenTestingKit.framework in Frameworks */,
-				3AD9503A15C7E3C1005D45D7 /* UIKit.framework in Frameworks */,
-				3AD9503B15C7E3C1005D45D7 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -493,7 +466,6 @@
 				3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */,
 				3AD0AEC415C944FA00B67EED /* resources */,
 				3AD9502015C7E3C0005D45D7 /* PFC-Attendance */,
-				3AD9503E15C7E3C1005D45D7 /* PFC-AttendanceTests */,
 				3AD9501915C7E3C0005D45D7 /* Frameworks */,
 				3AD9501715C7E3C0005D45D7 /* Products */,
 			);
@@ -503,7 +475,6 @@
 			isa = PBXGroup;
 			children = (
 				3AD9501615C7E3C0005D45D7 /* AttendanceGuti.app */,
-				3AD9503715C7E3C1005D45D7 /* AttendanceGutiTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -544,25 +515,6 @@
 				3AD0CC9915CAA8AC00FDE7E5 /* main.m */,
 				3AD9502815C7E3C0005D45D7 /* AttendanceGuti-Prefix.pch */,
 				3A4462E215CAAF4B008B1FA3 /* Localizable.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		3AD9503E15C7E3C1005D45D7 /* PFC-AttendanceTests */ = {
-			isa = PBXGroup;
-			children = (
-				3AD9504415C7E3C1005D45D7 /* PFC_AttendanceTests.h */,
-				3AD9504515C7E3C1005D45D7 /* PFC_AttendanceTests.m */,
-				3AD9503F15C7E3C1005D45D7 /* Supporting Files */,
-			);
-			path = "PFC-AttendanceTests";
-			sourceTree = "<group>";
-		};
-		3AD9503F15C7E3C1005D45D7 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				3AD9504015C7E3C1005D45D7 /* AttendanceGutiTests-Info.plist */,
-				3AD9504115C7E3C1005D45D7 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -924,25 +876,6 @@
 			productReference = 3AD9501615C7E3C0005D45D7 /* AttendanceGuti.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3AD9503615C7E3C1005D45D7 /* AttendanceGutiTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3AD9504C15C7E3C1005D45D7 /* Build configuration list for PBXNativeTarget "AttendanceGutiTests" */;
-			buildPhases = (
-				3AD9503215C7E3C1005D45D7 /* Sources */,
-				3AD9503315C7E3C1005D45D7 /* Frameworks */,
-				3AD9503415C7E3C1005D45D7 /* Resources */,
-				3AD9503515C7E3C1005D45D7 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3AD9503D15C7E3C1005D45D7 /* PBXTargetDependency */,
-			);
-			name = AttendanceGutiTests;
-			productName = "PFC-AttendanceTests";
-			productReference = 3AD9503715C7E3C1005D45D7 /* AttendanceGutiTests.octest */;
-			productType = "com.apple.product-type.bundle";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -971,7 +904,6 @@
 			projectRoot = "";
 			targets = (
 				3AD9501515C7E3C0005D45D7 /* AttendanceGuti */,
-				3AD9503615C7E3C1005D45D7 /* AttendanceGutiTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1034,31 +966,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AD9503415C7E3C1005D45D7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3AD9504315C7E3C1005D45D7 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3AD9503515C7E3C1005D45D7 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3AD9501215C7E3C0005D45D7 /* Sources */ = {
@@ -1072,22 +980,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AD9503215C7E3C1005D45D7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3AD9504615C7E3C1005D45D7 /* PFC_AttendanceTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3AD9503D15C7E3C1005D45D7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3AD9501515C7E3C0005D45D7 /* AttendanceGuti */;
-			targetProxy = 3AD9503C15C7E3C1005D45D7 /* PBXContainerItemProxy */;
-		};
 		3AFF0A1415CBDC9D00CD01E4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = GDataTouchStaticLib;
@@ -1127,14 +1022,6 @@
 				3AD9502D15C7E3C0005D45D7 /* en */,
 			);
 			name = MainStoryboard.storyboard;
-			sourceTree = "<group>";
-		};
-		3AD9504115C7E3C1005D45D7 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3AD9504215C7E3C1005D45D7 /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1219,40 +1106,6 @@
 			};
 			name = Release;
 		};
-		3AD9504D15C7E3C1005D45D7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PFC-Attendance.app/PFC-Attendance";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PFC-Attendance/PFC-Attendance-Prefix.pch";
-				INFOPLIST_FILE = "PFC-AttendanceTests/AttendanceGutiTests-Info.plist";
-				PRODUCT_NAME = AttendanceGutiTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		3AD9504E15C7E3C1005D45D7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PFC-Attendance.app/PFC-Attendance";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PFC-Attendance/PFC-Attendance-Prefix.pch";
-				INFOPLIST_FILE = "PFC-AttendanceTests/AttendanceGutiTests-Info.plist";
-				PRODUCT_NAME = AttendanceGutiTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1270,15 +1123,6 @@
 			buildConfigurations = (
 				3AD9504A15C7E3C1005D45D7 /* Debug */,
 				3AD9504B15C7E3C1005D45D7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3AD9504C15C7E3C1005D45D7 /* Build configuration list for PBXNativeTarget "AttendanceGutiTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3AD9504D15C7E3C1005D45D7 /* Debug */,
-				3AD9504E15C7E3C1005D45D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
