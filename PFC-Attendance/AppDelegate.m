@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "GDocsHelper.h"
 
 @implementation AppDelegate
 
@@ -16,6 +17,10 @@
 {
     // Override point for customization after application launch.
     NSLog(@"Esto es una prueba4");
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    [midh mifetch];
+    
+    
     return YES;
 }
 							
