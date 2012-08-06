@@ -63,6 +63,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="listaTableView" destination="Gm5-dX-PS1" id="vK7-WK-ijq"/>
+                        <outlet property="miTabla" destination="Gm5-dX-PS1" id="WkI-U2-Sam"/>
                     </connections>
                 </viewController>
             </objects>

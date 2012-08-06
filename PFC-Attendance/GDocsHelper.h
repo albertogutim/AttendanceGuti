@@ -9,6 +9,14 @@
 #import <Foundation/Foundation.h>
 #import "../Headers/GData.h"
 
+@class GDocsHelper;
+
+@protocol GDocsHelperDelegate <NSObject> 
+@required
+- (void)respuesta:(GDataFeedSpreadsheet *) feed;
+
+@end
+
 @interface GDocsHelper : NSObject
 
 +(GDocsHelper *)sharedInstance;
@@ -20,4 +28,5 @@
 
 @property(nonatomic,strong) GDataServiceGoogleSpreadsheet *miService;
 @property (nonatomic, strong) GDataFeedSpreadsheet *mSpreadsheetFeed;
+@property (nonatomic, weak) id <GDocsHelperDelegate> delegate;
 @end

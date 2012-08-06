@@ -16,6 +16,8 @@
 @synthesize infoLbl = _infoLbl;
 @synthesize activity = _activity;
 @synthesize listaTableView = _listaTableView;
+@synthesize miListaAsignaturas = _miListaAsignaturas;
+@synthesize miTabla = _miTabla;
 
 - (void)didReceiveMemoryWarning
 {
@@ -31,6 +33,11 @@
 	// Do any additional setup after loading the view, typically from a nib.
     //Cargamos un NIB con la jerarquía de vistas para el custom ButtonItem
     [[NSBundle mainBundle] loadNibNamed:@"vistaConexion" owner:self options:nil];
+    self.title = NSLocalizedString(@"SUBJECTS_TITLE", nil);
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    midh.delegate = self;
+    [midh mifetch];
+    
     
 }
 
@@ -41,6 +48,10 @@
     [self setInfoLbl:nil];
     [self setActivity:nil];
     [self setListaTableView:nil];
+    [self setMiListaAsignaturas:nil];
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    midh.delegate=nil;
+    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -59,8 +70,7 @@
     [nuevosElementos insertObject:botonTunning atIndex:1];
     [self setToolbarItems:nuevosElementos animated:YES];
 
-    //TO DO: Si hay credenciales activar rueda y poner "Conectando"
-    //y si no hay credenciales puede que esten pero no guardadas en el keychain y haya que cogerlas de la ConfigTVC.
+    //TODO: coger credenciales del ConfigHelper.
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
     NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
     NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
@@ -68,7 +78,7 @@
     if (([password length] != 0) && ([username length] != 0)) {
         [self.activity startAnimating];
         [self.infoLbl setText:NSLocalizedString(@"CREDENTIALS", nil)];
-        //To do: parar la ruedita y el mensaje a 'conectado' cuando conecte.
+        
     }
     else
     {
@@ -82,8 +92,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-   
     
 }
 
@@ -116,9 +124,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    [midh mifetch];
-    return 2;
+    
+    return [self.miListaAsignaturas count];
     
     
 }
@@ -133,14 +140,23 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tablalistar"];
     }
     
-
-    //GDataEntrySpreadsheet *doc = [[mSpreadsheetFeed2 entries] objectAtIndex:indexPath.row];
-    
-    //cell.textLabel.text = [[doc title] stringValue];
+    cell.textLabel.text = [self.miListaAsignaturas objectAtIndex:indexPath.row];
     
     
     return cell;
 } 
+
+//implementacion protocolo
+- (void)respuesta:(NSArray *)feed
+{
+    //TODO: Controlar errores
+    self.miListaAsignaturas = feed;
+    [self.miTabla reloadData];
+    //TODO:Coger el nombre de usuario de ConfigHelper
+    NSString *usr = @"Ana";
+    self.infoLbl.text = [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"CONNECTED_USR" value:@"" table:nil],usr];
+    [self.activity stopAnimating];
+}
 
 
 @end

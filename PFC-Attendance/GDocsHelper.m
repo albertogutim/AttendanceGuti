@@ -11,7 +11,9 @@
 #import "../Headers/GDataSpreadsheet.h"
 
 @implementation GDocsHelper
-@synthesize miService = _miService,mSpreadsheetFeed =_mSpreadsheetFeed;
+@synthesize miService = _miService;
+@synthesize mSpreadsheetFeed =_mSpreadsheetFeed;
+@synthesize delegate = _delegate;
 
 - (GDataServiceGoogleSpreadsheet *)spreadsheetService {
     
@@ -79,6 +81,19 @@ finishedWithFeed: (GDataFeedSpreadsheet *) feed
     
     [alertView show];
     */
+    
+    NSMutableArray *listaFeeds = [NSMutableArray arrayWithCapacity: [[self.mSpreadsheetFeed entries] count]];
+    for (GDataEntrySpreadsheet *ss in [self.mSpreadsheetFeed entries]) {
+        
+        if ([[[ss title] stringValue] hasPrefix:@"AT_"]) {
+            
+            NSString *cadCortada = [[[ss title] stringValue] substringFromIndex:3];
+            [listaFeeds addObject:cadCortada];
+            
+        }
+    }
+    [self.delegate respuesta:[NSArray arrayWithArray:listaFeeds] ];
+    
     
 }
 

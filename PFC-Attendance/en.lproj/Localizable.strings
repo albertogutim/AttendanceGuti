@@ -7,3 +7,5 @@
 */
 "NO_CREDENTIALS"= "Configure GoogleDocs credentials";
 "CREDENTIALS"= "Connecting...";
+"SUBJECTS_TITLE"="My Subjects";
+"CONNECTED_USR"="Connected as %@"; 

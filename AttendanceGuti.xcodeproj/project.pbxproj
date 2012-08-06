@@ -11,6 +11,8 @@
 		3A2A7EAD15CE860C000E3074 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */; };
 		3A4462E015CAAF4B008B1FA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A4462E215CAAF4B008B1FA3 /* Localizable.strings */; };
 		3A864B6C15C9E1CF00DE7D8A /* ConfigTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */; };
+		3A876F6E15D02F850095B2E3 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A876F6D15D02F850095B2E3 /* libxml2.dylib */; };
+		3A876F7015D0300E0095B2E3 /* libGDataTouchStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A876F6F15D0300E0095B2E3 /* libGDataTouchStaticLib.a */; };
 		3AD0AED215C949E400B67EED /* cross@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AD0AECE15C949E400B67EED /* cross@2x.png */; };
 		3AD0AED315C949E400B67EED /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AD0AECF15C949E400B67EED /* check@2x.png */; };
 		3AD0AED415C949E400B67EED /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AD0AED015C949E400B67EED /* check.png */; };
@@ -28,55 +30,10 @@
 		3AD9502B15C7E3C0005D45D7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9502A15C7E3C0005D45D7 /* AppDelegate.m */; };
 		3AD9502E15C7E3C0005D45D7 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */; };
 		3AD9503115C7E3C0005D45D7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9503015C7E3C0005D45D7 /* ViewController.m */; };
-		3AFF0A1515CBDCD000CD01E4 /* libGDataTouchStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A0B15CBDB3700CD01E4 /* libGDataTouchStaticLib.a */; };
+		3AE039CD15CFD54F00AB63EB /* ConfigHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		3AFF0A0815CBDB3700CD01E4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F38F6A60B66E91D00B24B81;
-			remoteInfo = GDataFramework;
-		};
-		3AFF0A0A15CBDB3700CD01E4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F1C6E0F1027B3CE00B46459;
-			remoteInfo = GDataTouchStaticLib;
-		};
-		3AFF0A0C15CBDB3700CD01E4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F14A9DD0B1276B70072EBB8;
-			remoteInfo = GDataUnitTests;
-		};
-		3AFF0A0E15CBDB3700CD01E4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F85E018103B83B700B4C418;
-			remoteInfo = GDataIPhoneUnitTests;
-		};
-		3AFF0A1015CBDB3700CD01E4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F1AD9020B71603F00DC0485;
-			remoteInfo = DevelopmentTestTool;
-		};
-		3AFF0A1315CBDC9D00CD01E4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4F1C6E0E1027B3CE00B46459;
-			remoteInfo = GDataTouchStaticLib;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		3A2A7E8E15CBEA2B000E3074 /* GDocsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDocsHelper.h; sourceTree = "<group>"; };
@@ -87,6 +44,8 @@
 		3A4462E315CAAF53008B1FA3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A864B6A15C9E1CF00DE7D8A /* ConfigTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigTVC.h; path = ../ConfigTVC.h; sourceTree = "<group>"; };
 		3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConfigTVC.m; path = ../ConfigTVC.m; sourceTree = "<group>"; };
+		3A876F6D15D02F850095B2E3 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		3A876F6F15D0300E0095B2E3 /* libGDataTouchStaticLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGDataTouchStaticLib.a; sourceTree = "<group>"; };
 		3AD0AECE15C949E400B67EED /* cross@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cross@2x.png"; sourceTree = "<group>"; };
 		3AD0AECF15C949E400B67EED /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
 		3AD0AED015C949E400B67EED /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
@@ -110,7 +69,8 @@
 		3AD9502F15C7E3C0005D45D7 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		3AD9503015C7E3C0005D45D7 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		3AD9503815C7E3C1005D45D7 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GData.xcodeproj; path = "../../gdata-objectivec-client-read-only/Source/GData.xcodeproj"; sourceTree = "<group>"; };
+		3AE039CB15CFD54F00AB63EB /* ConfigHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigHelper.h; sourceTree = "<group>"; };
+		3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigHelper.m; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3AFF0CA215CBE4B700CD01E4 /* GData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GData.h; sourceTree = "<group>"; };
@@ -437,12 +397,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A876F6E15D02F850095B2E3 /* libxml2.dylib in Frameworks */,
 				3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */,
 				3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */,
-				3AFF0A1515CBDCD000CD01E4 /* libGDataTouchStaticLib.a in Frameworks */,
 				3AD9501B15C7E3C0005D45D7 /* UIKit.framework in Frameworks */,
 				3AD9501D15C7E3C0005D45D7 /* Foundation.framework in Frameworks */,
 				3AD9501F15C7E3C0005D45D7 /* CoreGraphics.framework in Frameworks */,
+				3A876F7015D0300E0095B2E3 /* libGDataTouchStaticLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,8 +429,9 @@
 		3AD9500B15C7E3BF005D45D7 = {
 			isa = PBXGroup;
 			children = (
+				3A876F6F15D0300E0095B2E3 /* libGDataTouchStaticLib.a */,
+				3A876F6D15D02F850095B2E3 /* libxml2.dylib */,
 				3AFF0CA115CBE4B700CD01E4 /* Headers */,
-				3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */,
 				3AD0AEC415C944FA00B67EED /* resources */,
 				3AD9502015C7E3C0005D45D7 /* PFC-Attendance */,
 				3AD9501915C7E3C0005D45D7 /* Frameworks */,
@@ -501,6 +463,8 @@
 		3AD9502015C7E3C0005D45D7 /* PFC-Attendance */ = {
 			isa = PBXGroup;
 			children = (
+				3AE039CB15CFD54F00AB63EB /* ConfigHelper.h */,
+				3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */,
 				3A2A7E8E15CBEA2B000E3074 /* GDocsHelper.h */,
 				3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */,
 				3A864B6A15C9E1CF00DE7D8A /* ConfigTVC.h */,
@@ -527,18 +491,6 @@
 				3A4462E215CAAF4B008B1FA3 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		3AFF09FD15CBDB3600CD01E4 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3AFF0A0915CBDB3700CD01E4 /* GData.framework */,
-				3AFF0A0B15CBDB3700CD01E4 /* libGDataTouchStaticLib.a */,
-				3AFF0A0D15CBDB3700CD01E4 /* GDataUnitTests.octest */,
-				3AFF0A0F15CBDB3700CD01E4 /* GDataIPhoneUnitTests.octest */,
-				3AFF0A1115CBDB3700CD01E4 /* DevelopmentTestTool */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		3AFF0CA115CBE4B700CD01E4 /* Headers */ = {
@@ -879,7 +831,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3AFF0A1415CBDC9D00CD01E4 /* PBXTargetDependency */,
 			);
 			name = AttendanceGuti;
 			productName = "PFC-Attendance";
@@ -905,56 +856,12 @@
 			mainGroup = 3AD9500B15C7E3BF005D45D7;
 			productRefGroup = 3AD9501715C7E3C0005D45D7 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 3AFF09FD15CBDB3600CD01E4 /* Products */;
-					ProjectRef = 3AFF09FC15CBDB3600CD01E4 /* GData.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				3AD9501515C7E3C0005D45D7 /* AttendanceGuti */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		3AFF0A0915CBDB3700CD01E4 /* GData.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = GData.framework;
-			remoteRef = 3AFF0A0815CBDB3700CD01E4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3AFF0A0B15CBDB3700CD01E4 /* libGDataTouchStaticLib.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libGDataTouchStaticLib.a;
-			remoteRef = 3AFF0A0A15CBDB3700CD01E4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3AFF0A0D15CBDB3700CD01E4 /* GDataUnitTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = GDataUnitTests.octest;
-			remoteRef = 3AFF0A0C15CBDB3700CD01E4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3AFF0A0F15CBDB3700CD01E4 /* GDataIPhoneUnitTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = GDataIPhoneUnitTests.octest;
-			remoteRef = 3AFF0A0E15CBDB3700CD01E4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		3AFF0A1115CBDB3700CD01E4 /* DevelopmentTestTool */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = DevelopmentTestTool;
-			remoteRef = 3AFF0A1015CBDB3700CD01E4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		3AD9501415C7E3C0005D45D7 /* Resources */ = {
@@ -989,18 +896,11 @@
 				3A864B6C15C9E1CF00DE7D8A /* ConfigTVC.m in Sources */,
 				3A2A7E9015CBEA2B000E3074 /* GDocsHelper.m in Sources */,
 				3A2A7EAD15CE860C000E3074 /* KeychainItemWrapper.m in Sources */,
+				3AE039CD15CFD54F00AB63EB /* ConfigHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		3AFF0A1415CBDC9D00CD01E4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GDataTouchStaticLib;
-			targetProxy = 3AFF0A1315CBDC9D00CD01E4 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3A4462E215CAAF4B008B1FA3 /* Localizable.strings */ = {
@@ -1091,6 +991,11 @@
 				GCC_PREFIX_HEADER = "PFC-Attendance/AttendanceGuti-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "PFC-Attendance/AttendanceGuti-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",
@@ -1108,6 +1013,11 @@
 				GCC_PREFIX_HEADER = "PFC-Attendance/AttendanceGuti-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "PFC-Attendance/AttendanceGuti-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lxml2",

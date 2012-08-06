@@ -7,3 +7,5 @@
 */
 "NO_CREDENTIALS"= "Configure usuario GoogleDocs";
 "CREDENTIALS"= "Conectando...";
+"SUBJECTS_TITLE"="Mis Asignaturas";
+"CONNECTED_USR"="Conectado como %@"; 

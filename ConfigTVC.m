@@ -7,7 +7,7 @@
 //
 
 #import "ConfigTVC.h"
-#import "./PFC-Attendance/KeychainItemWrapper.h"
+#import "./PFC-Attendance/ConfigHelper.h"
 
 @implementation ConfigTVC
 @synthesize passwordField = _passwordField;
@@ -74,15 +74,15 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     //escribir en user/password labels los credenciales guardados en keychain
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
-      
-    NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
-    NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
-
-    self.usrField.text = username;
-    self.passwordField.text = password;
+    //TODO: sacarlos del ConfigHelper
     
-    if (([password length] != 0) && ([username length] != 0))
+    ConfigHelper *ConfigH = [ConfigHelper sharedInstance];
+
+
+    self.usrField.text = ConfigH.user;
+    self.passwordField.text = ConfigH.password;
+    
+    if (([ConfigH.password length] != 0) && ([ConfigH.user length] != 0))
         [self.guardarSwitch setOn:YES];
 
     else
@@ -135,20 +135,21 @@
 
 - (IBAction)guardarChanged:(id)sender {
     //guardamos usuario/contraseña usando keychain
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
+    
     //guardamos lo que ha escrito el usuario
     self.stringUser = self.usrField.text;
     self.stringPass = self.passwordField.text;
 
     
-    if(self.guardarSwitch.isOn)
+    /*if(self.guardarSwitch.isOn)
     {
     
-    [keychainItem setObject:self.stringPass  forKey:(__bridge id)kSecValueData];
-    [keychainItem setObject:self.stringUser  forKey:(__bridge id)kSecAttrAccount];
+    //[keychainItem setObject:self.stringPass  forKey:(__bridge id)kSecValueData];
+    //[keychainItem setObject:self.stringUser  forKey:(__bridge id)kSecAttrAccount];
        }
     else
-        [keychainItem resetKeychainItem];
+      //  [keychainItem resetKeychainItem];
+     */
            
 }
 - (IBAction)presentesChanged:(id)sender {

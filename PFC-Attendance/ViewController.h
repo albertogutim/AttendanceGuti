@@ -7,12 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GDocsHelper.h"
 
-@interface ViewController : UIViewController
+
+
+@interface ViewController : UIViewController <GDocsHelperDelegate>
 
 @property(nonatomic,strong)IBOutlet UIView *miVistaTunning;
 @property (weak, nonatomic) IBOutlet UILabel *infoLbl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 @property (strong, nonatomic) IBOutlet UITableView *listaTableView;
+@property (strong, nonatomic) NSArray *miListaAsignaturas;
+@property (weak, nonatomic) IBOutlet UITableView *miTabla;
 
 @end
