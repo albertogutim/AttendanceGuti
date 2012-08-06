@@ -16,10 +16,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    NSLog(@"Esto es una prueba4");
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    [midh mifetch];
-    
+    //GDocsHelper *midh = [GDocsHelper sharedInstance];
+    //[midh mifetch];
+
     
     return YES;
 }

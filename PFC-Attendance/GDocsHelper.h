@@ -13,8 +13,11 @@
 
 +(GDocsHelper *)sharedInstance;
 - (void) mifetch;
+- (void) ticket: (GDataServiceTicket *) ticket
+                 finishedWithFeed: (GDataFeedSpreadsheet *) feed
+                            error: (NSError *) error;
+
 
 @property(nonatomic,strong) GDataServiceGoogleSpreadsheet *miService;
-@property (nonatomic, strong) GDataServiceTicket *mDoclistFetchTicket;
 @property (nonatomic, strong) GDataFeedSpreadsheet *mSpreadsheetFeed;
 @end

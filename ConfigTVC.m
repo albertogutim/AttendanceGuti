@@ -7,10 +7,19 @@
 //
 
 #import "ConfigTVC.h"
-
+#import "./PFC-Attendance/KeychainItemWrapper.h"
 
 @implementation ConfigTVC
-@synthesize usrField;
+@synthesize passwordField = _passwordField;
+@synthesize stepperAusencias = _stepperAusencias;
+@synthesize stepperRetrasosLbl = _stepperRetrasosLbl;
+@synthesize stepperAusenciaslbl = _stepperAusenciaslbl;
+@synthesize presentesSwitch = _presentesSwitch;
+@synthesize stepperRetrasos = _stepperRetrasos;
+@synthesize guardarSwitch = _guardarSwitch;
+@synthesize usrField = _usrField;
+@synthesize stringUser = _stringUser;
+@synthesize stringPass = _stringPass;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -45,6 +54,13 @@
 - (void)viewDidUnload
 {
     [self setUsrField:nil];
+    [self setPasswordField:nil];
+    [self setGuardarSwitch:nil];
+    [self setStepperRetrasos:nil];
+    [self setStepperAusencias:nil];
+    [self setStepperRetrasosLbl:nil];
+    [self setStepperAusenciaslbl:nil];
+    [self setPresentesSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -52,11 +68,38 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated{
+    //escribir en user/password labels los credenciales guardados en keychain
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
+      
+    NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
+    NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
+
+    self.usrField.text = username;
+    self.passwordField.text = password;
+    
+    if (([password length] != 0) && ([username length] != 0))
+        [self.guardarSwitch setOn:YES];
+
+    else
+
+        [self.guardarSwitch setOn:NO];
+     
+
+    //escribir los limites de ausentes y retrasos guardados en NSUserdefaults
+   self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f",  [[NSUserDefaults standardUserDefaults] doubleForKey:@"retrasos"]];
+   self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f",  [[NSUserDefaults standardUserDefaults] doubleForKey:@"ausencias"]];
+    
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"presentesDefecto"])
+        [self.presentesSwitch setOn:YES];
+    else
+         [self.presentesSwitch setOn:NO];
+    
     [super viewDidAppear:animated];
 }
 
@@ -76,75 +119,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - Table view data source
-
-/*- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 3;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 3;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    // Configure the cell...
-    
-    return cell;
-}
- */
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
@@ -160,7 +134,59 @@
 }
 
 - (IBAction)guardarChanged:(id)sender {
-    NSLog(@"ME cosco");
+    //guardamos usuario/contraseña usando keychain
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
+    //guardamos lo que ha escrito el usuario
+    self.stringUser = self.usrField.text;
+    self.stringPass = self.passwordField.text;
+
     
+    if(self.guardarSwitch.isOn)
+    {
+    
+    [keychainItem setObject:self.stringPass  forKey:(__bridge id)kSecValueData];
+    [keychainItem setObject:self.stringUser  forKey:(__bridge id)kSecAttrAccount];
+       }
+    else
+        [keychainItem resetKeychainItem];
+           
 }
+- (IBAction)presentesChanged:(id)sender {
+    
+    if (self.presentesSwitch.isOn)
+        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"presentesDefecto"];
+    else
+        [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"presentesDefecto"];
+}
+- (IBAction)masdeXretrasos:(id)sender {
+    
+    double stepperValue = self.stepperRetrasos.value;
+    self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f", stepperValue];
+    [[NSUserDefaults standardUserDefaults]setDouble:stepperValue forKey:@"retrasos"];
+ 
+}
+- (IBAction)masdeXausencias:(id)sender {
+    
+    double stepperValue = self.stepperAusencias.value;
+    self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f", stepperValue];
+    [[NSUserDefaults standardUserDefaults]setDouble:stepperValue forKey:@"ausencias"];
+
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.
+	if (theTextField == self.usrField) {
+        //guardamos lo que ha escrito el usuario
+        self.stringUser = self.usrField.text;
+		[self.usrField resignFirstResponder];
+    }
+    
+    if (theTextField == self.passwordField) {
+        self.stringPass = self.passwordField.text;
+        self.stringUser = self.usrField.text;
+        [self.passwordField resignFirstResponder];
+    }
+	return YES;
+}
+
 @end

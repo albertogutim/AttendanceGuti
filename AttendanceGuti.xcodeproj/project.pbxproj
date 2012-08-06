@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A2A7E9015CBEA2B000E3074 /* GDocsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */; };
+		3A2A7EAD15CE860C000E3074 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */; };
 		3A4462E015CAAF4B008B1FA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A4462E215CAAF4B008B1FA3 /* Localizable.strings */; };
 		3A864B6C15C9E1CF00DE7D8A /* ConfigTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */; };
 		3AD0AED215C949E400B67EED /* cross@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AD0AECE15C949E400B67EED /* cross@2x.png */; };
@@ -80,6 +81,8 @@
 /* Begin PBXFileReference section */
 		3A2A7E8E15CBEA2B000E3074 /* GDocsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDocsHelper.h; sourceTree = "<group>"; };
 		3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDocsHelper.m; sourceTree = "<group>"; };
+		3A2A7EAB15CE860C000E3074 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		3A4462E115CAAF4B008B1FA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A4462E315CAAF53008B1FA3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A864B6A15C9E1CF00DE7D8A /* ConfigTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigTVC.h; path = ../ConfigTVC.h; sourceTree = "<group>"; };
@@ -502,6 +505,8 @@
 				3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */,
 				3A864B6A15C9E1CF00DE7D8A /* ConfigTVC.h */,
 				3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */,
+				3A2A7EAB15CE860C000E3074 /* KeychainItemWrapper.h */,
+				3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */,
 				3AD9502915C7E3C0005D45D7 /* AppDelegate.h */,
 				3AD9502A15C7E3C0005D45D7 /* AppDelegate.m */,
 				3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */,
@@ -983,6 +988,7 @@
 				3AD9503115C7E3C0005D45D7 /* ViewController.m in Sources */,
 				3A864B6C15C9E1CF00DE7D8A /* ConfigTVC.m in Sources */,
 				3A2A7E9015CBEA2B000E3074 /* GDocsHelper.m in Sources */,
+				3A2A7EAD15CE860C000E3074 /* KeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

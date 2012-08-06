@@ -11,8 +11,7 @@
 #import "../Headers/GDataSpreadsheet.h"
 
 @implementation GDocsHelper
-@synthesize miService = _miService,mSpreadsheetFeed =_mSpreadsheetFeed,mDoclistFetchTicket = _mDoclistFetchTicket;
-
+@synthesize miService = _miService,mSpreadsheetFeed =_mSpreadsheetFeed;
 
 - (GDataServiceGoogleSpreadsheet *)spreadsheetService {
     
@@ -49,16 +48,12 @@
                                    password:@"AGE81984"];
     
     
-    GDataServiceTicket *ticket;
-    
-    
     NSURL *feedURL = [NSURL URLWithString: kGDataGoogleSpreadsheetsPrivateFullFeed];
     
-    ticket = [service fetchFeedWithURL:feedURL
+    
+    [service fetchFeedWithURL:feedURL
                               delegate:self
                      didFinishSelector:@selector(ticket:finishedWithFeed:error:)];
-    
-    self.mDoclistFetchTicket = ticket;
     
     
 }
@@ -73,7 +68,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *) feed
     self.mSpreadsheetFeed = feed;
     
     
-    GDataEntrySpreadsheet *doc = [[self.mSpreadsheetFeed entries] objectAtIndex:0];
+    /*GDataEntrySpreadsheet *doc = [[self.mSpreadsheetFeed entries] objectAtIndex:0];
     
     NSString *ttitle = [[doc title] stringValue];
     UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"primer doc"
@@ -83,10 +78,9 @@ finishedWithFeed: (GDataFeedSpreadsheet *) feed
                                                otherButtonTitles:nil];
     
     [alertView show];
-    //[self performSegueWithIdentifier:@"displaydocs" sender:self];
+    */
     
 }
-
 
 
 @end

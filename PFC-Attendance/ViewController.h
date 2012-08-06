@@ -13,5 +13,6 @@
 @property(nonatomic,strong)IBOutlet UIView *miVistaTunning;
 @property (weak, nonatomic) IBOutlet UILabel *infoLbl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
+@property (strong, nonatomic) IBOutlet UITableView *listaTableView;
 
 @end

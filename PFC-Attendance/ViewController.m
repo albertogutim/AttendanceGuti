@@ -7,12 +7,15 @@
 //
 
 #import "ViewController.h"
-#import "../Headers/GData.h"
+#import "GDocsHelper.h"
+#import "KeychainItemWrapper.h"
+
 
 @implementation ViewController
 @synthesize miVistaTunning = _miVistaTunning;
 @synthesize infoLbl = _infoLbl;
 @synthesize activity = _activity;
+@synthesize listaTableView = _listaTableView;
 
 - (void)didReceiveMemoryWarning
 {
@@ -32,12 +35,12 @@
 }
 
 
-
 - (void)viewDidUnload
 {
     [self setMiVistaTunning:nil];
     [self setInfoLbl:nil];
     [self setActivity:nil];
+    [self setListaTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -56,9 +59,23 @@
     [nuevosElementos insertObject:botonTunning atIndex:1];
     [self setToolbarItems:nuevosElementos animated:YES];
 
-    //TODO: Si hay credenciales activar rueda y poner "Conectando"
-    [self.activity stopAnimating];
-    [self.infoLbl setText:NSLocalizedString(@"NO_CREDENTIALS", nil)];
+    //TO DO: Si hay credenciales activar rueda y poner "Conectando"
+    //y si no hay credenciales puede que esten pero no guardadas en el keychain y haya que cogerlas de la ConfigTVC.
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
+    NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
+    NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
+    
+    if (([password length] != 0) && ([username length] != 0)) {
+        [self.activity startAnimating];
+        [self.infoLbl setText:NSLocalizedString(@"CREDENTIALS", nil)];
+        //To do: parar la ruedita y el mensaje a 'conectado' cuando conecte.
+    }
+    else
+    {
+        //Aqui hay que comprobar antes que no haya credenciales sin guardar al hacer el back.
+        [self.activity stopAnimating];
+        [self.infoLbl setText:NSLocalizedString(@"NO_CREDENTIALS", nil)];
+    }
     
 }
 
@@ -85,5 +102,45 @@
     // Return YES for supported orientations
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
+
+
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+ {
+     return 1;
+ }
+ 
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    [midh mifetch];
+    return 2;
+    
+    
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    UITableViewCell *cell = [tableView 
+                             dequeueReusableCellWithIdentifier:@"tablalistar"];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tablalistar"];
+    }
+    
+
+    //GDataEntrySpreadsheet *doc = [[mSpreadsheetFeed2 entries] objectAtIndex:indexPath.row];
+    
+    //cell.textLabel.text = [[doc title] stringValue];
+    
+    
+    return cell;
+} 
+
 
 @end
