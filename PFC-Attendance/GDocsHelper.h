@@ -12,8 +12,8 @@
 @class GDocsHelper;
 
 @protocol GDocsHelperDelegate <NSObject> 
-@required
-- (void)respuesta:(GDataFeedSpreadsheet *) feed;
+
+- (void)respuesta:(NSArray *) feed error: (NSError *) error;
 
 @end
 

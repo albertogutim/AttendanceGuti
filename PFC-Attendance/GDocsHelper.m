@@ -63,10 +63,11 @@
 
 
 - (void) listadoAsignaturasTicket: (GDataServiceTicket *) ticket
-finishedWithFeed: (GDataFeedSpreadsheet *) feed
+finishedWithFeed: (GDataFeedSpreadsheet *)feed
           error: (NSError *) error {
     
     
+    NSLog(@"%@",[error description]);
     self.mSpreadsheetFeed = feed;
     
     
@@ -94,7 +95,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *) feed
             
         }
     }
-    [self.delegate respuesta:[NSArray arrayWithArray:listaFeeds] ];
+    [self.delegate respuesta:[NSArray arrayWithArray:listaFeeds] error:error];
     //devolvemos un array.
     
 }

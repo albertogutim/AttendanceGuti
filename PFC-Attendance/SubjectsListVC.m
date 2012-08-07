@@ -153,31 +153,55 @@
 } 
 
 //implementacion protocolo
-- (void)respuesta:(NSArray *)feed
+- (void)respuesta:(NSArray *)feed error:(NSError *)error
 {
     //TODO: Controlar errores
     
     //error al conectar 
     //error user/pass
     //0 spreadsheets
-    
-    self.miListaAsignaturas = feed;
-    [self.miTabla reloadData];
-    //Cogemos el nombre de usuario de ConfigHelper para mostrar con que cuenta se esta conectando la aplicacion.
-    
-    ConfigHelper *configH = [ConfigHelper sharedInstance];
-    NSString *usr = configH.user;
-    
-    //mostramos mensaje "conectado a " y paramos la ruedita.
-    self.infoLbl.text = [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"CONNECTED_USR" value:@"" table:nil],usr];
-    [self.activity stopAnimating];
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+                NSLog(@"Error de login");
+                break;
+                
+            case -1009:
+                NSLog(@"Error de conexión");
+                break;
+                
+            default:
+                //Error desconocido. Poner el localized description del NSError
+                
+                break;
+        }
+        
+    } else { //No ha habido error
+        
+        self.miListaAsignaturas = feed;
+        [self.miTabla reloadData];
+        //Cogemos el nombre de usuario de ConfigHelper para mostrar con que cuenta se esta conectando la aplicacion.
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        NSString *usr = configH.user;
+        
+        //mostramos mensaje "conectado a " y paramos la ruedita.
+        self.infoLbl.text = [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"CONNECTED_USR" value:@"" table:nil],usr];
+        [self.activity stopAnimating];
+        
+    }
 }
+
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Make sure your segue name in storyboard is the same as this line
     if ([[segue identifier] isEqualToString:@"goToConfig"])
     {
+        
+        //borramos la lista de asignaturas por si hay un cambio de usuario
         self.miListaAsignaturas = nil;
         [self.miTabla reloadData];
     }
