@@ -68,6 +68,8 @@
     //Borramos el usuario/contraseña guardado.
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
     [keychainItem resetKeychainItem];
+    self.user = nil;
+    self.password = nil;
 }
 
 
@@ -77,11 +79,24 @@
     //Cuando el usuario quiere guardar sus datos para la proxima conexion.
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
     
-    [keychainItem setObject:user  forKey:(__bridge id)kSecValueData];
-    [keychainItem setObject:password  forKey:(__bridge id)kSecAttrAccount];
+    [keychainItem setObject:password  forKey:(__bridge id)kSecValueData];
+    [keychainItem setObject:user  forKey:(__bridge id)kSecAttrAccount];
     
     self.user = user;
     self.password = password;
+
+}
+
+-(BOOL)hasCredentials{
+    
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
+    NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
+    NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
+    
+    if (([password length] != 0) && ([username length] != 0))
+        return YES;
+    else
+        return NO;
 
 }
 

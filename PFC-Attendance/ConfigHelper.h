@@ -15,6 +15,7 @@
 -(void) guardarCredenciales: (NSString *) user 
                        pass: (NSString *) password;
 -(void) resetearCredenciales; 
+-(BOOL)hasCredentials;
 
 @property (strong, nonatomic) NSString *user;
 @property (strong, nonatomic) NSString *password;

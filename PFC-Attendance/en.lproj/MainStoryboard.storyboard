@@ -8,7 +8,7 @@
         <scene sceneID="6n4-zW-guE">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DQ1-8Q-UYg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="X7u-9h-zJ1" customClass="ViewController" sceneMemberID="viewController">
+                <viewController id="X7u-9h-zJ1" customClass="SubjectsListVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ghS-xn-EGH">
                         <rect key="frame" x="0.0" y="64" width="320" height="372"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -52,7 +52,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Puu-BR-Ah9"/>
                         <barButtonItem systemItem="play" id="xs8-NF-dsQ">
                             <connections>
-                                <segue destination="S77-OL-wLM" kind="push" id="gbz-GR-Vl7"/>
+                                <segue destination="S77-OL-wLM" kind="push" identifier="goToConfig" id="gbz-GR-Vl7"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -87,7 +87,7 @@
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="gwj-2M-prK">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="gwj-2M-prK">
                                                     <rect key="frame" x="112" y="7" width="175" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -115,7 +115,7 @@
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="42G-eG-l70">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="42G-eG-l70">
                                                     <rect key="frame" x="112" y="6" width="175" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -154,7 +154,7 @@
                                                     <rect key="frame" x="221" y="8" width="79" height="27"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <connections>
-                                                        <action selector="guardarChanged:" destination="S77-OL-wLM" eventType="valueChanged" id="FO1-1y-v8z"/>
+                                                        <action selector="guardarChanged:" destination="S77-OL-wLM" eventType="valueChanged" id="ef9-Nj-wbo"/>
                                                     </connections>
                                                 </switch>
                                             </subviews>

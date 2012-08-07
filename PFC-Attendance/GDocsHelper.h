@@ -20,14 +20,15 @@
 @interface GDocsHelper : NSObject
 
 +(GDocsHelper *)sharedInstance;
-
-- (void) listadoAsignaturas;
-- (void) listadoAsignaturasTicket: (GDataServiceTicket *) ticket
+-(void)createSpreadsheetService;
+-(void)credentialsWithUsr:(NSString *)newUsr andPwd:(NSString *)newPwd;
+-(void)listadoAsignaturas;
+-(void)listadoAsignaturasTicket: (GDataServiceTicket *) ticket
                  finishedWithFeed: (GDataFeedSpreadsheet *) feed
                             error: (NSError *) error;
 
-- (void)listadoClasesAsignatura:(GDataEntrySpreadsheet *)asignatura;
-- (void)listadoClasesAsignaturaTicket:(GDataServiceTicket *)ticket
+-(void)listadoClasesAsignatura:(GDataEntrySpreadsheet *)asignatura;
+-(void)listadoClasesAsignaturaTicket:(GDataServiceTicket *)ticket
                      finishedWithFeed:(GDataFeedWorksheet *)feed
                                 error:(NSError *)error;
 

@@ -16,19 +16,7 @@
 @synthesize delegate = _delegate;
 @synthesize mWorksheetFeed = _mWorksheetFeed;
 
-- (GDataServiceGoogleSpreadsheet *)spreadsheetService {
-    
-    static GDataServiceGoogleSpreadsheet* service = nil;
-    
-    if (!service) {
-        service = [[GDataServiceGoogleSpreadsheet alloc] init];
-        
-        [service setShouldCacheResponseData:YES];
-        [service setServiceShouldFollowNextLinks:YES];
-    }
-    
-    return service;
-}
+
 
 +(GDocsHelper *)sharedInstance {
     
@@ -36,25 +24,36 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance= [[GDocsHelper alloc]init];
-        [sharedInstance spreadsheetService];
+        [sharedInstance createSpreadsheetService];
         
     });
     return sharedInstance;
 }
 
+- (void)createSpreadsheetService {
+    
+    self.miService = [[GDataServiceGoogleSpreadsheet alloc] init];
+    [self.miService setShouldCacheResponseData:YES];
+    [self.miService setServiceShouldFollowNextLinks:YES];
+    
+}
 
-- (void) listadoAsignaturas {
+-(void)credentialsWithUsr:(NSString *)newUsr andPwd:(NSString *)newPwd{
+
+    [self.miService setUserCredentialsWithUsername:newUsr
+                                          password:newPwd];
     
-    GDataServiceGoogleSpreadsheet *service = [self spreadsheetService];
+}
+
+- (void)listadoAsignaturas {
     
-    [service setUserCredentialsWithUsername:@"ana.guti84@gmail.com"
-                                   password:@"AGE81984"];
     
+        
     
     NSURL *feedURL = [NSURL URLWithString: kGDataGoogleSpreadsheetsPrivateFullFeed];
     
     
-    [service fetchFeedWithURL:feedURL
+    [self.miService fetchFeedWithURL:feedURL
                               delegate:self
                      didFinishSelector:@selector(listadoAsignaturasTicket:finishedWithFeed:error:)];
     
@@ -105,13 +104,10 @@ finishedWithFeed: (GDataFeedSpreadsheet *) feed
 - (void)listadoClasesAsignatura:(GDataEntrySpreadsheet *)asignatura
 {
     
-    GDataServiceGoogleSpreadsheet *service = [self spreadsheetService];
-    
-    [service setUserCredentialsWithUsername:@"ana.guti84@gmail.com"
-                                   password:@"AGE81984"];
 
     NSURL *f = [asignatura worksheetsFeedURL];
-    [service fetchFeedWithURL:f
+    
+    [self.miService fetchFeedWithURL:f
                       delegate:self
              didFinishSelector:@selector(listadoClasesAsignaturaTicket:finishedWithFeed:error:)];
 
