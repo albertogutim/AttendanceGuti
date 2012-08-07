@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "GDocsHelper.h"
-#import "KeychainItemWrapper.h"
+#import "ConfigHelper.h"
 
 
 @implementation ViewController
@@ -36,7 +36,7 @@
     self.title = NSLocalizedString(@"SUBJECTS_TITLE", nil);
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    [midh mifetch];
+    [midh listadoAsignaturas];
     
     
 }
@@ -70,19 +70,19 @@
     [nuevosElementos insertObject:botonTunning atIndex:1];
     [self setToolbarItems:nuevosElementos animated:YES];
 
-    //TODO: coger credenciales del ConfigHelper.
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
-    NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
-    NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
+    //cogemos credenciales del ConfigHelper.
     
-    if (([password length] != 0) && ([username length] != 0)) {
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
+    //si existen guardados animamos la rueda y mostramos el mensaje correspondiente.
+    if (([configH.password length] != 0) && ([configH.user length] != 0)) {
         [self.activity startAnimating];
         [self.infoLbl setText:NSLocalizedString(@"CREDENTIALS", nil)];
         
     }
     else
     {
-        //Aqui hay que comprobar antes que no haya credenciales sin guardar al hacer el back.
+        //si no hay credenciales no hay rueda y mostramos el mensaje correspondiente.
         [self.activity stopAnimating];
         [self.infoLbl setText:NSLocalizedString(@"NO_CREDENTIALS", nil)];
     }
@@ -125,6 +125,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 
     
+    //tantas celdas como asignaturas tenga el usuario en googledocs con el prefijo AT_
     return [self.miListaAsignaturas count];
     
     
@@ -140,6 +141,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tablalistar"];
     }
     
+    //rellenamos las celdas con el nombre de la asignatura.
     cell.textLabel.text = [self.miListaAsignaturas objectAtIndex:indexPath.row];
     
     
@@ -150,10 +152,19 @@
 - (void)respuesta:(NSArray *)feed
 {
     //TODO: Controlar errores
+    
+    //error al conectar 
+    //error user/pass
+    //0 spreadsheets
+    
     self.miListaAsignaturas = feed;
     [self.miTabla reloadData];
-    //TODO:Coger el nombre de usuario de ConfigHelper
-    NSString *usr = @"Ana";
+    //Cogemos el nombre de usuario de ConfigHelper para mostrar con que cuenta se esta conectando la aplicacion.
+    
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    NSString *usr = configH.user;
+    
+    //mostramos mensaje "conectado a " y paramos la ruedita.
     self.infoLbl.text = [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"CONNECTED_USR" value:@"" table:nil],usr];
     [self.activity stopAnimating];
 }

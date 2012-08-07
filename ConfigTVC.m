@@ -18,8 +18,6 @@
 @synthesize stepperRetrasos = _stepperRetrasos;
 @synthesize guardarSwitch = _guardarSwitch;
 @synthesize usrField = _usrField;
-@synthesize stringUser = _stringUser;
-@synthesize stringPass = _stringPass;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -69,37 +67,39 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 
+    //escribir en user/password labels los credenciales guardados en keychain
+    //sacarlos del ConfigHelper
+    
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
+    
+    self.usrField.text = configH.user;
+    self.passwordField.text = configH.password;
+    
+    /*if (([configH.password length] != 0) && ([configH.user length] != 0))
+        [self.guardarSwitch setOn:YES];
+    
+    else
+        
+        [self.guardarSwitch setOn:NO];
+    */
+    
+    //escribir los limites de ausentes y retrasos guardados en NSUserdefaults accediendo a ConfigHelper.
+    self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f",  configH.retrasos];
+    self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f",  configH.ausencias];
+    
+    
+    //poner el switch a ON si esta guardado que los alumnos se muestran presentes por defecto
+    if (configH.presentesDefecto)
+        [self.presentesSwitch setOn:YES];
+    else
+        [self.presentesSwitch setOn:NO];
+
     [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    //escribir en user/password labels los credenciales guardados en keychain
-    //TODO: sacarlos del ConfigHelper
-    
-    ConfigHelper *ConfigH = [ConfigHelper sharedInstance];
-
-
-    self.usrField.text = ConfigH.user;
-    self.passwordField.text = ConfigH.password;
-    
-    if (([ConfigH.password length] != 0) && ([ConfigH.user length] != 0))
-        [self.guardarSwitch setOn:YES];
-
-    else
-
-        [self.guardarSwitch setOn:NO];
-     
-
-    //escribir los limites de ausentes y retrasos guardados en NSUserdefaults
-   self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f",  [[NSUserDefaults standardUserDefaults] doubleForKey:@"retrasos"]];
-   self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f",  [[NSUserDefaults standardUserDefaults] doubleForKey:@"ausencias"]];
-    
-    
-    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"presentesDefecto"])
-        [self.presentesSwitch setOn:YES];
-    else
-         [self.presentesSwitch setOn:NO];
-    
+        
     [super viewDidAppear:animated];
 }
 
@@ -134,57 +134,55 @@
 }
 
 - (IBAction)guardarChanged:(id)sender {
-    //guardamos usuario/contraseña usando keychain
+    //guardamos usuario/contraseña usando ConfigHelper
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
     
-    //guardamos lo que ha escrito el usuario
-    self.stringUser = self.usrField.text;
-    self.stringPass = self.passwordField.text;
+    if(self.guardarSwitch.isOn)
+        [configH guardarCredenciales: self.usrField.text pass: self.passwordField.text];
 
-    
-    /*if(self.guardarSwitch.isOn)
-    {
-    
-    //[keychainItem setObject:self.stringPass  forKey:(__bridge id)kSecValueData];
-    //[keychainItem setObject:self.stringUser  forKey:(__bridge id)kSecAttrAccount];
-       }
     else
-      //  [keychainItem resetKeychainItem];
-     */
+        [configH resetearCredenciales];
+     
            
 }
 - (IBAction)presentesChanged:(id)sender {
     
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
     if (self.presentesSwitch.isOn)
-        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"presentesDefecto"];
+        [configH setPresentesDefecto: YES];
     else
-        [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"presentesDefecto"];
+        [configH setPresentesDefecto: NO];
+     
 }
 - (IBAction)masdeXretrasos:(id)sender {
     
-    double stepperValue = self.stepperRetrasos.value;
-    self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f", stepperValue];
-    [[NSUserDefaults standardUserDefaults]setDouble:stepperValue forKey:@"retrasos"];
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
+    //guardamos en NSUserDefaults
+    [configH setRetrasos:self.stepperRetrasos.value];
+    //escribimos en el label
+    self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f",self.stepperRetrasos.value];
  
 }
 - (IBAction)masdeXausencias:(id)sender {
     
-    double stepperValue = self.stepperAusencias.value;
-    self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f", stepperValue];
-    [[NSUserDefaults standardUserDefaults]setDouble:stepperValue forKey:@"ausencias"];
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
+    //guardamos en NSUserDefaults
+    [configH setAusencias:self.stepperAusencias.value];
+     //escribimos en el label
+    self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f",self.stepperAusencias.value];
 
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
 	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.
 	if (theTextField == self.usrField) {
-        //guardamos lo que ha escrito el usuario
-        self.stringUser = self.usrField.text;
 		[self.usrField resignFirstResponder];
     }
     
     if (theTextField == self.passwordField) {
-        self.stringPass = self.passwordField.text;
-        self.stringUser = self.usrField.text;
         [self.passwordField resignFirstResponder];
     }
 	return YES;

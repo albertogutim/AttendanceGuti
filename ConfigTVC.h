@@ -21,10 +21,7 @@
 
 
 @property (weak, nonatomic) IBOutlet UITextField *usrField;
-@property (nonatomic, copy) NSString * stringUser;
-
 @property (strong, nonatomic) IBOutlet UITextField *passwordField;
-@property (nonatomic, copy) NSString * stringPass;
 
 - (IBAction)guardarChanged:(id)sender;
 - (IBAction)presentesChanged:(id)sender;

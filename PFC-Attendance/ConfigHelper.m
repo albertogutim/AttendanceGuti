@@ -47,18 +47,16 @@
     }
     
     
-    //Ahora inicializamos los NSUserDefaults (3) presentesDefecto, retrasos, ausencias.
-    
-    
-   [NSUserDefaults resetStandardUserDefaults];
+    //Ahora inicializamos los NSUserDefaults (3) presentesDefecto, retrasos y ausencias si no existen.    
+
     
     NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
 
     if ([settings objectForKey:@"presentesDefecto"] == nil) 
     {
         [settings setBool:YES forKey:@"presentesDefecto"]; //todos presentes por defecto
-        [settings setDouble:0 forKey:@"retrasos"]; //0
-        [settings setDouble:0 forKey:@"ausencias"];//0
+        [settings setInteger:0 forKey:@"retrasos"]; //0
+        [settings setInteger:0 forKey:@"ausencias"];//0
     }
     
 }
@@ -67,38 +65,75 @@
 
 -(void) resetearCredenciales {
     
+    //Borramos el usuario/contraseña guardado.
     KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
     [keychainItem resetKeychainItem];
 }
 
--(void) leerConfiguracion {
-    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
-    
-    NSString *password = [keychainItem objectForKey:(__bridge id)kSecValueData];
-    NSString *username = [keychainItem objectForKey:(__bridge id)kSecAttrAccount];
-    
-    self.password = password;
-    self.user = username;
-    
-    NSUserDefaults *NSUser =[NSUserDefaults standardUserDefaults];
-    [NSUser boolForKey:@"presentesDefecto"];
-    [NSUser doubleForKey:@"retrasos"];
-    [NSUser doubleForKey:@"ausencias"];
-   
-    
-}
 
 -(void) guardarCredenciales: (NSString *) user 
                             pass: (NSString *) password {
 
-
+    //Cuando el usuario quiere guardar sus datos para la proxima conexion.
+    KeychainItemWrapper *keychainItem = [[KeychainItemWrapper alloc] initWithIdentifier:@"YourAppPassword" accessGroup:nil];
+    
+    [keychainItem setObject:user  forKey:(__bridge id)kSecValueData];
+    [keychainItem setObject:password  forKey:(__bridge id)kSecAttrAccount];
+    
+    self.user = user;
+    self.password = password;
 
 }
 
--(void) guardar 
-{
+
+-(int)retrasos {
+    
+    //Obtener dato de NSUserDefaults
+    NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
+    return [settings integerForKey:@"retrasos"];
+    
+}
+
+-(void)setRetrasos:(int)retrasos {
+    
+    //Guardar dato en NSUserDefaults
+    NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
+    [settings setInteger:retrasos forKey:@"retrasos"];
+    
+}
+
+-(int) ausencias {
+
+    //Obtener dato de NSUserDefaults
+    NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
+    return [settings integerForKey:@"ausencias"];
 
 }
+
+-(void) setAusencias:(int)ausencias {
+
+    //Guardar dato en NSUserDefaults
+    NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
+    [settings setInteger:ausencias forKey:@"ausencias"];
+    
+
+}
+
+-(BOOL) presentesDefecto {
+    
+    //Obtener dato de NSUserDefaults
+    NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
+    return [settings boolForKey:@"presentesDefecto"];
+}
+
+-(void) setPresentesDefecto:(BOOL)presentesDefecto {
+    
+    //Guardar dato en NSUserDefaults
+    NSUserDefaults *settings =[NSUserDefaults standardUserDefaults];
+    [settings setBool:presentesDefecto forKey:@"presentesDefecto"];
+
+}
+
 
 
 

@@ -18,4 +18,8 @@
 
 @property (strong, nonatomic) NSString *user;
 @property (strong, nonatomic) NSString *password;
+
+@property (assign, nonatomic) int retrasos;
+@property (assign, nonatomic) int ausencias;
+@property (assign, nonatomic) BOOL presentesDefecto;
 @end

@@ -20,13 +20,20 @@
 @interface GDocsHelper : NSObject
 
 +(GDocsHelper *)sharedInstance;
-- (void) mifetch;
-- (void) ticket: (GDataServiceTicket *) ticket
+
+- (void) listadoAsignaturas;
+- (void) listadoAsignaturasTicket: (GDataServiceTicket *) ticket
                  finishedWithFeed: (GDataFeedSpreadsheet *) feed
                             error: (NSError *) error;
+
+- (void)listadoClasesAsignatura:(GDataEntrySpreadsheet *)asignatura;
+- (void)listadoClasesAsignaturaTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedWorksheet *)feed
+                                error:(NSError *)error;
 
 
 @property(nonatomic,strong) GDataServiceGoogleSpreadsheet *miService;
 @property (nonatomic, strong) GDataFeedSpreadsheet *mSpreadsheetFeed;
+@property (nonatomic, strong) GDataFeedWorksheet *mWorksheetFeed;
 @property (nonatomic, weak) id <GDocsHelperDelegate> delegate;
 @end
