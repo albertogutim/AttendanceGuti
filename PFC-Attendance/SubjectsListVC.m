@@ -18,6 +18,7 @@
 @synthesize listaTableView = _listaTableView;
 @synthesize miListaAsignaturas = _miListaAsignaturas;
 @synthesize miTabla = _miTabla;
+@synthesize asignatura = _asignatura;
 
 - (void)didReceiveMemoryWarning
 {
@@ -34,6 +35,13 @@
     //Cargamos un NIB con la jerarquía de vistas para el custom ButtonItem
     [[NSBundle mainBundle] loadNibNamed:@"vistaConexion" owner:self options:nil];
     self.title = NSLocalizedString(@"SUBJECTS_TITLE", nil);
+    __weak NSArray *elementosToolbar = [self toolbarItems];
+    
+    UIBarButtonItem *botonTunning = [[UIBarButtonItem alloc] initWithCustomView:self.miVistaTunning];
+    NSMutableArray *nuevosElementos = [NSMutableArray arrayWithCapacity:elementosToolbar.count+1];
+    [nuevosElementos addObjectsFromArray:elementosToolbar];
+    [nuevosElementos insertObject:botonTunning atIndex:1];
+    [self setToolbarItems:nuevosElementos animated:YES];
     
 }
 
@@ -45,6 +53,7 @@
     [self setActivity:nil];
     [self setListaTableView:nil];
     [self setMiListaAsignaturas:nil];
+    [self setAsignatura:nil];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
     
@@ -58,13 +67,7 @@
         
     [super viewWillAppear:animated];
     
-    __weak NSArray *elementosToolbar = [self toolbarItems];
     
-    UIBarButtonItem *botonTunning = [[UIBarButtonItem alloc] initWithCustomView:self.miVistaTunning];
-    NSMutableArray *nuevosElementos = [NSMutableArray arrayWithCapacity:elementosToolbar.count+1];
-    [nuevosElementos addObjectsFromArray:elementosToolbar];
-    [nuevosElementos insertObject:botonTunning atIndex:1];
-    [self setToolbarItems:nuevosElementos animated:YES];
 
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
@@ -102,6 +105,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+   // NSLog(@"%@",[self.asignatura description]);
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -132,7 +136,6 @@
     //tantas celdas como asignaturas tenga el usuario en googledocs con el prefijo AT_
     return [self.miListaAsignaturas count];
     
-    
 }
 
 
@@ -146,14 +149,35 @@
     }
     
     //rellenamos las celdas con el nombre de la asignatura.
-    cell.textLabel.text = [self.miListaAsignaturas objectAtIndex:indexPath.row];
+    cell.textLabel.text = [self.miListaAsignaturas.allValues objectAtIndex:indexPath.row];
     
     
     return cell;
 } 
 
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    //guardamos en asignatura el identificador de la asignatura que se ha seleccionado de la tabla
+
+    
+    self.asignatura= [self.miListaAsignaturas.allKeys objectAtIndex:indexPath.row];
+    
+    /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"SubjectsView"
+                                                         message:[NSString stringWithFormat:@"asignatura: %@", self.asignatura]
+                                                        delegate:self
+                                               cancelButtonTitle:@"Dismiss"
+                                               otherButtonTitles:nil];
+    
+    [alertView show];*/
+    [self performSegueWithIdentifier:@"goToWorksheetsView" sender:self];
+
+}
+
 //implementacion protocolo
-- (void)respuesta:(NSArray *)feed error:(NSError *)error
+- (void)respuesta:(NSDictionary *)feed error:(NSError *)error
 {
     //TODO: Controlar errores
     
@@ -205,6 +229,19 @@
         self.miListaAsignaturas = nil;
         [self.miTabla reloadData];
     }
+    
+     if ([[segue identifier] isEqualToString:@"goToWorksheetsView"])
+     {
+     
+         //cuando el usuario selecciona una asignatura se le pasa el id de la misma al tableview siguiente
+         
+         
+         ClassListTVC *classListView = [segue destinationViewController];
+         classListView.asignatura = self.asignatura;
+         
+        
+         
+     }
 }
 
 @end

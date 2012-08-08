@@ -15,6 +15,8 @@
 @synthesize mSpreadsheetFeed =_mSpreadsheetFeed;
 @synthesize delegate = _delegate;
 @synthesize mWorksheetFeed = _mWorksheetFeed;
+@synthesize mListSpreadsheetId = _mListSpreadsheetId;
+@synthesize mListWorksheetId = _mListWorksheetId;
 
 
 
@@ -67,7 +69,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
           error: (NSError *) error {
     
     
-    NSLog(@"%@",[error description]);
+    //NSLog(@"%@",[error description]);
     self.mSpreadsheetFeed = feed;
     
     
@@ -86,33 +88,69 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     //creamos una lista de feeds conteniendo solo las asignaturas que empiecen por AT_
     NSMutableArray *listaFeeds = [NSMutableArray arrayWithCapacity: [[self.mSpreadsheetFeed entries] count]];
+    NSMutableArray *identifiers = [NSMutableArray arrayWithCapacity: [[self.mSpreadsheetFeed entries] count]];
+    NSInteger i = 0;
     for (GDataEntrySpreadsheet *ss in [self.mSpreadsheetFeed entries]) {
         
         if ([[[ss title] stringValue] hasPrefix:@"AT_"]) {
             
             NSString *cadCortada = [[[ss title] stringValue] substringFromIndex:3];
             [listaFeeds addObject:cadCortada];
+            [identifiers addObject:[[[self.mSpreadsheetFeed entries]objectAtIndex:i] identifier]];
             
         }
+        i++;
     }
-    [self.delegate respuesta:[NSArray arrayWithArray:listaFeeds] error:error];
-    //devolvemos un array.
     
+     NSMutableDictionary *listaSsId = [NSMutableDictionary dictionaryWithObjects:listaFeeds forKeys:identifiers];
+    
+     NSDictionary * listaSsIdDictionary = [NSDictionary dictionaryWithDictionary:listaSsId];
+    
+     self.mListSpreadsheetId = listaSsIdDictionary;
+     [self.delegate respuesta: listaSsIdDictionary error:error];
+    
+    //[self.delegate respuesta:[NSArray arrayWithArray:listaFeeds] error:error];
+    //devolvemos un array.
+     
 }
 
 
 
-- (void)listadoClasesAsignatura:(GDataEntrySpreadsheet *)asignatura
+- (void)listadoClasesAsignatura:(NSString *)asignatura
 {
     
 
-    NSURL *f = [asignatura worksheetsFeedURL];
+   /* id selectedClass =[self.mListSpreadsheetId objectForKey:asignatura];
+    NSInteger i = 0;
+    for (GDataEntrySpreadsheet *ss in [self.mSpreadsheetFeed entries] )
+    {
+        if ([[[ss title] stringValue] isEqualToString:selectedClass]) 
+        {
+            
+            GDataEntrySpreadsheet *spread = [[self.mSpreadsheetFeed entries] objectAtIndex:i];
+            NSURL *f = [spread worksheetsFeedURL];
+            
+            
+            [self.miService fetchFeedWithURL:f
+                                    delegate:self
+                           didFinishSelector:@selector(listadoClasesAsignaturaTicket:finishedWithFeed:error:)];
+            break;
+        }
+        i++;
+    
+    }*/
+    
+    GDataEntrySpreadsheet *ss = [self.mSpreadsheetFeed entryForIdentifier:asignatura];
+    NSURL *f = [ss worksheetsFeedURL];
+    
     
     [self.miService fetchFeedWithURL:f
-                      delegate:self
-             didFinishSelector:@selector(listadoClasesAsignaturaTicket:finishedWithFeed:error:)];
+                            delegate:self
+                   didFinishSelector:@selector(listadoClasesAsignaturaTicket:finishedWithFeed:error:)];
+
 
 }
+
 
 - (void)listadoClasesAsignaturaTicket:(GDataServiceTicket *)ticket
         finishedWithFeed:(GDataFeedWorksheet *)feed
@@ -121,7 +159,8 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     self.mWorksheetFeed = feed;
     
-    /*NSArray *Worksheets = [self.mWorksheetFeed entries];
+    
+    /*NSArray *Worksheets = [feed entries];
     GDataEntryWorksheet *Worksheet = [Worksheets objectAtIndex:0];
     
     NSString *ttitleworksheet = [[Worksheet title] stringValue];
@@ -131,15 +170,25 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                                                cancelButtonTitle:@"Dismiss"
                                                otherButtonTitles:nil];
     
-    [alertView show];
-     */
+    [alertView show];*/
+     
     
     NSMutableArray *listaWorksheetFeeds = [NSMutableArray arrayWithCapacity: [[self.mWorksheetFeed entries] count]];
+    NSMutableArray *identifiers = [NSMutableArray arrayWithCapacity: [[self.mWorksheetFeed entries] count]];
+    NSInteger i = 0;
     for (GDataEntryWorksheet *ws in [self.mWorksheetFeed entries]) {
         
             [listaWorksheetFeeds addObject:[[ws title] stringValue]];
+            [identifiers addObject:[[[self.mWorksheetFeed entries]objectAtIndex:i] identifier]];
+            i++;
             
     }
+    
+    NSMutableDictionary *listaWsId = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithArray:listaWorksheetFeeds] forKeys:[NSArray arrayWithArray:identifiers]];
+    
+    NSDictionary * listaWsIdDictionary = [NSDictionary dictionaryWithDictionary:listaWsId];
+    self.mListWorksheetId = listaWsIdDictionary;
+    [self.delegate respuesta: listaWsIdDictionary error:error];
     
 }
 

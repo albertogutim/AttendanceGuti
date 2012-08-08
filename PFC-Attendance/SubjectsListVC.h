@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
+#import "ClassListTVC.h"
 
 
 
@@ -17,7 +18,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *infoLbl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 @property (strong, nonatomic) IBOutlet UITableView *listaTableView;
-@property (strong, nonatomic) NSArray *miListaAsignaturas;
+@property (weak, nonatomic) NSDictionary *miListaAsignaturas;
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
+@property (strong, nonatomic) id asignatura;
 
 @end

@@ -11,3 +11,4 @@
 "CONNECTED_USR"="Conectado como %@"; 
 "BLANK_ERROR"="Error campo vacío";
 "BLANK_MSG"="Debe rellenar ambos campos";
+"CLASS_TITLE"="Clases";

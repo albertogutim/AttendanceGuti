@@ -35,9 +35,6 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="gL0-ve-xDd" kind="push" id="Sla-Yy-Uwh"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -64,10 +61,11 @@
                     <connections>
                         <outlet property="listaTableView" destination="Gm5-dX-PS1" id="vK7-WK-ijq"/>
                         <outlet property="miTabla" destination="Gm5-dX-PS1" id="WkI-U2-Sam"/>
+                        <segue destination="Q0I-Tn-xsk" kind="push" identifier="goToWorksheetsView" id="zIR-jj-AVr"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="260" y="-449"/>
+            <point key="canvasLocation" x="209" y="-591"/>
         </scene>
         <scene sceneID="zkq-4D-1Mz">
             <objects>
@@ -295,6 +293,50 @@
             </objects>
             <point key="canvasLocation" x="762" y="-758"/>
         </scene>
+        <scene sceneID="EDa-M4-YCd">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jxn-5Q-pY3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="Q0I-Tn-xsk" customClass="ClassListTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="o7d-D8-jFq">
+                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="claselistar" textLabel="04Z-Wo-tgG" style="IBUITableViewCellStyleDefault" id="Aqu-37-6mJ">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="04Z-Wo-tgG">
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <segue destination="gL0-ve-xDd" kind="push" id="Kcn-Up-jZa"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Q0I-Tn-xsk" id="r95-vu-mPY"/>
+                            <outlet property="delegate" destination="Q0I-Tn-xsk" id="U8q-fe-e1O"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="kJw-I2-cEQ"/>
+                    <connections>
+                        <outlet property="miTabla" destination="o7d-D8-jFq" id="vE7-k0-mmi"/>
+                    </connections>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="632" y="-186"/>
+        </scene>
         <scene sceneID="DqZ-QP-NdK">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ENb-fh-U0y" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -378,7 +420,7 @@
                     </navigationItem>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="755" y="-92"/>
+            <point key="canvasLocation" x="851" y="-93"/>
         </scene>
         <scene sceneID="yy0-Pm-lwf">
             <objects>
@@ -500,7 +542,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="zgb-bG-UZF" style="IBUITableViewCellStyleDefault" id="dKb-Ls-J3L">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Nombre" textLabel="zgb-bG-UZF" style="IBUITableViewCellStyleDefault" id="dKb-Ls-J3L">
                                         <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -518,7 +560,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="7v0-d7-MBU" style="IBUITableViewCellStyleDefault" id="LjR-MP-ToV">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="email" textLabel="7v0-d7-MBU" style="IBUITableViewCellStyleDefault" id="LjR-MP-ToV">
                                         <rect key="frame" x="0.0" y="66" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

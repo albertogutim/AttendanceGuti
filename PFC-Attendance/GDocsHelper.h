@@ -13,9 +13,9 @@
 
 @protocol GDocsHelperDelegate <NSObject> 
 
-- (void)respuesta:(NSArray *) feed error: (NSError *) error;
-
+- (void)respuesta:(NSDictionary *) feed error: (NSError *) error;
 @end
+
 
 @interface GDocsHelper : NSObject
 
@@ -27,7 +27,7 @@
                  finishedWithFeed: (GDataFeedSpreadsheet *) feed
                             error: (NSError *) error;
 
--(void)listadoClasesAsignatura:(GDataEntrySpreadsheet *)asignatura;
+-(void)listadoClasesAsignatura:(NSString *)asignatura;
 -(void)listadoClasesAsignaturaTicket:(GDataServiceTicket *)ticket
                      finishedWithFeed:(GDataFeedWorksheet *)feed
                                 error:(NSError *)error;
@@ -37,4 +37,6 @@
 @property (nonatomic, strong) GDataFeedSpreadsheet *mSpreadsheetFeed;
 @property (nonatomic, strong) GDataFeedWorksheet *mWorksheetFeed;
 @property (nonatomic, weak) id <GDocsHelperDelegate> delegate;
+@property (nonatomic, strong) NSDictionary *mListSpreadsheetId;
+@property (nonatomic, strong) NSDictionary *mListWorksheetId;
 @end

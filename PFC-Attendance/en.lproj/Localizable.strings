@@ -11,3 +11,4 @@
 "CONNECTED_USR"="Connected as %@";
 "BLANK_ERROR"="Empty fields error";
 "BLANK_MSG"="You must fill both credential fields";
+"CLASS_TITLE"="Classes";
