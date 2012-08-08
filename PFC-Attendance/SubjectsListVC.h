@@ -14,6 +14,9 @@
 
 @interface SubjectsListVC : UIViewController <GDocsHelperDelegate>
 
+- (IBAction)refreshData:(id)sender;
+-(void)connectIntent;
+
 @property(nonatomic,strong)IBOutlet UIView *miVistaTunning;
 @property (weak, nonatomic) IBOutlet UILabel *infoLbl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;

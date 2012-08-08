@@ -12,6 +12,8 @@
 @interface ClassListTVC : UITableViewController <GDocsHelperDelegate>
 
 
+- (IBAction)refreshData:(id)sender;
+-(void) connectIntent;
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *asignatura;
 @property (strong, nonatomic) NSDictionary *miListaClases;

@@ -67,34 +67,9 @@
         
     [super viewWillAppear:animated];
     
-    
-
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    midh.delegate = self;
-    
-   
-    
-    //cogemos credenciales del ConfigHelper.
-    
-    ConfigHelper *configH = [ConfigHelper sharedInstance];
-    
-    //si existen guardados animamos la rueda y mostramos el mensaje correspondiente.
-    if (([configH.password length] != 0) && ([configH.user length] != 0)) {
-        [self.activity startAnimating];
-        [self.infoLbl setText:NSLocalizedString(@"CREDENTIALS", nil)];
-        
-        [midh credentialsWithUsr:configH.user andPwd:configH.password];
-        [midh listadoAsignaturas];
-        
-    }
-    else
-    {
-        //si no hay credenciales no hay rueda y mostramos el mensaje correspondiente.
-        [self.activity stopAnimating];
-        [self.infoLbl setText:NSLocalizedString(@"NO_CREDENTIALS", nil)];
-    }
-    
+    [self connectIntent];
 }
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -176,6 +151,42 @@
 
 }
 
+
+#pragma mark - My methods
+
+-(void)connectIntent {
+    
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    midh.delegate = self;
+    
+    
+    
+    //cogemos credenciales del ConfigHelper.
+    
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
+    //si existen guardados animamos la rueda y mostramos el mensaje correspondiente.
+    if (([configH.password length] != 0) && ([configH.user length] != 0)) {
+        [self.activity startAnimating];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        [self.infoLbl setText:NSLocalizedString(@"CREDENTIALS", nil)];
+        
+        [midh credentialsWithUsr:configH.user andPwd:configH.password];
+        [midh listadoAsignaturas];
+        
+    }
+    else
+    {
+        //si no hay credenciales no hay rueda y mostramos el mensaje correspondiente.
+        [self.activity stopAnimating];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+        [self.infoLbl setText:NSLocalizedString(@"NO_CREDENTIALS", nil)];
+    }
+    
+}
+
+
 //implementacion protocolo
 - (void)respuesta:(NSDictionary *)feed error:(NSError *)error
 {
@@ -213,6 +224,8 @@
         //mostramos mensaje "conectado a " y paramos la ruedita.
         self.infoLbl.text = [NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"CONNECTED_USR" value:@"" table:nil],usr];
         [self.activity stopAnimating];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
     }
 }
@@ -244,4 +257,8 @@
      }
 }
 
+- (IBAction)refreshData:(id)sender {
+    
+    [self connectIntent];
+}
 @end

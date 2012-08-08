@@ -8,7 +8,7 @@
 
 #import "ClassListTVC.h"
 #import "GDocsHelper.h"
-#import "ConfigHelper.h"
+
 
 
 @implementation ClassListTVC
@@ -60,16 +60,9 @@
 {
     
     
-    //NSLog(@"%@", [self.asignatura description]);    
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    midh.delegate = self;
-
-    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    //NSLog(@"%@", [self.asignatura description]); 
     
-    [midh credentialsWithUsr:configH.user andPwd:configH.password];
-    [midh listadoClasesAsignatura:self.asignatura];
-    
-    
+    [self connectIntent];
     
     [super viewWillAppear:animated];
 }
@@ -92,7 +85,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark - Table view data source
@@ -177,13 +170,54 @@
 }
 
 
-- (void)respuesta:(NSDictionary *) feed error: (NSError *) error
+#pragma mark - My Methods
+
+-(void) connectIntent
 
 {
 
-    self.miListaClases = feed;
-    [self.miTabla reloadData];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    midh.delegate = self;
+    
+    [midh listadoClasesAsignatura:self.asignatura];
+
+}
+- (void)respuesta:(NSDictionary *) feed error: (NSError *) error
+
+{
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+                NSLog(@"Error de login");
+                break;
+                
+            case -1009:
+                NSLog(@"Error de conexión");
+                break;
+                
+            default:
+                //Error desconocido. Poner el localized description del NSError
+                
+                break;
+        }
+    }
+        else
+        {
+
+            self.miListaClases = feed;
+            [self.miTabla reloadData];
+            [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }
 
 }
 
+- (IBAction)refreshData:(id)sender 
+{
+    
+    [self connectIntent];
+}
 @end
