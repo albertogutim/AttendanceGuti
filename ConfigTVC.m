@@ -49,6 +49,8 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     //TODO: cambiar labels dependiendo del idioma
+    
+    self.usrField.keyboardType=UIKeyboardTypeEmailAddress;
 
 }
 
@@ -88,9 +90,11 @@
     
     
     //escribir los limites de ausentes y retrasos guardados en NSUserdefaults accediendo a ConfigHelper.
-    self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%.f",  configH.retrasos];
-    self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f",  configH.ausencias];
+    self.stepperRetrasosLbl.text = [NSString stringWithFormat:@"%d",  configH.retrasos];
+    self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%d",  configH.ausencias];
     
+    self.stepperRetrasos.value = configH.retrasos;
+    self.stepperAusencias.value = configH.ausencias;
     
     //poner el switch a ON si esta guardado que los alumnos se muestran presentes por defecto
     if (configH.presentesDefecto)
@@ -280,6 +284,12 @@
     self.stepperAusenciaslbl.text = [NSString stringWithFormat:@"%.f",self.stepperAusencias.value];
 
 }
+
+- (IBAction)goBack:(id)sender {
+    
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
 	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.

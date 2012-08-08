@@ -119,26 +119,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 - (void)listadoClasesAsignatura:(NSString *)asignatura
 {
     
-
-   /* id selectedClass =[self.mListSpreadsheetId objectForKey:asignatura];
-    NSInteger i = 0;
-    for (GDataEntrySpreadsheet *ss in [self.mSpreadsheetFeed entries] )
-    {
-        if ([[[ss title] stringValue] isEqualToString:selectedClass]) 
-        {
-            
-            GDataEntrySpreadsheet *spread = [[self.mSpreadsheetFeed entries] objectAtIndex:i];
-            NSURL *f = [spread worksheetsFeedURL];
-            
-            
-            [self.miService fetchFeedWithURL:f
-                                    delegate:self
-                           didFinishSelector:@selector(listadoClasesAsignaturaTicket:finishedWithFeed:error:)];
-            break;
-        }
-        i++;
-    
-    }*/
     
     GDataEntrySpreadsheet *ss = [self.mSpreadsheetFeed entryForIdentifier:asignatura];
     NSURL *f = [ss worksheetsFeedURL];

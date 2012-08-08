@@ -54,7 +54,7 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="oWN-fo-h3Q"/>
                         <barButtonItem systemItem="play" id="xs8-NF-dsQ">
                             <connections>
-                                <segue destination="S77-OL-wLM" kind="push" identifier="goToConfig" id="gbz-GR-Vl7"/>
+                                <segue destination="EHT-GH-jLV" kind="modal" identifier="goToConfig" modalTransitionStyle="flipHorizontal" id="gbz-GR-Vl7"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -77,7 +77,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PIA-xp-tgD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="S77-OL-wLM" customClass="ConfigTVC" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Gbt-A1-uhz">
-                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -283,7 +283,13 @@
                             <outlet property="delegate" destination="S77-OL-wLM" id="l2a-61-wpC"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Configuracion" id="pa2-GI-CJa"/>
+                    <navigationItem key="navigationItem" title="Configuracion" id="pa2-GI-CJa">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="KE4-MR-uKH">
+                            <connections>
+                                <action selector="goBack:" destination="S77-OL-wLM" id="vRj-mt-1Ag"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="guardarSwitch" destination="iRL-DL-Cbu" id="Ixf-2A-eoy"/>
                         <outlet property="passwordField" destination="42G-eG-l70" id="Dhr-Rl-bNp"/>
@@ -296,7 +302,7 @@
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="762" y="-758"/>
+            <point key="canvasLocation" x="1424" y="-1288"/>
         </scene>
         <scene sceneID="EDa-M4-YCd">
             <objects>
@@ -348,7 +354,7 @@
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="632" y="-186"/>
+            <point key="canvasLocation" x="784" y="-202"/>
         </scene>
         <scene sceneID="DqZ-QP-NdK">
             <objects>
@@ -413,34 +419,30 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem title="Random" id="qir-vL-HvC"/>
-                        <barButtonItem image="Sin título-2.png" id="kGO-c6-yeX">
+                        <barButtonItem systemItem="pageCurl" id="M7I-Ui-Lyx">
                             <connections>
-                                <segue destination="C5P-Ao-qYk" kind="push" id="gyj-Kd-TWR"/>
+                                <segue destination="Yg7-RB-d7a" kind="modal" modalTransitionStyle="partialCurl" id="6gN-2T-Bu9"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="Fecha" id="F5c-em-qs1">
-                            <connections>
-                                <segue destination="Yg7-RB-d7a" kind="push" id="kYX-lM-bkQ"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem width="25" style="plain" systemItem="fixedSpace" id="bPQ-eD-XSo"/>
                         <barButtonItem systemItem="add" id="6nP-Tv-uin"/>
+                        <barButtonItem width="25" style="plain" systemItem="fixedSpace" id="bPQ-eD-XSo"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="CK8-EM-Ggx">
                         <nil key="title"/>
                         <barButtonItem key="backBarButtonItem" title="Back" id="bX8-7E-dN0"/>
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="compose" id="iX9-ix-2Ks"/>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1013" y="-137"/>
+            <point key="canvasLocation" x="1253" y="-153"/>
         </scene>
         <scene sceneID="yy0-Pm-lwf">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z5c-EY-eO8" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController title="Informe Fecha" id="C5P-Ao-qYk" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mTk-KN-Mv3" userLabel="Informes">
-                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Fecha" lineBreakMode="tailTruncation" minimumFontSize="10" id="mV6-yk-UNS">
@@ -451,7 +453,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Go3-6r-D3b">
-                                <rect key="frame" x="0.0" y="36" width="320" height="336"/>
+                                <rect key="frame" x="0.0" y="36" width="320" height="380"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -511,7 +513,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1431" y="-130"/>
+            <point key="canvasLocation" x="1957" y="-122"/>
         </scene>
         <scene sceneID="AU9-xV-FS6">
             <objects>
@@ -540,7 +542,7 @@
                     </navigationItem>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1431" y="471"/>
+            <point key="canvasLocation" x="1957" y="479"/>
         </scene>
         <scene sceneID="Dwy-gc-5Ww">
             <objects>
@@ -636,17 +638,17 @@
                     <navigationItem key="navigationItem" id="pS8-a1-ey8"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2597" y="-23"/>
+            <point key="canvasLocation" x="3229" y="257"/>
         </scene>
         <scene sceneID="LZH-Go-ol8">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sfh-qS-KxB" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController title="Fecha" id="Yg7-RB-d7a" userLabel="Fecha" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wFf-vI-Rkh">
-                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" id="A9k-A9-YBw">
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" id="A9k-A9-YBw">
                                 <rect key="frame" x="0.0" y="200" width="320" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="365426914.54407698">
@@ -676,7 +678,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </timeZone>
                             </datePicker>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="cPd-gR-vGQ">
-                                <rect key="frame" x="0.0" y="328" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="416" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem title="Cancelar" id="qhF-6W-OhL"/>
@@ -685,12 +687,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </items>
                             </toolbar>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="Fecha" id="JoP-QC-YTQ"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1431" y="-715"/>
+            <point key="canvasLocation" x="1957" y="-715"/>
         </scene>
         <scene sceneID="yYm-hH-aco">
             <objects>
@@ -741,7 +743,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </navigationItem>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1901" y="-40"/>
+            <point key="canvasLocation" x="2533" y="240"/>
         </scene>
         <scene sceneID="PYV-Ei-DzB">
             <objects>
@@ -800,14 +802,68 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </view>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2258" y="-40"/>
+            <point key="canvasLocation" x="2890" y="240"/>
+        </scene>
+        <scene sceneID="CaN-ei-8aZ">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FMF-2b-Fty" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController id="EHT-GH-jLV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="234-ct-jeW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="S77-OL-wLM" kind="relationship" relationship="rootViewController" id="oh6-v1-beI"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="773" y="-1288"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Sin título-2.png" width="20" height="20"/>
         <image name="check.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
     </resources>
+    <classes>
+        <class className="ClassListTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ConfigTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="goBack:"/>
+                <relationship kind="action" name="guardarChanged:"/>
+                <relationship kind="action" name="masdeXausencias:"/>
+                <relationship kind="action" name="masdeXretrasos:"/>
+                <relationship kind="action" name="presentesChanged:"/>
+                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SubjectsListVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

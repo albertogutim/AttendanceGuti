@@ -27,6 +27,7 @@
 - (IBAction)presentesChanged:(id)sender;
 - (IBAction)masdeXretrasos:(id)sender;
 - (IBAction)masdeXausencias:(id)sender;
+- (IBAction)goBack:(id)sender;
 
 
 
