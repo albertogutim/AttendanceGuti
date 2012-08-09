@@ -32,7 +32,7 @@
                      finishedWithFeed:(GDataFeedWorksheet *)feed
                                 error:(NSError *)error;
 
-- (void)listadoAlumnosClase:(NSString *)clase estadoDefault: (BOOL) estado;
+- (void)listadoAlumnosClase:(NSString *)clase paraFecha:(NSDate *)newFecha paraEstadosPorDefecto:(BOOL) estados;
 - (void)listadoAlumnosClaseTicket:(GDataServiceTicket *)ticket
                  finishedWithFeed:(GDataFeedBase *)feed
                             error:(NSError *)error;
@@ -42,12 +42,17 @@
 @property (nonatomic, strong) GDataFeedSpreadsheet *mSpreadsheetFeed;
 @property (nonatomic, strong) GDataFeedWorksheet *mWorksheetFeed;
 @property (nonatomic, strong) GDataFeedBase *mListCells;
+@property (nonatomic, strong) GDataFeedBase *mListFechas;
+@property (nonatomic, strong) GDataEntryWorksheet *miClaseWs;
 
 @property (nonatomic, weak) id <GDocsHelperDelegate> delegate;
 
 @property (nonatomic, strong) NSDictionary *mListSpreadsheetId;
 @property (nonatomic, strong) NSDictionary *mListWorksheetId;
-@property (nonatomic, assign) BOOL estado;
+
+@property (nonatomic, assign) BOOL estados;
+@property (nonatomic, strong) NSDate *fecha;
+
 
 
 @end

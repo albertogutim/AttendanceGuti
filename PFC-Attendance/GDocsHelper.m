@@ -18,7 +18,11 @@
 @synthesize mListSpreadsheetId = _mListSpreadsheetId;
 @synthesize mListWorksheetId = _mListWorksheetId;
 @synthesize mListCells = _mListCells;
-@synthesize estado = _estado;
+@synthesize mListFechas = _mListFechas;
+@synthesize miClaseWs = _miClaseWs;
+@synthesize estados = _estados;
+@synthesize fecha = _fecha;
+
 
 
 
@@ -175,30 +179,81 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 }
 
 
-- (void)listadoAlumnosClase:(NSString *)clase estadoDefault:(BOOL)estado
+- (void)listadoAlumnosClase:(NSString *)clase paraFecha:(NSDate *)newFecha paraEstadosPorDefecto:(BOOL)estados;
 
 {
     
-    self.estado = estado;
-    GDataEntryWorksheet *ws = [self.mWorksheetFeed entryForIdentifier:clase];
+    //guardamos fecha y estados para poder acceder desde el ticket.
+    self.estados = estados;
+    self.fecha = newFecha;
     
-    NSURL *feedURL = [[ws cellsLink] URL];
+    //Primero buscamos la fecha para saber si existe
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMaximumColumn:1];
-    [q setMinimumRow:3];
-    [q setMaximumRow:5];
+    [q setMinimumColumn:4];
+    [q setMinimumRow:1];
+    [q setMaximumRow:1];
     
-    //NSString *query = q.spreadsheetQuery;
-    
-    NSLog(@"lo que tiene la query %@",q.spreadsheetQuery);
     
     
     [self.miService fetchFeedWithQuery:q
                      delegate:self
-            didFinishSelector:@selector(listadoAlumnosClaseTicket:finishedWithFeed:error:)];
-    
+            didFinishSelector:@selector(consultaFechasTicket:finishedWithFeed:error:)];
+
     
 }
+
+- (void)consultaFechasTicket:(GDataServiceTicket *)ticket
+                 finishedWithFeed:(GDataFeedBase *)feed
+                            error:(NSError *)error {
+    
+    
+    if ([[feed entries] count]) {
+        //TODO: Buscar fecha
+        self.mListFechas = feed;
+        
+        
+    } else { //Es la primera vez, y no existe ninguna fecha. Añadir fecha en el header
+        
+        //Creamos la fecha en español para el día de hoy
+        //TODO: Generalizarlo para cualquier fecha
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        
+        NSString *dateStr = [df stringFromDate:[NSDate date]];
+       
+        GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:4 inputString:dateStr numericValue:nil resultString:nil];
+        GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+        
+        NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+        
+        [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(consultaFechasTicketCrearPrimeraFechaRespuesta:finishedWithFeed:error:)];
+        
+        
+    }
+}
+
+
+
+- (void)consultaFechasTicketCrearPrimeraFechaRespuesta:(GDataServiceTicket *)ticket
+                             finishedWithFeed:(GDataFeedBase *)feed
+                                        error:(NSError *)error {
+    
+    if (error) {
+        //TODO: Avisar de fallo al crear la celda
+    } else {
+        NSLog(@"Se ha creado con éxito");
+
+    }
+        
+}
+
+
 
 - (void)listadoAlumnosClaseTicket:(GDataServiceTicket *)ticket
                      finishedWithFeed:(GDataFeedBase *)feed
@@ -206,25 +261,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 
 
     self.mListCells = feed;
-    
-    /*GDataEntryBase *entry = [[self.mListCells entries] objectAtIndex:0];
-    
-    NSString *title = [[entry title] stringValue];
-
-
-   
-     
-    
-    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"celdas"
-                                                         message:[NSString stringWithFormat:@"tiene A1: %d", celdascolumna]
-                                                        delegate:self
-                                               cancelButtonTitle:@"Dismiss"
-                                               otherButtonTitles:nil];
-    
-    [alertView show];
-     */
-    
-   // [[self.mListCells entries] setMaximumRow:1]
 
         
     NSMutableArray *listaCellFeeds = [NSMutableArray arrayWithCapacity: [[self.mListCells entries] count]];
@@ -233,18 +269,16 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     for (GDataEntrySpreadsheetCell *cs in [self.mListCells entries]) {
         
         GDataSpreadsheetCell *theCell = [cs cell];
-        
-        //if ((theCell.column == 1)&& (theCell.row > 2)) {
             
             [listaCellFeeds addObject:theCell.inputString];
-            
-            if(self.estado)
+        
+            //TODO: controlar si hay que leer los estados porque existe la fecha o hay que cogerlos de los predeterminados.
+            //Controlar estado predeterminado alumnos presentes
+            if(self.estados)
                 [estados addObject:[NSNumber numberWithInteger:1]];
             else
                 [estados addObject:[NSNumber numberWithInteger:2]];
-        //}
-      
-        
+
     }
      
     

@@ -42,13 +42,19 @@
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+     ConfigHelper *configH = [ConfigHelper sharedInstance];
+    //TODO: Quitar esto
+    [midh listadoAlumnosClase:self.clase paraFecha: nil paraEstadosPorDefecto: configH.presentesDefecto];
+    
 }
-*/
+
 
 - (void)viewDidUnload
 {
@@ -57,6 +63,9 @@
     midh.delegate=nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    
+    
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -69,10 +78,8 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    ConfigHelper *configH = [ConfigHelper sharedInstance];
    
-    [midh listadoAlumnosClase:self.clase estadoDefault: configH.presentesDefecto];
-       
+          
     [super viewWillAppear:animated];
 }
 
@@ -91,40 +98,82 @@
 {
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [self.miListaAlumnos count];
+    if ([self.miListaAlumnos count]) {
+        return [self.miListaAlumnos count];
+    } else{
+        return 1;
+    }
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView 
-                             dequeueReusableCellWithIdentifier:@"alumnos"];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
+    UITableViewCell *cell;
+    
+    if ([self.miListaAlumnos count]) {
+        
+        
+       cell = [tableView 
+                                 dequeueReusableCellWithIdentifier:@"alumnos"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
+        }
+        
+        //rellenamos las celdas con el nombre de la asignatura.
+        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+        UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
+        
+        theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
+        switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
+            case 1: //Atendió
+                iv.image = [UIImage imageNamed:@"check.png"];
+                break;
+            case 2: //Faltó
+                iv.image = [UIImage imageNamed:@"cross.png"];
+                break;
+                
+            case 3: //Retraso
+                iv.image = [UIImage imageNamed:@"late.png"];
+                break;
+            case 4: //Vacío
+                iv.image = nil;
+                break;
+            default:
+                break;
+        }
+    }
+    else{
+        
+        
+        cell = [tableView 
+                                 dequeueReusableCellWithIdentifier:@"infoCell"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"infoCell"];
+        }
+       
+        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:3];
+        theCellLbl.text = NSLocalizedString(@"CHOOSE_DATE", nil);
+        cell.imageView.image = [UIImage imageNamed:@"curlButt.png"];
+
     }
     
-    //rellenamos las celdas con el nombre de la asignatura.
-    UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-    UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
-    
-    theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
-    switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
-        case 1: //Atendió
-            iv.image = [UIImage imageNamed:@"check.png"];
-            break;
-        case 2: //Faltó
-            iv.image = [UIImage imageNamed:@"cross.png"];
-            break;
-            
-        case 3: //Retraso
-            iv.image = [UIImage imageNamed:@"late.png"];
-            break;
-        case 4: //Vacío
-            iv.image = nil;
-            break;
-        default:
-            break;
-    }
     return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+   
+     if ([self.miListaAlumnos count]) {
+         
+         
+         return 79;
+
+         
+     }
+     else{
+        
+          return 100;
+         
+     }
 }
 
 
