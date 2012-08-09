@@ -10,6 +10,7 @@
 		3A238E5A15D270DC003C8C0C /* ClassListTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A238E5915D270DC003C8C0C /* ClassListTVC.m */; };
 		3A238E6C15D2D8C2003C8C0C /* AttendanceStudentsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A238E6B15D2D8C2003C8C0C /* AttendanceStudentsVC.m */; };
 		3A238E7E15D3AC65003C8C0C /* curlButt.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A238E7D15D3AC65003C8C0C /* curlButt.png */; };
+		3A238E8115D3EA07003C8C0C /* PickerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A238E8015D3EA06003C8C0C /* PickerVC.m */; };
 		3A2A7E9015CBEA2B000E3074 /* GDocsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */; };
 		3A2A7EAD15CE860C000E3074 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */; };
 		3A4462E015CAAF4B008B1FA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A4462E215CAAF4B008B1FA3 /* Localizable.strings */; };
@@ -44,6 +45,8 @@
 		3A238E6A15D2D8C2003C8C0C /* AttendanceStudentsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttendanceStudentsVC.h; sourceTree = "<group>"; };
 		3A238E6B15D2D8C2003C8C0C /* AttendanceStudentsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttendanceStudentsVC.m; sourceTree = "<group>"; };
 		3A238E7D15D3AC65003C8C0C /* curlButt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = curlButt.png; sourceTree = "<group>"; };
+		3A238E7F15D3EA06003C8C0C /* PickerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerVC.h; sourceTree = "<group>"; };
+		3A238E8015D3EA06003C8C0C /* PickerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerVC.m; sourceTree = "<group>"; };
 		3A2A7E8E15CBEA2B000E3074 /* GDocsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDocsHelper.h; sourceTree = "<group>"; };
 		3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDocsHelper.m; sourceTree = "<group>"; };
 		3A2A7EAB15CE860C000E3074 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
@@ -485,6 +488,8 @@
 				3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */,
 				3A238E6A15D2D8C2003C8C0C /* AttendanceStudentsVC.h */,
 				3A238E6B15D2D8C2003C8C0C /* AttendanceStudentsVC.m */,
+				3A238E7F15D3EA06003C8C0C /* PickerVC.h */,
+				3A238E8015D3EA06003C8C0C /* PickerVC.m */,
 				3A238E5815D270DC003C8C0C /* ClassListTVC.h */,
 				3A238E5915D270DC003C8C0C /* ClassListTVC.m */,
 				3AD9502F15C7E3C0005D45D7 /* SubjectsListVC.h */,
@@ -913,6 +918,7 @@
 				3AE039CD15CFD54F00AB63EB /* ConfigHelper.m in Sources */,
 				3A238E5A15D270DC003C8C0C /* ClassListTVC.m in Sources */,
 				3A238E6C15D2D8C2003C8C0C /* AttendanceStudentsVC.m in Sources */,
+				3A238E8115D3EA07003C8C0C /* PickerVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

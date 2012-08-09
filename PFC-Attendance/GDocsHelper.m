@@ -179,6 +179,56 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 }
 
 
+-(void)fechasValidasPara:(NSString *)miClase {
+    
+    
+    //Primero buscamos la fecha para saber si existe
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:miClase];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:4];
+    [q setMinimumRow:1];
+    [q setMaximumRow:1];
+    
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(consultaFechasValidasTicket:finishedWithFeed:error:)];
+    
+    
+}
+
+
+- (void)consultaFechasValidasTicket:(GDataServiceTicket *)ticket
+            finishedWithFeed:(GDataFeedBase *)feed
+                       error:(NSError *)error {
+    
+    
+    if ([[feed entries] count]) {
+        
+        NSMutableArray *fechasValidas = [NSMutableArray arrayWithCapacity:[[feed entries] count]];
+        for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
+            
+            GDataSpreadsheetCell *theCell = [cs cell];
+            
+            [fechasValidas addObject:theCell.inputString];
+        }
+
+        
+        [self.delegate respuestaFechasValidas:[NSArray arrayWithArray:fechasValidas] error:error];
+        
+        
+    } else {
+        
+        //Si no hay ninguna es la primera vez y devolvemos nil
+        [self.delegate respuestaFechasValidas:nil error:error];
+    }
+    
+}
+
+
 - (void)listadoAlumnosClase:(NSString *)clase paraFecha:(NSDate *)newFecha paraEstadosPorDefecto:(BOOL)estados;
 
 {

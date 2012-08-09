@@ -13,7 +13,9 @@
 
 @protocol GDocsHelperDelegate <NSObject> 
 
+@optional
 - (void)respuesta:(NSDictionary *) feed error: (NSError *) error;
+- (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error;
 @end
 
 
@@ -23,6 +25,9 @@
 -(void)createSpreadsheetService;
 -(void)credentialsWithUsr:(NSString *)newUsr andPwd:(NSString *)newPwd;
 -(void)listadoAsignaturas;
+-(void)fechasValidasPara:(NSString *)miClase;
+
+
 -(void)listadoAsignaturasTicket: (GDataServiceTicket *) ticket
                  finishedWithFeed: (GDataFeedSpreadsheet *) feed
                             error: (NSError *) error;
@@ -52,6 +57,7 @@
 
 @property (nonatomic, assign) BOOL estados;
 @property (nonatomic, strong) NSDate *fecha;
+
 
 
 

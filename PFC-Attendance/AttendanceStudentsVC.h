@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
+#import "PickerVC.h"
 
-@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate>
+@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *clase;

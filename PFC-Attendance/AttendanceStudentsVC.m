@@ -187,4 +187,21 @@
 }
 
 
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
+    if ([[segue identifier] isEqualToString:@"goToPicker"])
+    {
+        
+        //cuando el usuario selecciona una clase se le pasa el id de la misma al viewcontroller siguiente
+        
+        
+        PickerVC *pickerV = [segue destinationViewController];
+        pickerV.clase = self.clase;
+        
+        
+        
+    }
+}
 @end
