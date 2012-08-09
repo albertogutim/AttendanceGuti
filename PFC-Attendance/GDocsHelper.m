@@ -257,6 +257,65 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
 }
 
+//NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.
+//Devuelve -1 si es anterior, 1 si es posterior y 0 si es el mismo día
+-(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2 {
+    
+    NSDateFormatter *yearDF = [[NSDateFormatter alloc] init];
+    [yearDF setDateFormat:@"yyyy"];
+    
+    NSDateFormatter *monthDF = [[NSDateFormatter alloc] init];
+    [monthDF setDateFormat:@"mm"];
+    
+    NSDateFormatter *dayDF = [[NSDateFormatter alloc] init];
+    [dayDF setDateFormat:@"dd"];
+    
+    
+    int year1 = [[yearDF stringFromDate:date1] intValue];
+    int year2 = [[yearDF stringFromDate:date2] intValue];
+    
+    if (year1 < year2) {
+        
+        return -1;
+        
+    }
+    if (year1 > year2) {
+        
+        return 1;
+        
+    }
+    //Mismo año, comprobamos el mes
+    int month1 = [[monthDF stringFromDate:date1] intValue];
+    int month2 = [[monthDF stringFromDate:date2] intValue];
+    
+    if (month1 < month2) {
+        
+        return -1;
+        
+    }
+    if (month1 > month2) {
+        
+        return 1;
+        
+    }
+    //Mismo mes, comprobamos día
+    int day1 = [[dayDF stringFromDate:date1] intValue];
+    int day2 = [[dayDF stringFromDate:date2] intValue];
+    
+    if (day1 < day2) {
+        
+        return -1;
+        
+    }
+    if (day1 > day2) {
+        
+        return 1;
+        
+    }
+    return 0; //es el mismo día
+
+}
+
 
 @end
 
