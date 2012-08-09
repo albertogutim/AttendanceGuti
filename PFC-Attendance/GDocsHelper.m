@@ -17,6 +17,8 @@
 @synthesize mWorksheetFeed = _mWorksheetFeed;
 @synthesize mListSpreadsheetId = _mListSpreadsheetId;
 @synthesize mListWorksheetId = _mListWorksheetId;
+@synthesize mListCells = _mListCells;
+@synthesize estado = _estado;
 
 
 
@@ -169,6 +171,89 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     NSDictionary * listaWsIdDictionary = [NSDictionary dictionaryWithDictionary:listaWsId];
     self.mListWorksheetId = listaWsIdDictionary;
     [self.delegate respuesta: listaWsIdDictionary error:error];
+    
+}
+
+
+- (void)listadoAlumnosClase:(NSString *)clase estadoDefault:(BOOL)estado
+
+{
+    
+    self.estado = estado;
+    GDataEntryWorksheet *ws = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    NSURL *feedURL = [[ws cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMaximumColumn:1];
+    [q setMinimumRow:3];
+    [q setMaximumRow:5];
+    
+    //NSString *query = q.spreadsheetQuery;
+    
+    NSLog(@"lo que tiene la query %@",q.spreadsheetQuery);
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                     delegate:self
+            didFinishSelector:@selector(listadoAlumnosClaseTicket:finishedWithFeed:error:)];
+    
+    
+}
+
+- (void)listadoAlumnosClaseTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error {
+
+
+    self.mListCells = feed;
+    
+    /*GDataEntryBase *entry = [[self.mListCells entries] objectAtIndex:0];
+    
+    NSString *title = [[entry title] stringValue];
+
+
+   
+     
+    
+    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"celdas"
+                                                         message:[NSString stringWithFormat:@"tiene A1: %d", celdascolumna]
+                                                        delegate:self
+                                               cancelButtonTitle:@"Dismiss"
+                                               otherButtonTitles:nil];
+    
+    [alertView show];
+     */
+    
+   // [[self.mListCells entries] setMaximumRow:1]
+
+        
+    NSMutableArray *listaCellFeeds = [NSMutableArray arrayWithCapacity: [[self.mListCells entries] count]];
+    NSMutableArray *estados = [NSMutableArray arrayWithCapacity: [[self.mListCells entries] count]];
+
+    for (GDataEntrySpreadsheetCell *cs in [self.mListCells entries]) {
+        
+        GDataSpreadsheetCell *theCell = [cs cell];
+        
+        //if ((theCell.column == 1)&& (theCell.row > 2)) {
+            
+            [listaCellFeeds addObject:theCell.inputString];
+            
+            if(self.estado)
+                [estados addObject:[NSNumber numberWithInteger:1]];
+            else
+                [estados addObject:[NSNumber numberWithInteger:2]];
+        //}
+      
+        
+    }
+     
+    
+    NSMutableDictionary *listaCsStado = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithArray:estados] forKeys:[NSArray arrayWithArray:listaCellFeeds]];
+    
+    NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
+    self.mListWorksheetId = listaCellsStadoDictionary;
+    [self.delegate respuesta: listaCellsStadoDictionary error:error];
+    
     
 }
 

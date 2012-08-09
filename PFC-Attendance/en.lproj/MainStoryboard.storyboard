@@ -330,9 +330,6 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <connections>
-                                    <segue destination="gL0-ve-xDd" kind="push" id="Kcn-Up-jZa"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -351,6 +348,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="miTabla" destination="o7d-D8-jFq" id="vE7-k0-mmi"/>
+                        <segue destination="gL0-ve-xDd" kind="push" identifier="goToAsistenciaAlumnos" id="GFK-0i-SJU"/>
                     </connections>
                 </tableViewController>
             </objects>
@@ -359,7 +357,7 @@
         <scene sceneID="DqZ-QP-NdK">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ENb-fh-U0y" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="gL0-ve-xDd" sceneMemberID="viewController">
+                <viewController id="gL0-ve-xDd" customClass="AttendanceStudentsVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="be9-DP-Alf">
                         <rect key="frame" x="0.0" y="64" width="320" height="372"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -369,14 +367,14 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="alumnos" rowHeight="75" id="GL1-Oo-Gs7">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="alumnos" rowHeight="75" id="GL1-Oo-Gs7">
                                         <rect key="frame" x="0.0" y="46" width="320" height="77"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="267" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Alberto Gutiérrez Martínez de la Fuente de la ostia" lineBreakMode="wordWrap" numberOfLines="2" minimumFontSize="10" id="fIL-Gf-ISA">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="" lineBreakMode="wordWrap" numberOfLines="2" minimumFontSize="10" id="fIL-Gf-ISA">
                                                     <rect key="frame" x="14" y="4" width="176" height="66"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -394,6 +392,10 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="gL0-ve-xDd" id="RFn-Aa-yIT"/>
+                                    <outlet property="delegate" destination="gL0-ve-xDd" id="wPA-nO-feO"/>
+                                </connections>
                             </tableView>
                             <searchBar contentMode="redraw" id="GgV-Ak-JyN">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -433,6 +435,9 @@
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="compose" id="iX9-ix-2Ks"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="miTabla" destination="W2A-tF-XIu" id="REb-Gt-Qgc"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1253" y="-153"/>
@@ -826,44 +831,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <image name="check.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
     </resources>
-    <classes>
-        <class className="ClassListTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshData:"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="ConfigTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="action" name="guardarChanged:"/>
-                <relationship kind="action" name="masdeXausencias:"/>
-                <relationship kind="action" name="masdeXretrasos:"/>
-                <relationship kind="action" name="presentesChanged:"/>
-                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="SubjectsListVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshData:"/>
-                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

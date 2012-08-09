@@ -32,11 +32,22 @@
                      finishedWithFeed:(GDataFeedWorksheet *)feed
                                 error:(NSError *)error;
 
+- (void)listadoAlumnosClase:(NSString *)clase estadoDefault: (BOOL) estado;
+- (void)listadoAlumnosClaseTicket:(GDataServiceTicket *)ticket
+                 finishedWithFeed:(GDataFeedBase *)feed
+                            error:(NSError *)error;
+
 
 @property(nonatomic,strong) GDataServiceGoogleSpreadsheet *miService;
 @property (nonatomic, strong) GDataFeedSpreadsheet *mSpreadsheetFeed;
 @property (nonatomic, strong) GDataFeedWorksheet *mWorksheetFeed;
+@property (nonatomic, strong) GDataFeedBase *mListCells;
+
 @property (nonatomic, weak) id <GDocsHelperDelegate> delegate;
+
 @property (nonatomic, strong) NSDictionary *mListSpreadsheetId;
 @property (nonatomic, strong) NSDictionary *mListWorksheetId;
+@property (nonatomic, assign) BOOL estado;
+
+
 @end

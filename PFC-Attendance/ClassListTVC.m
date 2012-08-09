@@ -15,6 +15,7 @@
 @synthesize miTabla = _miTabla;
 @synthesize asignatura = _asignatura;
 @synthesize miListaClases = _miListaClases;
+@synthesize clase = _clase;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -160,13 +161,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    
+    
+     self.clase= [self.miListaClases.allKeys objectAtIndex:indexPath.row];
+    [self performSegueWithIdentifier:@"goToAsistenciaAlumnos" sender:self];
 }
 
 
@@ -220,4 +218,23 @@
     
     [self connectIntent];
 }
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
+    if ([[segue identifier] isEqualToString:@"goToAsistenciaAlumnos"])
+    {
+        
+        //cuando el usuario selecciona una clase se le pasa el id de la misma al viewcontroller siguiente
+        
+        
+        AttendanceStudentsVC *attendanceStudentView = [segue destinationViewController];
+        attendanceStudentView.clase = self.clase;
+        
+        
+        
+    }
+}
+
 @end
