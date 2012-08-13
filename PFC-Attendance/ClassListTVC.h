@@ -19,4 +19,5 @@
 @property (strong, nonatomic) NSString *asignatura;
 @property (strong, nonatomic) NSString *clase;
 @property (strong, nonatomic) NSDictionary *miListaClases;
+
 @end

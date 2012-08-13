@@ -22,6 +22,11 @@
 @synthesize miClaseWs = _miClaseWs;
 @synthesize estados = _estados;
 @synthesize fecha = _fecha;
+@synthesize clase = _clase;
+@synthesize encontrada = _encontrada;
+@synthesize columna = _columna;
+@synthesize alumnos = _alumnos;
+
 
 
 
@@ -236,6 +241,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     //guardamos fecha y estados para poder acceder desde el ticket.
     self.estados = estados;
     self.fecha = newFecha;
+    self.clase = clase;
     
     //Primero buscamos la fecha para saber si existe
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
@@ -263,26 +269,81 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     if ([[feed entries] count]) {
         //TODO: Buscar fecha
         self.mListFechas = feed;
-        
+        self.encontrada=NO;
+        NSInteger col = 1;
+        for (GDataEntrySpreadsheetCell *fech in [self.mListFechas entries]) {
+            NSDateFormatter *df = [NSDateFormatter new];
+            [df setTimeStyle:NSDateFormatterNoStyle];
+            [df setDateStyle:NSDateFormatterShortStyle];
+             GDataSpreadsheetCell *theCell = [fech cell];
+            NSDate *nuevaFecha = [df dateFromString:theCell.inputString];
+            if([nuevaFecha isEqualToDate:self.fecha])
+            //if([self compareDay: nuevaFecha withDay:self.fecha] == 0)
+            { NSLog(@"Se compara bien la fecha");
+            //encontro la fecha seleccionada en la spreadsheet. Hay que devolver la lista de alumnos y sus estados
+                self.encontrada = YES;
+                self.columna = 3+col;
+                
+                self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+                
+                NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+                GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+                [q setMinimumColumn:1];
+                [q setMaximumColumn:1];
+                [q setMinimumRow:1];
+                
+                
+                [self.miService fetchFeedWithQuery:q
+                                          delegate:self
+                                 didFinishSelector:@selector(listadoAlumnosConEstadoClaseTicket:finishedWithFeed:error:)];
+                
+            }
+            col++;
+        }
+        // si despues de la búsqueda no encontró la fecha significa q es el día de hoy. hay que crear la columna con la fecha y los estados por defecto.
+        if (!self.encontrada)
+        {
+            NSLog(@"no encontrada es el dia de hoy");
+
+            NSDateFormatter *df = [NSDateFormatter new];
+            [df setTimeStyle:NSDateFormatterNoStyle];
+            [df setDateStyle:NSDateFormatterShortStyle];
+            NSLocale *theLocale = [NSLocale currentLocale];
+            [df setLocale:theLocale];
+            
+            
+            NSDate *d =[NSDate date];
+            NSString *dateStr = [df stringFromDate:d];
+            
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:[[feed entries] count]+4 inputString:dateStr numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            
+            NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+            
+            [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(columnaConFechaDeHoyCreada:finishedWithFeed:error:)];
+        }
         
     } else { //Es la primera vez, y no existe ninguna fecha. Añadir fecha en el header
         
         //Creamos la fecha en español para el día de hoy
         //TODO: Generalizarlo para cualquier fecha
+        self.encontrada=NO;
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         NSLocale *theLocale = [NSLocale currentLocale];
         [df setLocale:theLocale];
         
-        NSString *dateStr = [df stringFromDate:[NSDate date]];
+        
+        NSDate *d =[NSDate date];
+        NSString *dateStr = [df stringFromDate:d];
        
         GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:4 inputString:dateStr numericValue:nil resultString:nil];
         GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
         
         NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
         
-        [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(consultaFechasTicketCrearPrimeraFechaRespuesta:finishedWithFeed:error:)];
+        [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(columnaConFechaDeHoyCreada:finishedWithFeed:error:)];
         
         
     }
@@ -290,22 +351,38 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 
 
 
-- (void)consultaFechasTicketCrearPrimeraFechaRespuesta:(GDataServiceTicket *)ticket
+- (void)columnaConFechaDeHoyCreada:(GDataServiceTicket *)ticket
                              finishedWithFeed:(GDataFeedBase *)feed
                                         error:(NSError *)error {
     
+    
+    //aqui llegamos despues de crear una columna nueva con la fecha de hoy. O bien porque es la primera vez que usamos la aplicacion y no hay ninguna fecha o bien porque queremos pasar asistencia para el dia de hoy y ya habia mas fechas. Tenemos que acceder a la lista de alumnos y asignarles el estado por defecto porque no estaba creada esta fecha.
     if (error) {
         //TODO: Avisar de fallo al crear la celda
     } else {
         NSLog(@"Se ha creado con éxito");
+        
+        //query para buscar los alumnos
+        self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+        
+        NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+        GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+        [q setMinimumColumn:1];
+        [q setMaximumColumn:1];
+        [q setMinimumRow:1];
+   
+        
+        [self.miService fetchFeedWithQuery:q
+                                  delegate:self
+                         didFinishSelector:@selector(listadoAlumnosConEstadoClaseTicket:finishedWithFeed:error:)];
+        
 
     }
         
 }
 
 
-
-- (void)listadoAlumnosClaseTicket:(GDataServiceTicket *)ticket
+- (void)listadoAlumnosConEstadoClaseTicket:(GDataServiceTicket *)ticket
                      finishedWithFeed:(GDataFeedBase *)feed
                                 error:(NSError *)error {
 
@@ -322,24 +399,74 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             
             [listaCellFeeds addObject:theCell.inputString];
         
-            //TODO: controlar si hay que leer los estados porque existe la fecha o hay que cogerlos de los predeterminados.
-            //Controlar estado predeterminado alumnos presentes
-            if(self.estados)
-                [estados addObject:[NSNumber numberWithInteger:1]];
-            else
-                [estados addObject:[NSNumber numberWithInteger:2]];
-
+            if(!self.encontrada){
+                if(self.estados)
+                    [estados addObject:[NSNumber numberWithInteger:1]];
+                else
+                    [estados addObject:[NSNumber numberWithInteger:2]];
+            
+            }
     }
-     
     
+    if(!self.encontrada){
     NSMutableDictionary *listaCsStado = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithArray:estados] forKeys:[NSArray arrayWithArray:listaCellFeeds]];
     
     NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
     self.mListWorksheetId = listaCellsStadoDictionary;
     [self.delegate respuesta: listaCellsStadoDictionary error:error];
+    }
+    else{
+        self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
+        [self listadoEstadosAlumnos];
+    }
+    
+   
+}
+     
+-(void) listadoEstadosAlumnos
+{
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:self.columna];
+    [q setMaximumColumn:self.columna];
+    [q setMinimumRow:1];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(listadoEstadosAlumnosTicket:finishedWithFeed:error:)];
     
     
 }
+    
+   
+
+- (void)listadoEstadosAlumnosTicket:(GDataServiceTicket *)ticket
+                          finishedWithFeed:(GDataFeedBase *)feed
+                                     error:(NSError *)error {
+
+
+    NSMutableArray *estados = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
+    
+    for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
+        
+        GDataSpreadsheetCell *theCell = [cs cell];
+        
+        [estados addObject:theCell.inputString];
+    }
+
+    
+    NSMutableDictionary *listaCsStado = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithArray:estados] forKeys:self.alumnos];
+    
+    NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
+    self.mListWorksheetId = listaCellsStadoDictionary;
+    [self.delegate respuesta: listaCellsStadoDictionary error:error];
+
+}
+
+
 
 //NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.
 //Devuelve -1 si es anterior, 1 si es posterior y 0 si es el mismo día

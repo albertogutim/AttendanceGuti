@@ -25,9 +25,6 @@
 -(void)createSpreadsheetService;
 -(void)credentialsWithUsr:(NSString *)newUsr andPwd:(NSString *)newPwd;
 -(void)listadoAsignaturas;
--(void)fechasValidasPara:(NSString *)miClase;
-
-
 -(void)listadoAsignaturasTicket: (GDataServiceTicket *) ticket
                  finishedWithFeed: (GDataFeedSpreadsheet *) feed
                             error: (NSError *) error;
@@ -37,10 +34,24 @@
                      finishedWithFeed:(GDataFeedWorksheet *)feed
                                 error:(NSError *)error;
 
+-(void)fechasValidasPara:(NSString *)miClase;
+- (void)consultaFechasValidasTicket:(GDataServiceTicket *)ticket
+                   finishedWithFeed:(GDataFeedBase *)feed
+                              error:(NSError *)error;
+
 - (void)listadoAlumnosClase:(NSString *)clase paraFecha:(NSDate *)newFecha paraEstadosPorDefecto:(BOOL) estados;
-- (void)listadoAlumnosClaseTicket:(GDataServiceTicket *)ticket
-                 finishedWithFeed:(GDataFeedBase *)feed
-                            error:(NSError *)error;
+- (void)consultaFechasTicket:
+    (GDataServiceTicket *)ticket
+            finishedWithFeed:(GDataFeedBase *)feed
+                       error:(NSError *)error;
+- (void)columnaConFechaDeHoyCreada:(GDataServiceTicket *)ticket
+                  finishedWithFeed:(GDataFeedBase *)feed
+                             error:(NSError *)errror;
+
+- (void)listadoAlumnosConEstadoClaseTicket:(GDataServiceTicket *)ticket
+                          finishedWithFeed:(GDataFeedBase *)feed
+                                     error:(NSError *)error;
+-(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
 
 
 @property(nonatomic,strong) GDataServiceGoogleSpreadsheet *miService;
@@ -56,8 +67,12 @@
 @property (nonatomic, strong) NSDictionary *mListWorksheetId;
 
 @property (nonatomic, assign) BOOL estados;
-@property (nonatomic, strong) NSDate *fecha;
+@property (nonatomic, assign) BOOL encontrada;
+@property (nonatomic, assign) NSInteger columna;
 
+@property (nonatomic, strong) NSDate *fecha;
+@property (nonatomic, strong) NSString *clase;
+@property (nonatomic, strong) NSArray *alumnos;
 
 
 

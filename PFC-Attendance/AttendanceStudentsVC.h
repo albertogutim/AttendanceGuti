@@ -10,10 +10,11 @@
 #import "GDocsHelper.h"
 #import "PickerVC.h"
 
-@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate>
+@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *clase;
 @property (strong, nonatomic) NSDictionary *miListaAlumnos;
+@property (nonatomic, strong) NSDate *fecha;
 
 @end

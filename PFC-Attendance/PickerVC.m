@@ -8,11 +8,13 @@
 
 #import "PickerVC.h"
 #import "GDocsHelper.h"
+#import "ConfigHelper.h"
 
 @implementation PickerVC
 @synthesize fechas = _fechas;
 @synthesize miPicker = _miPicker;
 @synthesize clase = _clase;
+@synthesize fecha = _fecha;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -93,9 +95,29 @@
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     
+    NSString *fechCad = [self.fechas objectAtIndex:row];
+    
+    NSDateFormatter *df = [NSDateFormatter new];
+    [df setTimeStyle:NSDateFormatterNoStyle];
+    [df setDateStyle:NSDateFormatterFullStyle];
+    NSDate *nuevaFecha = [df dateFromString:fechCad];
+
+    
+    self.fecha = nuevaFecha;
+    
+    /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"Picker"
+                                                         message:[NSString stringWithFormat:@"fecha: %@", nuevaFecha]
+                                                        delegate:self
+                                               cancelButtonTitle:@"Dismiss"
+                                               otherButtonTitles:nil];
+    
+    [alertView show];
+     */
+     
     
     
 }
+
 
 #pragma mark My methods
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error {
@@ -108,6 +130,7 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         NSDate *nuevaFecha = [df dateFromString:fechCad];
+        
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
         NSLocale *theLocale = [NSLocale currentLocale];
@@ -120,4 +143,23 @@
     [self.miPicker reloadAllComponents];
 }
 
+
+//el usuario ha elegido fecha y quiere volver a la pantalla anterior
+- (IBAction)aceptarFecha:(id)sender {
+    
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    
+
+    [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
+    //[self.delegate devolverFecha:self didSelectDate:self.fecha];
+    
+    
+}
+
+//el usuario no quiere elegir fecha y quiere volver a la pantalla anterior
+- (IBAction)cancelarFecha:(id)sender {
+    
+    [self.delegate devolverFecha:self didSelectDate:nil];
+}
 @end

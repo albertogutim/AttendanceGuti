@@ -15,6 +15,7 @@
 @synthesize miTabla = _miTabla;
 @synthesize clase = _clase;
 @synthesize miListaAlumnos = _miListaAlumnos;
+@synthesize fecha = _fecha;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,11 +49,12 @@
 {
     [super viewDidLoad];
     
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-     ConfigHelper *configH = [ConfigHelper sharedInstance];
+    //GDocsHelper *midh = [GDocsHelper sharedInstance];
+    //ConfigHelper *configH = [ConfigHelper sharedInstance];
     //TODO: Quitar esto
-    [midh listadoAlumnosClase:self.clase paraFecha: nil paraEstadosPorDefecto: configH.presentesDefecto];
-    
+    //NSDate *d = [NSDate date];
+    //[midh listadoAlumnosClase:self.clase paraFecha:d paraEstadosPorDefecto: configH.presentesDefecto];
+   
 }
 
 
@@ -78,6 +80,7 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
+     
    
           
     [super viewWillAppear:animated];
@@ -199,9 +202,15 @@
         
         PickerVC *pickerV = [segue destinationViewController];
         pickerV.clase = self.clase;
+        pickerV.delegate = self;
         
         
         
     }
+}
+
+-(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date
+{
+    self.fecha = date;
 }
 @end

@@ -17,6 +17,7 @@
 @synthesize miListaClases = _miListaClases;
 @synthesize clase = _clase;
 
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -231,10 +232,14 @@
         
         AttendanceStudentsVC *attendanceStudentView = [segue destinationViewController];
         attendanceStudentView.clase = self.clase;
+    
         
         
         
     }
 }
+
+
+
 
 @end
