@@ -15,6 +15,7 @@
 @synthesize miPicker = _miPicker;
 @synthesize clase = _clase;
 @synthesize fecha = _fecha;
+@synthesize today = _today;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -68,6 +69,7 @@
     // e.g. self.myOutlet = nil;
 }
 
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -97,6 +99,11 @@
     
     NSString *fechCad = [self.fechas objectAtIndex:row];
     
+    if([fechCad isEqualToString:NSLocalizedString(@"TODAY", nil)])
+        self.fecha = self.today;
+    else
+    {
+    
     NSDateFormatter *df = [NSDateFormatter new];
     [df setTimeStyle:NSDateFormatterNoStyle];
     [df setDateStyle:NSDateFormatterFullStyle];
@@ -104,6 +111,7 @@
 
     
     self.fecha = nuevaFecha;
+    }
     
     /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"Picker"
                                                          message:[NSString stringWithFormat:@"fecha: %@", nuevaFecha]
@@ -123,6 +131,21 @@
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error {
     //TODO: Controlar error
     NSMutableArray *fechaLong = [NSMutableArray arrayWithCapacity:[fechas count]];
+    BOOL encontradoHoy=NO;
+    
+    NSDateFormatter *dff = [NSDateFormatter new];
+    [dff setTimeStyle:NSDateFormatterNoStyle];
+    [dff setDateStyle:NSDateFormatterShortStyle];
+    NSLocale *theLocalee = [NSLocale currentLocale];
+    [dff setLocale:theLocalee];
+    
+    
+    NSDate *today =[NSDate date];
+    NSString *todayStr = [dff stringFromDate:today];
+    [dff setTimeStyle:NSDateFormatterNoStyle];
+    [dff setDateStyle:NSDateFormatterShortStyle];
+    NSDate *todayOk = [dff dateFromString:todayStr];
+    self.today = todayOk;
    
     for (NSString *fechCad in fechas) {
         
@@ -130,6 +153,10 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         NSDate *nuevaFecha = [df dateFromString:fechCad];
+        
+        //si encuentra la fecha de hoy
+        if([todayOk isEqualToDate:nuevaFecha])
+            encontradoHoy=YES;
         
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
@@ -139,6 +166,9 @@
         [fechaLong addObject:dateStr];
         
     }
+    //si no encontro la fecha de hoy en el spreadsheet hay que añadirla al picker para que pueda seleccionarla y pasar lista.
+    if(!encontradoHoy)
+        [fechaLong addObject:NSLocalizedString(@"TODAY", nil)];
     self.fechas = fechaLong;
     [self.miPicker reloadAllComponents];
 }
@@ -147,12 +177,7 @@
 //el usuario ha elegido fecha y quiere volver a la pantalla anterior
 - (IBAction)aceptarFecha:(id)sender {
     
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    ConfigHelper *configH = [ConfigHelper sharedInstance];
-    
-
-    [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
-    //[self.delegate devolverFecha:self didSelectDate:self.fecha];
+    [self.delegate devolverFecha:self didSelectDate:self.fecha];
     
     
 }

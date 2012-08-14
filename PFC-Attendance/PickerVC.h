@@ -28,6 +28,7 @@
 @property (nonatomic,strong) NSString *clase;
 @property (nonatomic,strong) NSArray *fechas;
 @property (nonatomic, strong) NSDate *fecha;
+@property (nonatomic, strong) NSDate *today;
 
 @property (nonatomic, weak) id <PickerVCDelegate> delegate;
 

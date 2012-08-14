@@ -12,4 +12,5 @@
 "BLANK_ERROR"="Empty fields error";
 "BLANK_MSG"="You must fill both credential fields";
 "CLASS_TITLE"="Classes";
-"CHOOSE_DATE"="Choose date"; 
+"CHOOSE_DATE"="Choose date";
+"TODAY"="TODAY";

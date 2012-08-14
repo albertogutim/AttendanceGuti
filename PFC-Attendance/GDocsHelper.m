@@ -279,7 +279,8 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             NSDate *nuevaFecha = [df dateFromString:theCell.inputString];
             if([nuevaFecha isEqualToDate:self.fecha])
             //if([self compareDay: nuevaFecha withDay:self.fecha] == 0)
-            { NSLog(@"Se compara bien la fecha");
+            {
+                //NSLog(@"Se compara bien la fecha");
             //encontro la fecha seleccionada en la spreadsheet. Hay que devolver la lista de alumnos y sus estados
                 self.encontrada = YES;
                 self.columna = 3+col;
@@ -290,7 +291,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
                 [q setMinimumColumn:1];
                 [q setMaximumColumn:1];
-                [q setMinimumRow:1];
+                [q setMinimumRow:3];
                 
                 
                 [self.miService fetchFeedWithQuery:q
@@ -303,7 +304,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         // si despues de la búsqueda no encontró la fecha significa q es el día de hoy. hay que crear la columna con la fecha y los estados por defecto.
         if (!self.encontrada)
         {
-            NSLog(@"no encontrada es el dia de hoy");
+           // NSLog(@"no encontrada es el dia de hoy");
 
             NSDateFormatter *df = [NSDateFormatter new];
             [df setTimeStyle:NSDateFormatterNoStyle];
@@ -360,7 +361,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     if (error) {
         //TODO: Avisar de fallo al crear la celda
     } else {
-        NSLog(@"Se ha creado con éxito");
+        //NSLog(@"Se ha creado con éxito");
         
         //query para buscar los alumnos
         self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
@@ -369,7 +370,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
         [q setMinimumColumn:1];
         [q setMaximumColumn:1];
-        [q setMinimumRow:1];
+        [q setMinimumRow:3];
    
         
         [self.miService fetchFeedWithQuery:q
@@ -431,7 +432,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
     [q setMinimumColumn:self.columna];
     [q setMaximumColumn:self.columna];
-    [q setMinimumRow:1];
+    [q setMinimumRow:3];
     
     
     [self.miService fetchFeedWithQuery:q

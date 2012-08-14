@@ -49,12 +49,6 @@
 {
     [super viewDidLoad];
     
-    //GDocsHelper *midh = [GDocsHelper sharedInstance];
-    //ConfigHelper *configH = [ConfigHelper sharedInstance];
-    //TODO: Quitar esto
-    //NSDate *d = [NSDate date];
-    //[midh listadoAlumnosClase:self.clase paraFecha:d paraEstadosPorDefecto: configH.presentesDefecto];
-   
 }
 
 
@@ -187,6 +181,8 @@
 {
     self.miListaAlumnos = feed;
     [self.miTabla reloadData];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
 
@@ -212,5 +208,18 @@
 -(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date
 {
     self.fecha = date;
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    midh.delegate = self;
+    
+    //comprobamos que el usuario realmente seleccionó una fecha y le dió a aceptar y no a cancelar sin seleccionar nada.
+    if(date!=nil)
+    {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
+    }
 }
 @end
