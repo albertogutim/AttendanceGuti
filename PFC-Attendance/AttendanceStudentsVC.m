@@ -12,10 +12,12 @@
 
 @implementation AttendanceStudentsVC
 
+@synthesize attendanceButton = _attendanceButton;
 @synthesize miTabla = _miTabla;
 @synthesize clase = _clase;
 @synthesize miListaAlumnos = _miListaAlumnos;
 @synthesize fecha = _fecha;
+@synthesize columna = _columna;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,12 +50,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.attendanceButton setEnabled:NO];
     
 }
 
 
 - (void)viewDidUnload
 {
+    [self setAttendanceButton:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -74,9 +78,18 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
+    
+    
+    /*NSArray *alum = [[NSArray alloc] initWithObjects:@"Ana Gutierrez Esguevillas", @"Raquel Gutierrez Esguevillas", @"Aday Perera Rodriguez", @"Raul Suarez Rodriguez", @"Berta Galvan", @"Ana Rios Cabrera", @"Isabel Mayor Guerra", nil];
+    
+    NSArray *est = [[NSArray alloc] initWithObjects:@"3", @"3",
+                     @"2", @"2", @"1", @"1", @"3", nil];
+      
+    NSDictionary *prueba = [NSDictionary dictionaryWithObjects:est forKeys:alum];
      
+    [midh updateAlumnosConEstados:self.clase paraUpdate:prueba paraColumna:5];
    
-          
+*/
     [super viewWillAppear:animated];
 }
 
@@ -176,13 +189,18 @@
 
 #pragma mark - My Methods
 
-- (void)respuesta:(NSDictionary *) feed error: (NSError *) error
+- (void)respuestaConColumna:(NSDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error
 
 {
     self.miListaAlumnos = feed;
+    self.columna = columna; 
     [self.miTabla reloadData];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    //animar boton pasar asistencia
+    [self.attendanceButton setEnabled:YES];
+    
+    
 }
 
 
@@ -208,6 +226,7 @@
 -(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date
 {
     self.fecha = date;
+    [self.attendanceButton setEnabled:NO];
     [self.navigationController dismissModalViewControllerAnimated:YES];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
@@ -221,5 +240,17 @@
         ConfigHelper *configH = [ConfigHelper sharedInstance];
         [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
     }
+}
+- (IBAction)attendance:(id)sender {
+    
+    //TODO: habrá que controlar si le ha dado al boton para pasar asistencia o para hacer el update.
+    //si es la primera vez se habilita tocar las celdas. si es para el update hay que deshabilitarlas otra vez.
+    
+    //habilitar tocar celdas
+    [self.miTabla setUserInteractionEnabled:YES];
+    
+    //cambiar apariencia del boton para que cuando se termine de pasar asistencia se pulse de nuevo y se vuelque la información.
+    self.attendanceButton.title = @"OK";
+    
 }
 @end

@@ -455,10 +455,15 @@
                     <navigationItem key="navigationItem" id="CK8-EM-Ggx">
                         <nil key="title"/>
                         <barButtonItem key="backBarButtonItem" title="Back" id="bX8-7E-dN0"/>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="compose" id="iX9-ix-2Ks"/>
+                        <barButtonItem key="rightBarButtonItem" tag="4" style="done" systemItem="compose" id="iX9-ix-2Ks">
+                            <connections>
+                                <action selector="attendance:" destination="gL0-ve-xDd" id="ACf-J6-YL6"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="attendanceButton" destination="iX9-ix-2Ks" id="rKV-JS-JIo"/>
                         <outlet property="miTabla" destination="W2A-tF-XIu" id="REb-Gt-Qgc"/>
                     </connections>
                 </viewController>
@@ -852,58 +857,6 @@
         <image name="check.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
     </resources>
-    <classes>
-        <class className="AttendanceStudentsVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttendanceStudentsVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="ClassListTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshData:"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="ConfigTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="action" name="guardarChanged:"/>
-                <relationship kind="action" name="masdeXausencias:"/>
-                <relationship kind="action" name="masdeXretrasos:"/>
-                <relationship kind="action" name="presentesChanged:"/>
-                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="PickerVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PickerVC.h"/>
-            <relationships>
-                <relationship kind="action" name="aceptarFecha:"/>
-                <relationship kind="action" name="cancelarFecha:"/>
-                <relationship kind="outlet" name="miPicker" candidateClass="UIPickerView"/>
-            </relationships>
-        </class>
-        <class className="SubjectsListVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshData:"/>
-                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -14,7 +14,8 @@
 @protocol GDocsHelperDelegate <NSObject> 
 
 @optional
-- (void)respuesta:(NSDictionary *) feed error: (NSError *) error;
+- (void)respuesta:(NSDictionary *)feed error:(NSError *)error;
+- (void)respuestaConColumna:(NSDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error;
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error;
 @end
 
@@ -51,6 +52,30 @@
 - (void)listadoAlumnosConEstadoClaseTicket:(GDataServiceTicket *)ticket
                           finishedWithFeed:(GDataFeedBase *)feed
                                      error:(NSError *)error;
+
+- (void)updateAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col;
+- (void)updateAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error;
+- (void)updateCellsTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error;
+- (void)updatedCellsTicket:(GDataServiceTicket *)ticket
+          finishedWithFeed:(GDataFeedBase *)feed
+                     error:(NSError *)error;
+- (void)insertAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col;
+- (void)insertAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error;
+- (void)insertCellsTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error;
+
+- (void)insertedCellsTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error;
+
+
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
 
 
@@ -73,7 +98,9 @@
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, strong) NSString *clase;
 @property (nonatomic, strong) NSArray *alumnos;
-
+@property (nonatomic, strong) NSDictionary *update;
+@property (nonatomic, strong) NSString *eTag;
+@property (nonatomic, strong) NSArray *updatedEntries;
 
 
 @end

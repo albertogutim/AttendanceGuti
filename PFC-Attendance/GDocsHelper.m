@@ -26,6 +26,9 @@
 @synthesize encontrada = _encontrada;
 @synthesize columna = _columna;
 @synthesize alumnos = _alumnos;
+@synthesize update =_update;
+@synthesize eTag = _eTag;
+@synthesize updatedEntries = _updatedEntries;
 
 
 
@@ -315,6 +318,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             
             NSDate *d =[NSDate date];
             NSString *dateStr = [df stringFromDate:d];
+            self.columna = [[feed entries] count]+4;
             
             GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:[[feed entries] count]+4 inputString:dateStr numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
@@ -335,6 +339,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         NSLocale *theLocale = [NSLocale currentLocale];
         [df setLocale:theLocale];
         
+        self.columna = 4;
         
         NSDate *d =[NSDate date];
         NSString *dateStr = [df stringFromDate:d];
@@ -414,7 +419,11 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
     self.mListWorksheetId = listaCellsStadoDictionary;
-    [self.delegate respuesta: listaCellsStadoDictionary error:error];
+    self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
+        //Guardar en la spreadsheet los estados.
+    [self insertAlumnosConEstados:self.clase paraUpdate:listaCellsStadoDictionary paraColumna:self.columna];
+        
+    [self.delegate respuestaConColumna: listaCellsStadoDictionary enColumna: self.columna error:error];
     }
     else{
         self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
@@ -463,8 +472,165 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
     self.mListWorksheetId = listaCellsStadoDictionary;
-    [self.delegate respuesta: listaCellsStadoDictionary error:error];
+    [self.delegate respuestaConColumna: listaCellsStadoDictionary enColumna: self.columna error:error];
 
+}
+
+- (void)updateAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col
+{
+    self.update = listaAlumnosEstados;
+    self.columna = col;
+    self.clase = clase;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:col];
+    [q setMaximumColumn:col];
+    [q setMinimumRow:3];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(updateAlumnosConEstadosTicket:finishedWithFeed:error:)];
+    
+}
+
+- (void)updateAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
+                   finishedWithFeed:(GDataFeedBase *)feed
+                              error:(NSError *)error
+
+{
+
+    NSInteger i;
+    for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
+        
+    //GDataEntrySpreadsheetCell *newSC = [[feed entries] objectAtIndex:0];
+    [[cs cell] setInputString:[self.update.allValues objectAtIndex:i]];
+        i++;
+        
+        
+    }
+    NSString *eTag = feed.ETag;
+    self.eTag = eTag;
+        
+    NSArray *updatedEntries = [feed entries];
+    self.updatedEntries = updatedEntries;
+       
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    [self.miService fetchFeedWithURL:feedURL
+                            delegate:self
+                   didFinishSelector:@selector(updateCellsTicket:finishedWithFeed:error:)];
+    
+   
+}
+    
+   
+
+- (void)updateCellsTicket:(GDataServiceTicket *)ticket
+finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error{
+    
+    
+    NSURL *batchUrl = [[feed batchLink] URL];
+    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
+    
+    [batchFeed setEntriesWithEntries:self.updatedEntries];
+    
+    GDataBatchOperation *op;
+    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationUpdate];
+    [batchFeed setBatchOperation:op];
+    [batchFeed setETag:self.eTag];
+    
+ [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(updatedCellsTicket:finishedWithFeed:error:)];
+}
+    
+- (void)updatedCellsTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error
+{
+    NSLog(@"termino el update");
+    
+}
+
+
+- (void)insertAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col
+
+{
+
+    self.update = listaAlumnosEstados;
+    self.columna = col;
+    self.clase = clase;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:col];
+    [q setMaximumColumn:col];
+    [q setMinimumRow:3];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(insertAlumnosConEstadosTicket:finishedWithFeed:error:)];
+}
+
+- (void)insertAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
+          finishedWithFeed:(GDataFeedBase *)feed
+                     error:(NSError *)error
+{
+    
+    NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
+    for (int i=0; i<[self.alumnos count]; i++) {
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+3 column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+        NSString *batchID = [NSString stringWithFormat:@"batchID_%u", 1];
+        [newESC setBatchIDWithString:batchID];
+            [entries addObject:newESC];
+        }
+    
+    
+        
+    //NSString *eTag = feed.ETag;
+    //self.eTag = eTag;
+    
+    NSArray *nuevasEntries = [NSArray arrayWithArray:entries];
+    self.updatedEntries = nuevasEntries;
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    [self.miService fetchFeedWithURL:feedURL
+                            delegate:self
+                   didFinishSelector:@selector(insertCellsTicket:finishedWithFeed:error:)];
+
+}
+
+- (void)insertCellsTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error{
+    
+    
+    NSURL *batchUrl = [[feed batchLink] URL];
+    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
+    
+    [batchFeed setEntriesWithEntries:self.updatedEntries];
+    
+    GDataBatchOperation *op;
+    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationInsert];
+    [batchFeed setBatchOperation:op];
+    //[batchFeed setETag:self.eTag];
+    [batchFeed setIdentifier:@"batchID_1"];
+    
+    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+}
+
+- (void)insertedCellsTicket:(GDataServiceTicket *)ticket
+          finishedWithFeed:(GDataFeedBase *)feed
+                     error:(NSError *)error
+{
+    NSLog(@"termino el insert");
+    
 }
 
 
