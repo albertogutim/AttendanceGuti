@@ -117,7 +117,7 @@
                                         <rect key="frame" x="0.0" y="91" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="42G-eG-l70">
@@ -145,7 +145,7 @@
                                         <rect key="frame" x="0.0" y="135" width="320" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="41"/>
+                                            <rect key="frame" x="10" y="0.0" width="300" height="41"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Guardar" lineBreakMode="tailTruncation" minimumFontSize="10" id="0ir-Y1-EZx">
@@ -201,7 +201,7 @@
                                         <rect key="frame" x="0.0" y="281" width="320" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="61"/>
+                                            <rect key="frame" x="10" y="0.0" width="300" height="61"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Resaltar más de" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="ynn-g9-g03">
@@ -241,7 +241,7 @@
                                         <rect key="frame" x="0.0" y="343" width="320" height="68"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="66"/>
+                                            <rect key="frame" x="10" y="0.0" width="300" height="66"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stepper opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="20" id="gcd-9t-e0Z">
@@ -371,7 +371,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="alumnos" rowHeight="75" id="GL1-Oo-Gs7">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="alumnos" rowHeight="75" id="GL1-Oo-Gs7">
                                         <rect key="frame" x="0.0" y="46" width="320" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -457,7 +457,7 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="bX8-7E-dN0"/>
                         <barButtonItem key="rightBarButtonItem" tag="4" style="done" systemItem="compose" id="iX9-ix-2Ks">
                             <connections>
-                                <action selector="attendance:" destination="gL0-ve-xDd" id="ACf-J6-YL6"/>
+                                <action selector="attendance:" destination="gL0-ve-xDd" id="1Wb-30-mxf"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -857,6 +857,59 @@
         <image name="check.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
     </resources>
+    <classes>
+        <class className="AttendanceStudentsVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttendanceStudentsVC.h"/>
+            <relationships>
+                <relationship kind="outlet" name="attendanceButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ClassListTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ConfigTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="goBack:"/>
+                <relationship kind="action" name="guardarChanged:"/>
+                <relationship kind="action" name="masdeXausencias:"/>
+                <relationship kind="action" name="masdeXretrasos:"/>
+                <relationship kind="action" name="presentesChanged:"/>
+                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="PickerVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PickerVC.h"/>
+            <relationships>
+                <relationship kind="action" name="aceptarFecha:"/>
+                <relationship kind="action" name="cancelarFecha:"/>
+                <relationship kind="outlet" name="miPicker" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="SubjectsListVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

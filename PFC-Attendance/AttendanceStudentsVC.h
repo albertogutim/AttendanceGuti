@@ -11,12 +11,15 @@
 #import "PickerVC.h"
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate>
+
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
 
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *clase;
-@property (strong, nonatomic) NSDictionary *miListaAlumnos;
+@property (strong, nonatomic) NSMutableDictionary *miListaAlumnos;
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, assign) NSInteger columna;
+
+
 
 @end

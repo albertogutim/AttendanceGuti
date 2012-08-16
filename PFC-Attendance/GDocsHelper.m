@@ -423,7 +423,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         //Guardar en la spreadsheet los estados.
     [self insertAlumnosConEstados:self.clase paraUpdate:listaCellsStadoDictionary paraColumna:self.columna];
         
-    [self.delegate respuestaConColumna: listaCellsStadoDictionary enColumna: self.columna error:error];
+    [self.delegate respuestaConColumna: listaCsStado enColumna: self.columna error:error];
     }
     else{
         self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
@@ -472,7 +472,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
     self.mListWorksheetId = listaCellsStadoDictionary;
-    [self.delegate respuestaConColumna: listaCellsStadoDictionary enColumna: self.columna error:error];
+    [self.delegate respuestaConColumna: listaCsStado enColumna: self.columna error:error];
 
 }
 
@@ -581,20 +581,20 @@ finishedWithFeed:(GDataFeedBase *)feed
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error
 {
-    
+     static int idnum = 1;
     NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
     for (int i=0; i<[self.alumnos count]; i++) {
             GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+3 column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
-        NSString *batchID = [NSString stringWithFormat:@"batchID_%u", 1];
+        NSString *batchID = [NSString stringWithFormat:@"batchID_%u", idnum++];
         [newESC setBatchIDWithString:batchID];
             [entries addObject:newESC];
         }
     
     
         
-    //NSString *eTag = feed.ETag;
-    //self.eTag = eTag;
+    NSString *eTag = feed.ETag;
+    self.eTag = eTag;
     
     NSArray *nuevasEntries = [NSArray arrayWithArray:entries];
     self.updatedEntries = nuevasEntries;
@@ -619,8 +619,7 @@ finishedWithFeed:(GDataFeedBase *)feed
     GDataBatchOperation *op;
     op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationInsert];
     [batchFeed setBatchOperation:op];
-    //[batchFeed setETag:self.eTag];
-    [batchFeed setIdentifier:@"batchID_1"];
+    [batchFeed setETag:self.eTag];
     
     [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
 }

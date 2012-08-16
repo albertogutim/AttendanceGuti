@@ -12,12 +12,14 @@
 
 @implementation AttendanceStudentsVC
 
+
 @synthesize attendanceButton = _attendanceButton;
 @synthesize miTabla = _miTabla;
 @synthesize clase = _clase;
 @synthesize miListaAlumnos = _miListaAlumnos;
 @synthesize fecha = _fecha;
 @synthesize columna = _columna;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -129,6 +131,9 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
         }
         
+        
+
+   
         //rellenamos las celdas con el nombre de la asignatura.
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
@@ -170,6 +175,37 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
+    if (iv.image == [UIImage imageNamed:@"check.png"])
+    {
+        iv.image = [UIImage imageNamed:@"cross.png"];
+        //cambiar el valor del estado en self.miListaAlumnos para que cuando se repinte la tabla ponga la imagen correcta.
+        
+        [self.miListaAlumnos setObject:@"2" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+        
+    }
+         
+    else if (iv.image == [UIImage imageNamed:@"cross.png"])
+            {
+                iv.image = [UIImage imageNamed:@"late.png"];
+                [self.miListaAlumnos setObject:@"3" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+            }
+    
+        else
+            {
+                iv.image = [UIImage imageNamed:@"check.png"];
+                [self.miListaAlumnos setObject:@"1" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+            }
+     
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
    
      if ([self.miListaAlumnos count]) {
@@ -189,7 +225,7 @@
 
 #pragma mark - My Methods
 
-- (void)respuestaConColumna:(NSDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error
+- (void)respuestaConColumna:(NSMutableDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error
 
 {
     self.miListaAlumnos = feed;
@@ -250,7 +286,7 @@
     [self.miTabla setUserInteractionEnabled:YES];
     
     //cambiar apariencia del boton para que cuando se termine de pasar asistencia se pulse de nuevo y se vuelque la información.
-    self.attendanceButton.title = @"OK";
+    
     
 }
 @end
