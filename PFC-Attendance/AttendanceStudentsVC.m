@@ -131,9 +131,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
         }
         
-        
-
-   
+       
         //rellenamos las celdas con el nombre de la asignatura.
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
@@ -173,6 +171,19 @@
     }
     
     return cell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    
+    NSDateFormatter *df = [NSDateFormatter new];
+    [df setTimeStyle:NSDateFormatterNoStyle];
+    [df setDateStyle:NSDateFormatterFullStyle];
+    NSLocale *theLocale = [NSLocale currentLocale];
+    [df setLocale:theLocale];
+    NSString *fechaHeader = [df stringFromDate:self.fecha];
+    return fechaHeader;
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -282,7 +293,31 @@
     //TODO: habrá que controlar si le ha dado al boton para pasar asistencia o para hacer el update.
     //si es la primera vez se habilita tocar las celdas. si es para el update hay que deshabilitarlas otra vez.
     
+    
+    NSMutableArray *newButton = [[NSMutableArray alloc] initWithCapacity:1];
+    UIToolbar *tools = [[UIToolbar alloc]
+                        initWithFrame:CGRectMake(0.0f, 0.0f, 50.0f, 53.0f)];
+    // Add Pin button.
+    
+    UIBarButtonItem *bi1 = [[UIBarButtonItem alloc] initWithTitle:@"OK" style:UIBarButtonItemStylePlain target:self action:@selector(Edit:)];
+    bi1.style = UIBarButtonItemStyleBordered;
+    bi1.width = 45;
+    [newButton addObject:bi1];
+    
+    
+      // Add buttons to toolbar and toolbar to nav bar.
+    [tools setItems:newButton animated:NO];
+    
+    // Add toolbar to nav bar.
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithCustomView:tools];
+    self.navigationItem.rightBarButtonItem = button;
+   
+    
+    
+    
+    
     //habilitar tocar celdas
+    
     [self.miTabla setUserInteractionEnabled:YES];
     
     //cambiar apariencia del boton para que cuando se termine de pasar asistencia se pulse de nuevo y se vuelque la información.
