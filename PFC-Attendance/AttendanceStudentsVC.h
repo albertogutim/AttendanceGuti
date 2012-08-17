@@ -19,6 +19,9 @@
 @property (strong, nonatomic) NSMutableDictionary *miListaAlumnos;
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, assign) NSInteger columna;
+@property (strong, nonatomic) NSMutableDictionary *todos;
+@property (strong, nonatomic) NSMutableDictionary *ausentes;
+@property (strong, nonatomic) NSMutableDictionary *presentes;
 
 
 

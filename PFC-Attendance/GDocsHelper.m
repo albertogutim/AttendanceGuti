@@ -503,15 +503,31 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 
 {
 
-    NSInteger i;
-    for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
-        
-    //GDataEntrySpreadsheetCell *newSC = [[feed entries] objectAtIndex:0];
-    [[cs cell] setInputString:[self.update.allValues objectAtIndex:i]];
-        i++;
-        
-        
+    //Es necesario utilizar self.alumnos, donde estan guardados los nombres en el mismo orden que estan en la spreadsheet porque el NSDictionary cambia el orden al rellenarlo.
+    NSMutableArray *nuevosEstados = [NSMutableArray arrayWithCapacity:[self.alumnos count]];
+    for (int j=0; j<[self.alumnos count]; j++) {
+        NSInteger i=0;
+        for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
+            
+            if([[self.alumnos objectAtIndex:j] isEqualToString:[self.update.allKeys objectAtIndex:i]])
+            {
+                //nos vamos creando un array nuevo con los estados en orden
+                [nuevosEstados addObject:[self.update.allValues objectAtIndex:i]];
+                break;
+            }
+
+            i++;
+        }
     }
+    NSInteger h=0;
+    for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
+    
+        //recorremos por orden las celdas y vamos leyendo del array con los estados en orden.
+        [[cs cell] setInputString:[nuevosEstados objectAtIndex:h]];
+        h++;
+    
+    }
+    
     NSString *eTag = feed.ETag;
     self.eTag = eTag;
         

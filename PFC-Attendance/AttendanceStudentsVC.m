@@ -82,16 +82,9 @@
     midh.delegate = self;
     
     
-    /*NSArray *alum = [[NSArray alloc] initWithObjects:@"Ana Gutierrez Esguevillas", @"Raquel Gutierrez Esguevillas", @"Aday Perera Rodriguez", @"Raul Suarez Rodriguez", @"Berta Galvan", @"Ana Rios Cabrera", @"Isabel Mayor Guerra", nil];
     
-    NSArray *est = [[NSArray alloc] initWithObjects:@"3", @"3",
-                     @"2", @"2", @"1", @"1", @"3", nil];
-      
-    NSDictionary *prueba = [NSDictionary dictionaryWithObjects:est forKeys:alum];
-     
-    [midh updateAlumnosConEstados:self.clase paraUpdate:prueba paraColumna:5];
    
-*/
+
     [super viewWillAppear:animated];
 }
 
@@ -247,6 +240,17 @@
     //animar boton pasar asistencia
     [self.attendanceButton setEnabled:YES];
     
+    NSArray *alum = [[NSArray alloc] initWithObjects:@"Ana Gutierrez Esguevillas", @"Raquel Gutierrez Esguevillas", @"Aday Perera Rodriguez", @"Raul Suarez Rodriguez", @"Berta Galvan", @"Ana Rios Cabrera", @"Isabel Mayor Guerra", nil];
+    
+    NSArray *est = [[NSArray alloc] initWithObjects:@"3", @"3",
+                    @"2", @"2", @"1", @"1", @"3", nil];
+    
+    NSDictionary *prueba = [NSDictionary dictionaryWithObjects:est forKeys:alum];
+    
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    [midh updateAlumnosConEstados:self.clase paraUpdate:prueba paraColumna:5];
+
+    
     
 }
 
@@ -286,6 +290,7 @@
         GDocsHelper *midh = [GDocsHelper sharedInstance];
         ConfigHelper *configH = [ConfigHelper sharedInstance];
         [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
+        
     }
 }
 - (IBAction)attendance:(id)sender {
