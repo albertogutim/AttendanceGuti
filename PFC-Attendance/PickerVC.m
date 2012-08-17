@@ -69,6 +69,13 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+     [self.delegate devolverFecha:self didSelectDate:self.fecha];
+    [super viewWillDisappear:animated];
+}
+
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -185,6 +192,6 @@
 //el usuario no quiere elegir fecha y quiere volver a la pantalla anterior
 - (IBAction)cancelarFecha:(id)sender {
     
-    [self.delegate devolverFecha:self didSelectDate:nil];
+    [self.delegate devolverFecha:self didSelectDate:self.fecha];
 }
 @end

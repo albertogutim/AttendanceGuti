@@ -12,6 +12,7 @@
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate>
 
+@property (strong, nonatomic) IBOutlet UISegmentedControl *todosPresentesAusentes;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
 
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
@@ -20,8 +21,10 @@
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, assign) NSInteger columna;
 @property (strong, nonatomic) NSMutableDictionary *todos;
-@property (strong, nonatomic) NSMutableDictionary *ausentes;
-@property (strong, nonatomic) NSMutableDictionary *presentes;
+- (IBAction)attendance:(id)sender;
+- (IBAction)changeSegmentedControl:(id)sender;
+-(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
+-(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
 
 
 
