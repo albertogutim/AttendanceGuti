@@ -69,6 +69,16 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
+    [super viewWillAppear:animated];
+}
+
+
 - (void)viewWillDisappear:(BOOL)animated
 {
      [self.delegate devolverFecha:self didSelectDate:self.fecha];
@@ -177,9 +187,9 @@
     if(!encontradoHoy)
         [fechaLong addObject:NSLocalizedString(@"TODAY", nil)];
     self.fechas = fechaLong;
-    //Añadido Alberto: Para evitar que el picker devuelva nil en el caso de que sólo haya una fecha (porque sólo se le está dando valor a la propiedad en caso de que el usuario mueva el picker y eso es un error
-    self.fecha = [NSDate new]; //TODO: Comprobar esto. Hay que dar un valor por defecto pero no sé si este.
-    
+    self.fecha = [self.fechas objectAtIndex:0];//Le damos el valor de la primera fecha que sale por defecto que es siempre la primera de self.fechas.
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     [self.miPicker reloadAllComponents];
 }
 
