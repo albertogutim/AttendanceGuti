@@ -296,7 +296,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 
                 NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
                 GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-                [q setMinimumColumn:1]; //TODO:O no he entendido nada o esto está mal. Digo yo que tendrás que consultar la columna que has encontrado (self.column)
+                [q setMinimumColumn:1]; 
                 [q setMaximumColumn:1]; //Idem
                 [q setMinimumRow:3];
                 
