@@ -213,6 +213,7 @@
         //también tenemos que hacer el update de self.todos que es el NSDictionary que mantiene siempre una copia de la lista de alumnos completa, por si se da el caso de estar dentro de un filtro y hacer cambios en los estados.
     
                 //buscamos por el nombre en self.todos
+        //TO DO: COMPRUEBA SI ESTO MISMO NO LO PUEDES HACER DIRECTAMENTE USANDO EL MÉTODO valueForKey DE self.todos
                 for (int i=0; i<[self.todos count]; i++) {
                     if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]])
                         //cuando lo encuentra hace el update
@@ -273,7 +274,7 @@
     self.miListaAlumnos = feed;
     //Mantenemos una copia con todos los alumnos para poder gestionar el segmented control
     self.todos = feed;
-    self.columna = columna; 
+    self.columna = columna;
     [self.miTabla reloadData];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];

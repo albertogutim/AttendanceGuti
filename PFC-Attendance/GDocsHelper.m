@@ -247,6 +247,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     self.clase = clase;
     
     //Primero buscamos la fecha para saber si existe
+    //TO DO: Controlar error si no existe el identifier
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
@@ -274,11 +275,14 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         self.mListFechas = feed;
         self.encontrada=NO;
         NSInteger col = 1;
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        
         for (GDataEntrySpreadsheetCell *fech in [self.mListFechas entries]) {
-            NSDateFormatter *df = [NSDateFormatter new];
-            [df setTimeStyle:NSDateFormatterNoStyle];
-            [df setDateStyle:NSDateFormatterShortStyle];
-             GDataSpreadsheetCell *theCell = [fech cell];
+            
+            GDataSpreadsheetCell *theCell = [fech cell];
             NSDate *nuevaFecha = [df dateFromString:theCell.inputString];
             if([nuevaFecha isEqualToDate:self.fecha])
             //if([self compareDay: nuevaFecha withDay:self.fecha] == 0)
@@ -286,20 +290,21 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 //NSLog(@"Se compara bien la fecha");
             //encontro la fecha seleccionada en la spreadsheet. Hay que devolver la lista de alumnos y sus estados
                 self.encontrada = YES;
-                self.columna = 3+col;
+                self.columna = 3+col; //TODO: Esto es una ñapa. Saca el 3 de aquí y decláralo como constante porque esto provoca muchos fallos si tienes que hacer cambios en la hoja de Excel y empezar en otra columna. Usa por ej: #define COLUMN_START 3
                 
                 self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
                 
                 NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
                 GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-                [q setMinimumColumn:1];
-                [q setMaximumColumn:1];
+                [q setMinimumColumn:1]; //TODO:O no he entendido nada o esto está mal. Digo yo que tendrás que consultar la columna que has encontrado (self.column)
+                [q setMaximumColumn:1]; //Idem
                 [q setMinimumRow:3];
                 
                 
                 [self.miService fetchFeedWithQuery:q
                                           delegate:self
                                  didFinishSelector:@selector(listadoAlumnosConEstadoClaseTicket:finishedWithFeed:error:)];
+                break; //Si ya la has encontrado no sigas buscando!
                 
             }
             col++;
@@ -318,7 +323,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             
             NSDate *d =[NSDate date];
             NSString *dateStr = [df stringFromDate:d];
-            self.columna = [[feed entries] count]+4;
+            self.columna = [[feed entries] count]+4; //TODO: Este 4 ñapa. Crea constantes que te permitan modificar el excel sin sufrir
             
             GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:[[feed entries] count]+4 inputString:dateStr numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
