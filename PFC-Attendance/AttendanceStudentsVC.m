@@ -344,7 +344,7 @@
     //cambiar apariencia del boton para que cuando se termine de pasar asistencia se pulse de nuevo y se vuelque la información
     
     //INTENTO DE CAMBIAR EL BOTON COMPOSE POR UNO QUE PONGA OK
-    NSMutableArray *newButton = [[NSMutableArray alloc] initWithCapacity:1];
+    /*NSMutableArray *newButton = [[NSMutableArray alloc] initWithCapacity:1];
     UIToolbar *tools = [[UIToolbar alloc]
                         initWithFrame:CGRectMake(0.0f, 0.0f, 50.0f, 53.0f)];
     
@@ -360,7 +360,7 @@
     // Add toolbar to nav bar.
     UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithCustomView:tools];
     self.navigationItem.rightBarButtonItem = button;
-
+*/
     
     //habilitar tocar celdas
     
