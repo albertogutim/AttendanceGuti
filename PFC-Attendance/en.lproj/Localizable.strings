@@ -9,6 +9,8 @@
 "CREDENTIALS"= "Connecting...";
 "SUBJECTS_TITLE"="My Subjects";
 "CONNECTED_USR"="Connected as %@";
+"LOGIN_ERR" ="Credentials failed";
+"CONN_ERR" ="Connection failed";
 "BLANK_ERROR"="Empty fields error";
 "BLANK_MSG"="You must fill both credential fields";
 "CLASS_TITLE"="Classes";

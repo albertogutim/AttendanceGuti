@@ -200,10 +200,22 @@
         switch (error.code) {
             case 403:
                 NSLog(@"Error de login");
+                //TODO: Comprobar si al meter mal la clave y guardar las credenciales en el keychain, se puede corregir la clave (también guardada en keychain) y funciona. Creo que he tenido que meter un e-mail inventado antes de poner la clave bien otra vez porque no había manera.
+                //mostramos mensaje ERROR y paramos la ruedita.
+                self.infoLbl.text = NSLocalizedString(@"LOGIN_ERR", NIL);
+                [self.activity stopAnimating];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
                 break;
                 
             case -1009:
                 NSLog(@"Error de conexión");
+                //mostramos mensaje ERROR y paramos la ruedita.
+                self.infoLbl.text = NSLocalizedString(@"CONN_ERR", NIL);
+                [self.activity stopAnimating];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+
                 break;
                 
             default:

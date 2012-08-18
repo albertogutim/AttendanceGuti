@@ -8,7 +8,9 @@
 "NO_CREDENTIALS"= "Configure usuario GoogleDocs";
 "CREDENTIALS"= "Conectando...";
 "SUBJECTS_TITLE"="Mis Asignaturas";
-"CONNECTED_USR"="Conectado como %@"; 
+"CONNECTED_USR"="Conectado como %@";
+"LOGIN_ERR" ="Las credenciales fallaron";
+"CONN_ERR" ="Fallo de conexión";
 "BLANK_ERROR"="Error campo vacío";
 "BLANK_MSG"="Debe rellenar ambos campos";
 "CLASS_TITLE"="Clases";
