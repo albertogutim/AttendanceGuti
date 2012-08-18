@@ -177,6 +177,9 @@
     if(!encontradoHoy)
         [fechaLong addObject:NSLocalizedString(@"TODAY", nil)];
     self.fechas = fechaLong;
+    //Añadido Alberto: Para evitar que el picker devuelva nil en el caso de que sólo haya una fecha (porque sólo se le está dando valor a la propiedad en caso de que el usuario mueva el picker y eso es un error
+    self.fecha = [NSDate new]; //TODO: Comprobar esto. Hay que dar un valor por defecto pero no sé si este.
+    
     [self.miPicker reloadAllComponents];
 }
 
