@@ -159,6 +159,11 @@
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
+      
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+  //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        [df setDateFormat:@"dd/MM/yy"];
         NSDate *nuevaFecha = [df dateFromString:fechCad];
         
         //si encuentra la fecha de hoy
@@ -167,8 +172,9 @@
         
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
+       
         [df setLocale:theLocale];
+        //TODO: Como nuevaFecha vale nil peta al añadir a fechaLong un nil
         NSString *dateStr = [df stringFromDate:nuevaFecha];
         [fechaLong addObject:dateStr];
         
