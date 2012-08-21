@@ -29,6 +29,7 @@
 @synthesize update =_update;
 @synthesize eTag = _eTag;
 @synthesize updatedEntries = _updatedEntries;
+@synthesize listaCsStado =_listaCsStado;
 
 
 
@@ -203,13 +204,13 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     [self.miService fetchFeedWithQuery:q
                               delegate:self
-                     didFinishSelector:@selector(consultaFechasValidasTicket:finishedWithFeed:error:)];
+                     didFinishSelector:@selector(fechasValidasParaTicket:finishedWithFeed:error:)];
     
     
 }
 
 
-- (void)consultaFechasValidasTicket:(GDataServiceTicket *)ticket
+- (void)fechasValidasParaTicket:(GDataServiceTicket *)ticket
             finishedWithFeed:(GDataFeedBase *)feed
                        error:(NSError *)error {
     
@@ -425,37 +426,47 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     NSDictionary * listaCellsStadoDictionary = [NSDictionary dictionaryWithDictionary:listaCsStado];
     self.mListWorksheetId = listaCellsStadoDictionary;
     self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
+    self.listaCsStado = listaCsStado;
         //Guardar en la spreadsheet los estados.
-    [self insertAlumnosConEstados:self.clase paraUpdate:listaCellsStadoDictionary paraColumna:self.columna];
+        self.update = listaCellsStadoDictionary;
+        self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
         
-    [self.delegate respuestaConColumna: listaCsStado enColumna: self.columna error:error];
+        NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
+        for (int i=0; i<[self.alumnos count]; i++) {
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+3 column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            [entries addObject:newESC];
+        }
+        
+
+        NSArray *nuevasEntries = [NSArray arrayWithArray:entries];
+        self.updatedEntries = nuevasEntries;
+        
+        NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+        [self.miService fetchFeedWithURL:feedURL
+                                delegate:self
+                       didFinishSelector:@selector(insertCellsTicket:finishedWithFeed:error:)];
+        
+    
     }
     else{
         self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
-        [self listadoEstadosAlumnos];
+        self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+        
+        NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+        GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+        [q setMinimumColumn:self.columna];
+        [q setMaximumColumn:self.columna];
+        [q setMinimumRow:3];
+        
+        
+        [self.miService fetchFeedWithQuery:q
+                                  delegate:self
+                         didFinishSelector:@selector(listadoEstadosAlumnosTicket:finishedWithFeed:error:)];
     }
     
    
 }
-     
--(void) listadoEstadosAlumnos
-{
-    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
-    
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:self.columna];
-    [q setMaximumColumn:self.columna];
-    [q setMinimumRow:3];
-    
-    
-    [self.miService fetchFeedWithQuery:q
-                              delegate:self
-                     didFinishSelector:@selector(listadoEstadosAlumnosTicket:finishedWithFeed:error:)];
-    
-    
-}
-    
    
 
 - (void)listadoEstadosAlumnosTicket:(GDataServiceTicket *)ticket
@@ -481,6 +492,36 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 
 }
 
+
+
+- (void)insertCellsTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error{
+    
+    
+    NSURL *batchUrl = [[feed batchLink] URL];
+    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
+    
+    [batchFeed setEntriesWithEntries:self.updatedEntries];
+    
+    GDataBatchOperation *op;
+    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationInsert];
+    [batchFeed setBatchOperation:op];
+    
+    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+}
+
+- (void)insertedCellsTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error
+{
+    NSLog(@"termino el insert");
+    [self.delegate respuestaConColumna: self.listaCsStado enColumna: self.columna error:error];
+    
+    
+}
+
+
 - (void)updateAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col
 {
     self.update = listaAlumnosEstados;
@@ -503,11 +544,11 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 }
 
 - (void)updateAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
-                   finishedWithFeed:(GDataFeedBase *)feed
-                              error:(NSError *)error
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error
 
 {
-
+    
     //Es necesario utilizar self.alumnos, donde estan guardados los nombres en el mismo orden que estan en la spreadsheet porque el NSDictionary cambia el orden al rellenarlo.
     NSMutableArray *nuevosEstados = [NSMutableArray arrayWithCapacity:[self.alumnos count]];
     for (int j=0; j<[self.alumnos count]; j++) {
@@ -520,38 +561,38 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 [nuevosEstados addObject:[self.update.allValues objectAtIndex:i]];
                 break;
             }
-
+            
             i++;
         }
     }
     NSInteger h=0;
     for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
-    
+        
         //recorremos por orden las celdas y vamos leyendo del array con los estados en orden.
         [[cs cell] setInputString:[nuevosEstados objectAtIndex:h]];
         h++;
-    
+        
     }
     
     NSString *eTag = feed.ETag;
     self.eTag = eTag;
-        
+    
     NSArray *updatedEntries = [feed entries];
     self.updatedEntries = updatedEntries;
-       
+    
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     [self.miService fetchFeedWithURL:feedURL
                             delegate:self
                    didFinishSelector:@selector(updateCellsTicket:finishedWithFeed:error:)];
     
-   
-}
     
-   
+}
+
+
 
 - (void)updateCellsTicket:(GDataServiceTicket *)ticket
-finishedWithFeed:(GDataFeedBase *)feed
-                                error:(NSError *)error{
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error{
     
     
     NSURL *batchUrl = [[feed batchLink] URL];
@@ -564,95 +605,16 @@ finishedWithFeed:(GDataFeedBase *)feed
     [batchFeed setBatchOperation:op];
     [batchFeed setETag:self.eTag];
     
- [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(updatedCellsTicket:finishedWithFeed:error:)];
+    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(updatedCellsTicket:finishedWithFeed:error:)];
 }
-    
+
 - (void)updatedCellsTicket:(GDataServiceTicket *)ticket
-         finishedWithFeed:(GDataFeedBase *)feed
-                    error:(NSError *)error
+          finishedWithFeed:(GDataFeedBase *)feed
+                     error:(NSError *)error
 {
     NSLog(@"termino el update");
     
 }
-
-
-- (void)insertAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col
-
-{
-
-    self.update = listaAlumnosEstados;
-    self.columna = col;
-    self.clase = clase;
-    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
-    
-    
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:col];
-    [q setMaximumColumn:col];
-    [q setMinimumRow:3];
-    
-    
-    [self.miService fetchFeedWithQuery:q
-                              delegate:self
-                     didFinishSelector:@selector(insertAlumnosConEstadosTicket:finishedWithFeed:error:)];
-}
-
-- (void)insertAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
-          finishedWithFeed:(GDataFeedBase *)feed
-                     error:(NSError *)error
-{
-     static int idnum = 1;
-    NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
-    for (int i=0; i<[self.alumnos count]; i++) {
-            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+3 column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
-            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
-        NSString *batchID = [NSString stringWithFormat:@"batchID_%u", idnum++];
-        [newESC setBatchIDWithString:batchID];
-            [entries addObject:newESC];
-        }
-    
-    
-        
-    NSString *eTag = feed.ETag;
-    self.eTag = eTag;
-    
-    NSArray *nuevasEntries = [NSArray arrayWithArray:entries];
-    self.updatedEntries = nuevasEntries;
-    
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    [self.miService fetchFeedWithURL:feedURL
-                            delegate:self
-                   didFinishSelector:@selector(insertCellsTicket:finishedWithFeed:error:)];
-
-}
-
-- (void)insertCellsTicket:(GDataServiceTicket *)ticket
-         finishedWithFeed:(GDataFeedBase *)feed
-                    error:(NSError *)error{
-    
-    
-    NSURL *batchUrl = [[feed batchLink] URL];
-    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
-    
-    [batchFeed setEntriesWithEntries:self.updatedEntries];
-    
-    GDataBatchOperation *op;
-    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationInsert];
-    [batchFeed setBatchOperation:op];
-    [batchFeed setETag:self.eTag];
-    
-    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
-}
-
-- (void)insertedCellsTicket:(GDataServiceTicket *)ticket
-          finishedWithFeed:(GDataFeedBase *)feed
-                     error:(NSError *)error
-{
-    NSLog(@"termino el insert");
-    
-}
-
 
 
 //NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.

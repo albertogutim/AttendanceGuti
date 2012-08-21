@@ -79,14 +79,6 @@
 }
 
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-     [self.delegate devolverFecha:self didSelectDate:self.fecha];
-    [super viewWillDisappear:animated];
-}
-
-
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

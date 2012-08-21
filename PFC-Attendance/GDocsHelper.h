@@ -36,7 +36,7 @@
                                 error:(NSError *)error;
 
 -(void)fechasValidasPara:(NSString *)miClase;
-- (void)consultaFechasValidasTicket:(GDataServiceTicket *)ticket
+- (void)fechasValidasParaTicket:(GDataServiceTicket *)ticket
                    finishedWithFeed:(GDataFeedBase *)feed
                               error:(NSError *)error;
 
@@ -53,6 +53,20 @@
                           finishedWithFeed:(GDataFeedBase *)feed
                                      error:(NSError *)error;
 
+- (void)insertCellsTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error;
+
+- (void)insertedCellsTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error;
+
+- (void)listadoEstadosAlumnosTicket:(GDataServiceTicket *)ticket
+                   finishedWithFeed:(GDataFeedBase *)feed
+                              error:(NSError *)error;
+
+
+
 - (void)updateAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col;
 - (void)updateAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
                      finishedWithFeed:(GDataFeedBase *)feed
@@ -63,17 +77,6 @@
 - (void)updatedCellsTicket:(GDataServiceTicket *)ticket
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error;
-- (void)insertAlumnosConEstados:(NSString *)clase paraUpdate: (NSDictionary *) listaAlumnosEstados paraColumna:(NSInteger)col;
-- (void)insertAlumnosConEstadosTicket:(GDataServiceTicket *)ticket
-                     finishedWithFeed:(GDataFeedBase *)feed
-                                error:(NSError *)error;
-- (void)insertCellsTicket:(GDataServiceTicket *)ticket
-         finishedWithFeed:(GDataFeedBase *)feed
-                    error:(NSError *)error;
-
-- (void)insertedCellsTicket:(GDataServiceTicket *)ticket
-           finishedWithFeed:(GDataFeedBase *)feed
-                      error:(NSError *)error;
 
 
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
@@ -101,6 +104,7 @@
 @property (nonatomic, strong) NSDictionary *update;
 @property (nonatomic, strong) NSString *eTag;
 @property (nonatomic, strong) NSArray *updatedEntries;
+@property (nonatomic, strong) NSMutableDictionary *listaCsStado;
 
 
 @end

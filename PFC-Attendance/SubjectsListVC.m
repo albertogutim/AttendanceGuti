@@ -191,10 +191,6 @@
 - (void)respuesta:(NSDictionary *)feed error:(NSError *)error
 {
     //TODO: Controlar errores
-    
-    //error al conectar 
-    //error user/pass
-    //0 spreadsheets
     if (error) {
         
         switch (error.code) {
