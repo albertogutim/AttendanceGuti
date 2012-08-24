@@ -9,6 +9,9 @@
 #import "GDocsHelper.h"
 #import "../Headers/GData.h"
 #import "../Headers/GDataSpreadsheet.h"
+#define COLUMN_START 3
+#define ROW_START 3
+#define DATES_START 4
 
 @implementation GDocsHelper
 @synthesize miService = _miService;
@@ -196,7 +199,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:4];
+    [q setMinimumColumn:DATES_START];
     [q setMinimumRow:1];
     [q setMaximumRow:1];
     
@@ -253,7 +256,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:4];
+    [q setMinimumColumn:DATES_START];
     [q setMinimumRow:1];
     [q setMaximumRow:1];
     
@@ -291,7 +294,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 //NSLog(@"Se compara bien la fecha");
             //encontro la fecha seleccionada en la spreadsheet. Hay que devolver la lista de alumnos y sus estados
                 self.encontrada = YES;
-                self.columna = 3+col; //TODO: Esto es una ñapa. Saca el 3 de aquí y decláralo como constante porque esto provoca muchos fallos si tienes que hacer cambios en la hoja de Excel y empezar en otra columna. Usa por ej: #define COLUMN_START 3
+                self.columna = COLUMN_START+col;
                 
                 self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
                 
@@ -299,7 +302,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
                 [q setMinimumColumn:1]; 
                 [q setMaximumColumn:1]; //Idem
-                [q setMinimumRow:3];
+                [q setMinimumRow:ROW_START];
                 
                 
                 [self.miService fetchFeedWithQuery:q
@@ -324,9 +327,9 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             
             NSDate *d =[NSDate date];
             NSString *dateStr = [df stringFromDate:d];
-            self.columna = [[feed entries] count]+4; //TODO: Este 4 ñapa. Crea constantes que te permitan modificar el excel sin sufrir
+            self.columna = [[feed entries] count]+DATES_START;
             
-            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:[[feed entries] count]+4 inputString:dateStr numericValue:nil resultString:nil];
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:[[feed entries] count]+DATES_START inputString:dateStr numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
             
             NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
@@ -345,12 +348,12 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         NSLocale *theLocale = [NSLocale currentLocale];
         [df setLocale:theLocale];
         
-        self.columna = 4;
+        self.columna = DATES_START;
         
         NSDate *d =[NSDate date];
         NSString *dateStr = [df stringFromDate:d];
        
-        GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:4 inputString:dateStr numericValue:nil resultString:nil];
+        GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:DATES_START inputString:dateStr numericValue:nil resultString:nil];
         GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
         
         NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
@@ -381,7 +384,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
         [q setMinimumColumn:1];
         [q setMaximumColumn:1];
-        [q setMinimumRow:3];
+        [q setMinimumRow:ROW_START];
    
         
         [self.miService fetchFeedWithQuery:q
@@ -433,7 +436,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         
         NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
         for (int i=0; i<[self.alumnos count]; i++) {
-            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+3 column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
             [entries addObject:newESC];
         }
@@ -457,7 +460,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
         [q setMinimumColumn:self.columna];
         [q setMaximumColumn:self.columna];
-        [q setMinimumRow:3];
+        [q setMinimumRow:ROW_START];
         
         
         [self.miService fetchFeedWithQuery:q
@@ -534,7 +537,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
     [q setMinimumColumn:col];
     [q setMaximumColumn:col];
-    [q setMinimumRow:3];
+    [q setMinimumRow:ROW_START];
     
     
     [self.miService fetchFeedWithQuery:q
@@ -612,7 +615,8 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error
 {
-    NSLog(@"termino el update");
+    //NSLog(@"termino el update");
+    [self.delegate respuestaUpdate: error];
     
 }
 

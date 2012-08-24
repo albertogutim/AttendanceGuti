@@ -17,6 +17,7 @@
 - (void)respuesta:(NSDictionary *)feed error:(NSError *)error;
 - (void)respuestaConColumna:(NSMutableDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error;
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error;
+- (void)respuestaUpdate: (NSError *) error;
 @end
 
 

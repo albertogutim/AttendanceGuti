@@ -26,6 +26,7 @@
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
 
+- (IBAction)updateSpreadsheet:(id)sender;
 
 
 @end

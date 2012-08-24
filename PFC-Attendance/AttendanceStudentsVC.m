@@ -296,6 +296,22 @@
     
 }
 
+- (void)respuestaUpdate: (NSError *) error
+
+{
+    if(error){
+        //TODO: actuar si error
+    }
+    else
+    {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    }
+        
+            
+    
+}
+
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -367,9 +383,7 @@
     
     [self.miTabla setUserInteractionEnabled:YES];
     
-   
-    
-    
+
 }
 
 - (IBAction)changeSegmentedControl:(id)sender {
@@ -427,5 +441,16 @@
     return filtro;
     
 }
+
+- (IBAction)updateSpreadsheet:(id)sender {
+    
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    [midh updateAlumnosConEstados:self.clase paraUpdate:self.todos paraColumna:self.columna];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    
+}
+
+
 
 @end
