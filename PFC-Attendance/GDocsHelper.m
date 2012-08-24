@@ -431,24 +431,35 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
     self.listaCsStado = listaCsStado;
         //Guardar en la spreadsheet los estados.
-        self.update = listaCellsStadoDictionary;
-        self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+        //self.update = listaCellsStadoDictionary;
+    
         
+        NSString *e = [NSString string];
+        if(self.estados)
+            e = @"1";
+        else
+            e = @"2";
+        static int idnum = 1;
         NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
         for (int i=0; i<[self.alumnos count]; i++) {
-            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:self.columna inputString:[self.update.allValues objectAtIndex:i] numericValue:nil resultString:nil];
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:self.columna inputString:e numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            NSString *batchID = [NSString stringWithFormat:@"batchID_%u", idnum++];
+            [newESC setBatchIDWithString:batchID];
             [entries addObject:newESC];
         }
         
 
         NSArray *nuevasEntries = [NSArray arrayWithArray:entries];
         self.updatedEntries = nuevasEntries;
+        //self.eTag = feed.ETag;
+        
         
         NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
         [self.miService fetchFeedWithURL:feedURL
                                 delegate:self
                        didFinishSelector:@selector(insertCellsTicket:finishedWithFeed:error:)];
+        
         
     
     }
@@ -510,6 +521,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     GDataBatchOperation *op;
     op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationInsert];
     [batchFeed setBatchOperation:op];
+    //[batchFeed setETag:self.eTag];
     
     [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
 }

@@ -209,6 +209,6 @@
 //el usuario no quiere elegir fecha y quiere volver a la pantalla anterior
 - (IBAction)cancelarFecha:(id)sender {
     
-    [self.delegate devolverFecha:self didSelectDate:self.fecha];
+    [self.delegate devolverFecha:self didSelectDate:nil];
 }
 @end
