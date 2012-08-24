@@ -416,9 +416,11 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         
             if(!self.encontrada){
                 if(self.estados)
-                    [estados addObject:[NSNumber numberWithInteger:1]];
+                    //[estados addObject:[NSNumber numberWithInteger:1]];
+                    [estados addObject:@"1"];
                 else
-                    [estados addObject:[NSNumber numberWithInteger:2]];
+                    //[estados addObject:[NSNumber numberWithInteger:2]];
+                    [estados addObject:@"2"];
             
             }
     }
@@ -431,35 +433,27 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     self.alumnos = [NSArray arrayWithArray:listaCellFeeds];
     self.listaCsStado = listaCsStado;
         //Guardar en la spreadsheet los estados.
-        //self.update = listaCellsStadoDictionary;
+        //AQUÍ OCURRE LA CHAPUZA DEL INSERT DE LOS ESTADOS DE UN DÍA NUEVO
     
-        
+        NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
         NSString *e = [NSString string];
         if(self.estados)
             e = @"1";
         else
             e = @"2";
-        static int idnum = 1;
-        NSMutableArray *entries = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
+
         for (int i=0; i<[self.alumnos count]; i++) {
             GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:self.columna inputString:e numericValue:nil resultString:nil];
             GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
-            NSString *batchID = [NSString stringWithFormat:@"batchID_%u", idnum++];
-            [newESC setBatchIDWithString:batchID];
-            [entries addObject:newESC];
+            
+            
+            [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+           
         }
         
 
-        NSArray *nuevasEntries = [NSArray arrayWithArray:entries];
-        self.updatedEntries = nuevasEntries;
-        //self.eTag = feed.ETag;
-        
-        
-        NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-        [self.miService fetchFeedWithURL:feedURL
-                                delegate:self
-                       didFinishSelector:@selector(insertCellsTicket:finishedWithFeed:error:)];
-        
+        [self.delegate respuestaConColumna: self.listaCsStado enColumna: self.columna error:error];
+
         
     
     }
@@ -506,33 +500,13 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 
 }
 
-
-
-- (void)insertCellsTicket:(GDataServiceTicket *)ticket
-         finishedWithFeed:(GDataFeedBase *)feed
-                    error:(NSError *)error{
-    
-    
-    NSURL *batchUrl = [[feed batchLink] URL];
-    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
-    
-    [batchFeed setEntriesWithEntries:self.updatedEntries];
-    
-    GDataBatchOperation *op;
-    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationInsert];
-    [batchFeed setBatchOperation:op];
-    //[batchFeed setETag:self.eTag];
-    
-    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
-}
-
 - (void)insertedCellsTicket:(GDataServiceTicket *)ticket
            finishedWithFeed:(GDataFeedBase *)feed
                       error:(NSError *)error
 {
-    NSLog(@"termino el insert");
-    [self.delegate respuestaConColumna: self.listaCsStado enColumna: self.columna error:error];
-    
+    //NSLog(@"termino el insert");
+    if (error)
+        NSLog(@"ocurrió un error en la inserción de celdas");
     
 }
 

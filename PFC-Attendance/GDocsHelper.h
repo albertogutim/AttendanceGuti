@@ -54,10 +54,6 @@
                           finishedWithFeed:(GDataFeedBase *)feed
                                      error:(NSError *)error;
 
-- (void)insertCellsTicket:(GDataServiceTicket *)ticket
-         finishedWithFeed:(GDataFeedBase *)feed
-                    error:(NSError *)error;
-
 - (void)insertedCellsTicket:(GDataServiceTicket *)ticket
            finishedWithFeed:(GDataFeedBase *)feed
                       error:(NSError *)error;
