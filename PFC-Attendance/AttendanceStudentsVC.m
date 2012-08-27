@@ -15,6 +15,12 @@
 
 @synthesize todosPresentesAusentes = _todosPresentesAusentes;
 @synthesize attendanceButton = _attendanceButton;
+@synthesize addButton = _addButton;
+@synthesize refreshButton = _refreshButton;
+@synthesize informesButton = _informesButton;
+@synthesize randomButton = _randomButton;
+@synthesize resumenButton = _resumenButton;
+@synthesize calendarButton = _calendarButton;
 @synthesize miTabla = _miTabla;
 @synthesize clase = _clase;
 @synthesize miListaAlumnos = _miListaAlumnos;
@@ -55,7 +61,11 @@
 {
     [super viewDidLoad];
     [self.attendanceButton setEnabled:NO];
-    
+    [self.addButton setEnabled:NO];
+    [self.refreshButton setEnabled:NO];
+    [self.informesButton setEnabled:NO];
+    [self.resumenButton setEnabled:NO];
+    [self.randomButton setEnabled:NO];
 }
 
 
@@ -63,6 +73,12 @@
 {
     [self setAttendanceButton:nil];
     [self setTodosPresentesAusentes:nil];
+    [self setAddButton:nil];
+    [self setRefreshButton:nil];
+    [self setInformesButton:nil];
+    [self setRandomButton:nil];
+    [self setResumenButton:nil];
+    [self setCalendarButton:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -280,6 +296,12 @@
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     //animar boton pasar asistencia
     [self.attendanceButton setEnabled:YES];
+    [self.addButton setEnabled:YES];
+    [self.refreshButton setEnabled:YES];
+    [self.informesButton setEnabled:YES];
+    [self.resumenButton setEnabled:YES];
+    [self.randomButton setEnabled:YES];
+    [self.calendarButton setEnabled:YES];
     
     //QUITAR ESTO: Es para probar que funcionaba bien el update de estados en la spreadsheet.
     /*NSArray *alum = [[NSArray alloc] initWithObjects:@"Ana Gutierrez Esguevillas", @"Raquel Gutierrez Esguevillas", @"Aday Perera Rodriguez", @"Raul Suarez Rodriguez", @"Berta Galvan", @"Ana Rios Cabrera", @"Isabel Mayor Guerra", nil];
@@ -331,12 +353,20 @@
         
         
     }
+    if ([[segue identifier] isEqualToString:@"goToAddStudent"])
+    {
+        AddStudentTVC *addStudentTVC = [segue destinationViewController];
+        addStudentTVC.delegate = self;
+        
+    }
+    
 }
 
 -(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date
 {
     self.fecha = date;
     [self.attendanceButton setEnabled:NO];
+    [self.calendarButton setEnabled:NO];
     [self.navigationController dismissModalViewControllerAnimated:YES];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
@@ -352,6 +382,29 @@
         
     }
 }
+
+
+-(void) devolverDatosAlumno: (AddStudentTVC *) controller conNombre: (NSString *) nombre yEmail: (NSString *) mail
+{
+
+    //Aquí hay que añadir el nuevo alumno a la spreadsheet.
+    //TODO: crear un nuevo método para añadir el mail, el nombre del alumno y su estado predeterminado.
+    if((nombre!=nil) && (mail!=nil))
+    {
+        //[UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        //[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
+    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"datos alumno"
+                                                         message:[NSString stringWithFormat:@"nombre: %@ mail: %@", nombre, mail]
+                                                        delegate:self
+                                               cancelButtonTitle:@"Dismiss"
+                                               otherButtonTitles:nil];
+    
+    [alertView show];
+    }
+
+}
+
 - (IBAction)attendance:(id)sender {
     
     
@@ -450,6 +503,8 @@
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
 }
+
+
 
 
 

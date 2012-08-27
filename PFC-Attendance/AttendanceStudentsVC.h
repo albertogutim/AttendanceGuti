@@ -9,11 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
 #import "PickerVC.h"
+#import "AddStudentTVC.h"
 
-@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate>
+@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate>
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *todosPresentesAusentes;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
+
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *addButton;
+
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *informesButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *randomButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *resumenButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *calendarButton;
 
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *clase;
@@ -27,6 +36,7 @@
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
 
 - (IBAction)updateSpreadsheet:(id)sender;
+
 
 
 @end

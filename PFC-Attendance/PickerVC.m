@@ -116,6 +116,7 @@
     NSDateFormatter *df = [NSDateFormatter new];
     [df setTimeStyle:NSDateFormatterNoStyle];
     [df setDateStyle:NSDateFormatterFullStyle];
+    //[df setDateFormat:@"dd/MM/yy"];
     NSDate *nuevaFecha = [df dateFromString:fechCad];
 
     
@@ -153,6 +154,7 @@
     NSString *todayStr = [dff stringFromDate:today];
     [dff setTimeStyle:NSDateFormatterNoStyle];
     [dff setDateStyle:NSDateFormatterShortStyle];
+    [dff setDateFormat:@"dd/MM/yy"];
     NSDate *todayOk = [dff dateFromString:todayStr];
     self.today = todayOk;
    

@@ -343,6 +343,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         //TODO: Generalizarlo para cualquier fecha
         self.encontrada=NO;
         NSDateFormatter *df = [NSDateFormatter new];
+        [df setDateFormat:@"dd/MM/yy"];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         NSLocale *theLocale = [NSLocale currentLocale];
