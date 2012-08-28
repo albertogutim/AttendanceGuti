@@ -488,7 +488,7 @@
                         <barButtonItem systemItem="add" id="6nP-Tv-uin">
                             <connections>
                                 <action selector="addStudent:" destination="gL0-ve-xDd" id="xUC-wq-Pje"/>
-                                <segue destination="OVq-Kk-njC" kind="push" identifier="goToAddStudent" id="L3F-Y5-XW8"/>
+                                <segue destination="Hg9-Xn-Wq6" kind="push" identifier="goToAddStudent" id="jO5-hO-B8r"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -769,65 +769,65 @@
             <point key="canvasLocation" x="1957" y="-715"/>
         </scene>
         <!--Add StudentTVC-->
-        <scene sceneID="h3c-AX-fL9">
+        <scene sceneID="iHZ-mm-rao">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WaH-hl-xvo" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tableViewController id="OVq-Kk-njC" customClass="AddStudentTVC" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="qft-6V-quH">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jRv-bh-MAu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController id="Hg9-Xn-Wq6" customClass="AddStudentTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="50i-Gl-dR9">
+                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="Datos del Alumno" id="sfU-wn-H2K">
+                            <tableViewSection headerTitle="Datos del alumno" id="ZUQ-Uw-036">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="AGd-Hw-Xrc">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="tEi-Qy-PL9">
                                         <rect key="frame" x="0.0" y="46" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Nombre" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="IfC-op-faN">
-                                                    <rect key="frame" x="20" y="7" width="62" height="25"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Nombre" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="iIP-Ti-Gcb">
+                                                    <rect key="frame" x="20" y="11" width="62" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="GYH-DO-vEp">
-                                                    <rect key="frame" x="90" y="7" width="190" height="31"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="Zq5-AM-7nW">
+                                                    <rect key="frame" x="90" y="6" width="183" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="OVq-Kk-njC" id="U9g-ct-YIG"/>
+                                                        <outlet property="delegate" destination="Hg9-Xn-Wq6" id="E3m-Ob-fou"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Ay6-G1-vxx">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="VcU-oQ-xaQ">
                                         <rect key="frame" x="0.0" y="91" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="lHP-or-eVJ">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="sQf-fn-iLD">
                                                     <rect key="frame" x="20" y="11" width="42" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="znG-sL-fIh">
-                                                    <rect key="frame" x="89" y="6" width="191" height="31"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" id="vMI-ir-PjT">
+                                                    <rect key="frame" x="89" y="6" width="184" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     <connections>
-                                                        <outlet property="delegate" destination="OVq-Kk-njC" id="T4j-Jh-7hQ"/>
+                                                        <outlet property="delegate" destination="Hg9-Xn-Wq6" id="QjA-mZ-xZ7"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -838,24 +838,24 @@
                             </tableViewSection>
                         </sections>
                         <connections>
-                            <outlet property="dataSource" destination="OVq-Kk-njC" id="uiM-cB-0L8"/>
-                            <outlet property="delegate" destination="OVq-Kk-njC" id="q5H-xe-OPE"/>
+                            <outlet property="dataSource" destination="Hg9-Xn-Wq6" id="iSo-Uz-Eaw"/>
+                            <outlet property="delegate" destination="Hg9-Xn-Wq6" id="zpd-jI-GTc"/>
                         </connections>
                     </tableView>
-                    <toolbarItems>
-                        <barButtonItem title="Cancelar" id="0cu-qy-2f8"/>
-                        <barButtonItem width="162" style="plain" systemItem="fixedSpace" id="cpx-yJ-Sgx"/>
-                        <barButtonItem title="Aceptar" id="d0O-sY-0eT"/>
-                    </toolbarItems>
-                    <navigationItem key="navigationItem" id="9Ma-tL-aF3"/>
-                    <nil key="simulatedBottomBarMetrics"/>
+                    <navigationItem key="navigationItem" id="o7B-GQ-Zcn">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="tKE-Gu-loN">
+                            <connections>
+                                <action selector="done:" destination="Hg9-Xn-Wq6" id="ns7-rc-6fF"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
-                        <outlet property="emailField" destination="znG-sL-fIh" id="F4p-65-au1"/>
-                        <outlet property="nameField" destination="GYH-DO-vEp" id="YZs-dE-9sT"/>
+                        <outlet property="emailField" destination="vMI-ir-PjT" id="gwN-cj-aCb"/>
+                        <outlet property="nameField" destination="Zq5-AM-7nW" id="rHW-gK-dIM"/>
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="2385" y="-392"/>
+            <point key="canvasLocation" x="2329" y="-454"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="yYm-hH-aco">
@@ -1459,76 +1459,6 @@
         <image name="check.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
     </resources>
-    <classes>
-        <class className="AddStudentTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddStudentTVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="emailField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="nameField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="AttendanceStudentsVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttendanceStudentsVC.h"/>
-            <relationships>
-                <relationship kind="action" name="attendance:"/>
-                <relationship kind="action" name="changeSegmentedControl:"/>
-                <relationship kind="action" name="updateSpreadsheet:"/>
-                <relationship kind="outlet" name="addButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="attendanceButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="calendarButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="informesButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="randomButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="refreshButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="resumenButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="todosPresentesAusentes" candidateClass="UISegmentedControl"/>
-            </relationships>
-        </class>
-        <class className="ClassListTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshData:"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="ConfigTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
-            <relationships>
-                <relationship kind="action" name="goBack:"/>
-                <relationship kind="action" name="guardarChanged:"/>
-                <relationship kind="action" name="masdeXausencias:"/>
-                <relationship kind="action" name="masdeXretrasos:"/>
-                <relationship kind="action" name="presentesChanged:"/>
-                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="PickerVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PickerVC.h"/>
-            <relationships>
-                <relationship kind="action" name="aceptarFecha:"/>
-                <relationship kind="action" name="cancelarFecha:"/>
-                <relationship kind="outlet" name="miPicker" candidateClass="UIPickerView"/>
-            </relationships>
-        </class>
-        <class className="SubjectsListVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
-            <relationships>
-                <relationship kind="action" name="refreshData:"/>
-                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

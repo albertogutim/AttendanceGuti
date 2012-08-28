@@ -12,6 +12,8 @@
 #define COLUMN_START 3
 #define ROW_START 3
 #define DATES_START 4
+#define MAIL_COLUMN 2
+#define STUDENTS_COLUMN 1
 
 @implementation GDocsHelper
 @synthesize miService = _miService;
@@ -33,6 +35,9 @@
 @synthesize eTag = _eTag;
 @synthesize updatedEntries = _updatedEntries;
 @synthesize listaCsStado =_listaCsStado;
+@synthesize studentName = _studentName;
+@synthesize studentMail = _studentMail;
+@synthesize row = _row;
 
 
 
@@ -300,8 +305,8 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                 
                 NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
                 GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-                [q setMinimumColumn:1]; 
-                [q setMaximumColumn:1]; //Idem
+                [q setMinimumColumn:STUDENTS_COLUMN]; 
+                [q setMaximumColumn:STUDENTS_COLUMN]; 
                 [q setMinimumRow:ROW_START];
                 
                 
@@ -383,8 +388,8 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         
         NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
         GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-        [q setMinimumColumn:1];
-        [q setMaximumColumn:1];
+        [q setMinimumColumn:STUDENTS_COLUMN];
+        [q setMaximumColumn:STUDENTS_COLUMN];
         [q setMinimumRow:ROW_START];
    
         
@@ -607,6 +612,140 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
 }
 
+
+
+- (void)addStudent:(NSString *)clase paraColumna:(NSInteger) col conNombre: (NSString*) nombre paraEstadosPorDefecto: (BOOL)estados conEmail: (NSString*) mail
+{
+    //Vamos añadir un nuevo alumno con su mail y su estado predeterminado.
+    
+    
+    self.estados = estados;
+    self.columna = col;
+    self.clase = clase;
+    self.studentName = nombre;
+    self.studentMail = mail;
+    
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    //query para coger solo los nombres de los alumnos
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:STUDENTS_COLUMN];
+    [q setMaximumColumn:STUDENTS_COLUMN];
+    [q setMinimumRow:ROW_START];
+    
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(addStudentTicket:finishedWithFeed:error:)];
+    
+}
+
+
+
+- (void)addStudentTicket:(GDataServiceTicket *)ticket
+          finishedWithFeed:(GDataFeedBase *)feed
+                     error:(NSError *)error
+{
+        
+    //TODO: controlar errores
+
+    
+    self.row = [[feed entries] count] + ROW_START;
+    GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:1 inputString:self.studentName numericValue:nil resultString:nil];
+    GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    
+    [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedStudentTicket:finishedWithFeed:error:)];
+    
+}
+
+- (void)insertedStudentTicket:(GDataServiceTicket *)ticket
+finishedWithFeed:(GDataFeedBase *)feed
+          error:(NSError *)error
+{
+    //Ahora una vez tenemos insertado el nombre tenemos que insertar su estado
+    //TODO: controlar errores
+    NSString *e = [NSString string];
+    if(self.estados)
+        e = @"1";
+    else
+        e = @"2";
+    
+    GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:self.columna inputString:e numericValue:nil resultString:nil];
+    GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    
+    [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertStateStudentTicket:finishedWithFeed:error:)];
+    
+    
+}
+
+
+- (void)insertStateStudentTicket:(GDataServiceTicket *)ticket
+             finishedWithFeed:(GDataFeedBase *)feed
+                        error:(NSError *)error
+{
+
+    
+    //TODO: controlar errores
+    //Ahora solo nos queda insertar el mail.
+    
+    GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:MAIL_COLUMN inputString:self.studentMail numericValue:nil resultString:nil];
+    GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    
+    [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedStateStudentTicket:finishedWithFeed:error:)];
+    
+}
+
+- (void)insertedStateStudentTicket:(GDataServiceTicket *)ticket
+                finishedWithFeed:(GDataFeedBase *)feed
+                           error:(NSError *)error
+{
+
+    //TODO: controlar errores
+    //Ya se subió todo a la spreadsheet.
+    NSLog(@"Ya se subió todo a la spreadsheet");
+    
+    //ahora hay que compensar los días anteriores si los hubiera, poniendo un estado diferente
+    //que no contabilizara para las estadisticas (-1).
+    
+        if (self.columna>DATES_START) //hay fechas anteriores
+        {
+            
+            for (int i=DATES_START; i<self.columna; i++) {
+                
+                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:i inputString:@"-1" numericValue:nil resultString:nil];
+                GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+                
+                NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+                
+                [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertePastStateStudentTicket:finishedWithFeed:error:)];
+                
+            }
+            [self.delegate respuestaNewStudent: error];
+        
+        }
+    else
+        [self.delegate respuestaNewStudent: error];
+
+}
+
+
+- (void)insertePastStateStudentTicket:(GDataServiceTicket *)ticket
+                  finishedWithFeed:(GDataFeedBase *)feed
+                             error:(NSError *)error
+{
+
+//TODO: controlar error
+
+}
 
 //NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.
 //Devuelve -1 si es anterior, 1 si es posterior y 0 si es el mismo día

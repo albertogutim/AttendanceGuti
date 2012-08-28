@@ -203,7 +203,7 @@
 //el usuario ha elegido fecha y quiere volver a la pantalla anterior
 - (IBAction)aceptarFecha:(id)sender {
     
-    [self.delegate devolverFecha:self didSelectDate:self.fecha];
+    [self.delegate devolverFecha:self didSelectDate:self.fecha hoyEs: self.today];
     
     
 }
@@ -211,6 +211,6 @@
 //el usuario no quiere elegir fecha y quiere volver a la pantalla anterior
 - (IBAction)cancelarFecha:(id)sender {
     
-    [self.delegate devolverFecha:self didSelectDate:nil];
+    [self.delegate devolverFecha:self didSelectDate:nil hoyEs: self.today];
 }
 @end

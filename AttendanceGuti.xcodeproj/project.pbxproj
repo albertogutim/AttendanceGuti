@@ -14,7 +14,7 @@
 		3A2A7E9015CBEA2B000E3074 /* GDocsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7E8F15CBEA2B000E3074 /* GDocsHelper.m */; };
 		3A2A7EAD15CE860C000E3074 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */; };
 		3A4462E015CAAF4B008B1FA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A4462E215CAAF4B008B1FA3 /* Localizable.strings */; };
-		3A846C9815EBC7D0007D06B5 /* AddStudentTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A846C9715EBC7D0007D06B5 /* AddStudentTVC.m */; };
+		3A846C9F15ECD8D1007D06B5 /* AddStudentTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */; };
 		3A864B6C15C9E1CF00DE7D8A /* ConfigTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */; };
 		3A876F6E15D02F850095B2E3 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A876F6D15D02F850095B2E3 /* libxml2.dylib */; };
 		3A876F7015D0300E0095B2E3 /* libGDataTouchStaticLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A876F6F15D0300E0095B2E3 /* libGDataTouchStaticLib.a */; };
@@ -54,8 +54,8 @@
 		3A2A7EAC15CE860C000E3074 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		3A4462E115CAAF4B008B1FA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A4462E315CAAF53008B1FA3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3A846C9615EBC7D0007D06B5 /* AddStudentTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddStudentTVC.h; sourceTree = "<group>"; };
-		3A846C9715EBC7D0007D06B5 /* AddStudentTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddStudentTVC.m; sourceTree = "<group>"; };
+		3A846C9D15ECD8D0007D06B5 /* AddStudentTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddStudentTVC.h; sourceTree = "<group>"; };
+		3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddStudentTVC.m; sourceTree = "<group>"; };
 		3A864B6A15C9E1CF00DE7D8A /* ConfigTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigTVC.h; path = ../ConfigTVC.h; sourceTree = "<group>"; };
 		3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConfigTVC.m; path = ../ConfigTVC.m; sourceTree = "<group>"; };
 		3A876F6D15D02F850095B2E3 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -489,8 +489,8 @@
 				3AD9502915C7E3C0005D45D7 /* AppDelegate.h */,
 				3AD9502A15C7E3C0005D45D7 /* AppDelegate.m */,
 				3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */,
-				3A846C9615EBC7D0007D06B5 /* AddStudentTVC.h */,
-				3A846C9715EBC7D0007D06B5 /* AddStudentTVC.m */,
+				3A846C9D15ECD8D0007D06B5 /* AddStudentTVC.h */,
+				3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */,
 				3A238E6A15D2D8C2003C8C0C /* AttendanceStudentsVC.h */,
 				3A238E6B15D2D8C2003C8C0C /* AttendanceStudentsVC.m */,
 				3A238E7F15D3EA06003C8C0C /* PickerVC.h */,
@@ -924,7 +924,7 @@
 				3A238E5A15D270DC003C8C0C /* ClassListTVC.m in Sources */,
 				3A238E6C15D2D8C2003C8C0C /* AttendanceStudentsVC.m in Sources */,
 				3A238E8115D3EA07003C8C0C /* PickerVC.m in Sources */,
-				3A846C9815EBC7D0007D06B5 /* AddStudentTVC.m in Sources */,
+				3A846C9F15ECD8D1007D06B5 /* AddStudentTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

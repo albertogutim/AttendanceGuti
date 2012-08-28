@@ -18,6 +18,8 @@
 - (void)respuestaConColumna:(NSMutableDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error;
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error;
 - (void)respuestaUpdate: (NSError *) error;
+- (void)respuestaNewStudent: (NSError *) error;
+
 @end
 
 
@@ -76,6 +78,30 @@
                      error:(NSError *)error;
 
 
+- (void)addStudent:(NSString *)clase paraColumna:(NSInteger) col conNombre: (NSString*) nombre paraEstadosPorDefecto: (BOOL)estados conEmail: (NSString*) mail;
+
+- (void)addStudentTicket:(GDataServiceTicket *)ticket
+        finishedWithFeed:(GDataFeedBase *)feed
+                   error:(NSError *)error;
+
+- (void)insertedStudentTicket:(GDataServiceTicket *)ticket
+             finishedWithFeed:(GDataFeedBase *)feed
+                        error:(NSError *)error;
+
+- (void)insertStateStudentTicket:(GDataServiceTicket *)ticket
+                finishedWithFeed:(GDataFeedBase *)feed
+                           error:(NSError *)error;
+
+- (void)insertedStateStudentTicket:(GDataServiceTicket *)ticket
+                  finishedWithFeed:(GDataFeedBase *)feed
+                             error:(NSError *)error;
+
+- (void)insertePastStateStudentTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error;
+
+
+
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
 
 
@@ -94,6 +120,7 @@
 @property (nonatomic, assign) BOOL estados;
 @property (nonatomic, assign) BOOL encontrada;
 @property (nonatomic, assign) NSInteger columna;
+@property (nonatomic, assign) NSInteger row;
 
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, strong) NSString *clase;
@@ -102,6 +129,7 @@
 @property (nonatomic, strong) NSString *eTag;
 @property (nonatomic, strong) NSArray *updatedEntries;
 @property (nonatomic, strong) NSMutableDictionary *listaCsStado;
-
+@property (nonatomic, strong) NSString *studentName;
+@property (nonatomic, strong) NSString *studentMail;
 
 @end

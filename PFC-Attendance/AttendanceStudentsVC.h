@@ -28,6 +28,7 @@
 @property (strong, nonatomic) NSString *clase;
 @property (strong, nonatomic) NSMutableDictionary *miListaAlumnos;
 @property (nonatomic, strong) NSDate *fecha;
+@property (nonatomic, strong) NSDate *today;
 @property (nonatomic, assign) NSInteger columna;
 @property (strong, nonatomic) NSMutableDictionary *todos;
 - (IBAction)attendance:(id)sender;

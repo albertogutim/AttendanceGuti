@@ -13,7 +13,7 @@
 
 @protocol PickerVCDelegate <NSObject>
 
--(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date;
+-(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date hoyEs:(NSDate *) today;
 
 @end
 

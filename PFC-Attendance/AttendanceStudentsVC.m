@@ -27,6 +27,7 @@
 @synthesize fecha = _fecha;
 @synthesize columna = _columna;
 @synthesize todos = _todos;
+@synthesize today = _today;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -179,6 +180,7 @@
                 iv.image = nil;
                 break;
             default:
+                iv.image = nil;
                 break;
         }
     }
@@ -296,7 +298,10 @@
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     //animar boton pasar asistencia
     [self.attendanceButton setEnabled:YES];
-    [self.addButton setEnabled:YES];
+    
+    //solo se podra añadir un alumno si se trata del dia de hoy porque si no quedaria la spreadsheet incompleta
+    if([self.today isEqualToDate:self.fecha])
+        [self.addButton setEnabled:YES];
     [self.refreshButton setEnabled:YES];
     [self.informesButton setEnabled:YES];
     [self.resumenButton setEnabled:YES];
@@ -334,6 +339,28 @@
     
 }
 
+- (void)respuestaNewStudent: (NSError *) error
+{
+   
+    if(error){
+        //TODO: actuar si error
+    }
+    else
+    {
+        //repintamos la tabla
+        
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
+        
+        
+    }
+    
+    
+
+
+}
+
 
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -362,9 +389,11 @@
     
 }
 
--(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date
+-(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date hoyEs:(NSDate *) today
+
 {
     self.fecha = date;
+    self.today = today;
     [self.attendanceButton setEnabled:NO];
     [self.calendarButton setEnabled:NO];
     [self.navigationController dismissModalViewControllerAnimated:YES];
@@ -384,23 +413,41 @@
 }
 
 
--(void) devolverDatosAlumno: (AddStudentTVC *) controller conNombre: (NSString *) nombre yEmail: (NSString *) mail
+-(void) devolverDatosAlumno: (AddStudentTVC *) controller conNombre: (NSString *) nombre yEmail: (NSString *) mail yEstado: (NSInteger) estado
 {
+
+    [self.navigationController popViewControllerAnimated:YES];
 
     //Aquí hay que añadir el nuevo alumno a la spreadsheet.
     //TODO: crear un nuevo método para añadir el mail, el nombre del alumno y su estado predeterminado.
-    if((nombre!=nil) && (mail!=nil))
+    if(nombre!=nil) //Permitimos añadir un alumno sin mail??
     {
-        //[UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
-        //[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        //Tenemos que pintar de nuevo la tabla añadiendo el alumno nuevo.
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        if(configH.presentesDefecto)
+            [self.todos setValue:@"1" forKey:nombre];
+        else
+             [self.todos setValue:@"2" forKey:nombre];
+        
+        //Antes de repintar la tabla debemos añadir el nuevo alumno a la spreadsheet
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        midh.delegate = self;
+        [midh addStudent: self.clase paraColumna:self.columna conNombre: nombre paraEstadosPorDefecto: configH.presentesDefecto conEmail: mail];
+        
 
-    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"datos alumno"
+
+    /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"datos alumno"
                                                          message:[NSString stringWithFormat:@"nombre: %@ mail: %@", nombre, mail]
                                                         delegate:self
                                                cancelButtonTitle:@"Dismiss"
                                                otherButtonTitles:nil];
     
     [alertView show];
+     */
     }
 
 }
@@ -487,7 +534,7 @@
     {
         if(![[alumnos.allValues objectAtIndex:j] isEqualToString:@"1"])
         {
-            if([[alumnos.allValues objectAtIndex:j] isEqualToString:@"2"])
+            if(([[alumnos.allValues objectAtIndex:j] isEqualToString:@"2"]) || ([[alumnos.allValues objectAtIndex:j] isEqualToString:@"-1"]))
                 [filtro removeObjectForKey:[alumnos.allKeys objectAtIndex:j]];
         }
     }
