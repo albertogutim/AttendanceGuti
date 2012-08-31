@@ -10,6 +10,7 @@
 #import "GDocsHelper.h"
 #import "PickerVC.h"
 #import "AddStudentTVC.h"
+#import "ResumenVC.h"
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate>
 
@@ -37,6 +38,7 @@
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
 
 - (IBAction)updateSpreadsheet:(id)sender;
+- (IBAction)randomStudent:(id)sender;
 
 
 

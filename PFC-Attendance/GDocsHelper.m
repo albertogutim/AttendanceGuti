@@ -14,6 +14,7 @@
 #define DATES_START 4
 #define MAIL_COLUMN 2
 #define STUDENTS_COLUMN 1
+#define RESUMEN_ROW 2
 
 @implementation GDocsHelper
 @synthesize miService = _miService;
@@ -38,6 +39,7 @@
 @synthesize studentName = _studentName;
 @synthesize studentMail = _studentMail;
 @synthesize row = _row;
+@synthesize resumen = _resumen;
 
 
 
@@ -745,7 +747,129 @@ finishedWithFeed:(GDataFeedBase *)feed
 
 //TODO: controlar error
 
+
 }
+
+
+- (void)insertResumen:(NSString *)clase paraColumna:(NSInteger)columna conResumen:(NSString *)resumen
+{
+
+    self.columna = columna;
+    self.clase = clase;
+    self.resumen = resumen;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:RESUMEN_ROW column:columna inputString:resumen numericValue:nil resultString:nil];
+    GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    
+    [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertResumenTicket:finishedWithFeed:error:)];
+    
+
+
+
+}
+
+- (void)insertResumenTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error
+
+{
+
+    
+    //TODO: controlar error
+    NSLog(@"Resumen subido");
+    [self.delegate respuestaInsertResumen:error];
+    
+}
+
+- (void)existeResumen:(NSString *)clase paraColumna:(NSInteger)columna
+{
+
+    
+   
+    self.columna = columna;
+    self.clase = clase;
+       
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    //query para ver si existe resumen
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:columna];
+    [q setMaximumColumn:columna];
+    [q setMinimumRow:RESUMEN_ROW];
+    [q setMaximumRow:RESUMEN_ROW];
+    
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(existeResumenTicket:finishedWithFeed:error:)];
+    
+}
+
+
+- (void)existeResumenTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error
+{
+     if ([[feed entries] count]) //Existe resumen
+     {
+     
+          GDataSpreadsheetCell *theCell = [[[feed entries] objectAtIndex:0] cell];
+         [self.delegate respuestaExisteResumen:YES resumen:theCell.inputString error: error];
+     }
+    else
+        [self.delegate respuestaExisteResumen:NO resumen:nil error: error];
+}
+
+
+- (void)updateResumen:(NSString *)clase paraColumna:(NSInteger)columna conResumen: (NSString *) resumen
+{
+    
+    
+    self.columna = columna;
+    self.clase = clase;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    //query para acceder al resumen
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:columna];
+    [q setMaximumColumn:columna];
+    [q setMinimumRow:RESUMEN_ROW];
+    [q setMaximumRow:RESUMEN_ROW];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(updateResumenTicket:finishedWithFeed:error:)];
+
+}
+
+- (void)updateResumenTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error
+
+
+{
+     [[[[feed entries] objectAtIndex:0]  cell] setInputString:self.resumen];
+    
+    [self.miService fetchEntryByUpdatingEntry:[[feed entries] objectAtIndex:0] delegate:self didFinishSelector:@selector(updatedResumenTicket:finishedWithFeed:error:)];
+}
+
+- (void)updatedResumenTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error
+{
+          [self.delegate respuestaInsertResumen:error];
+}
+
 
 //NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.
 //Devuelve -1 si es anterior, 1 si es posterior y 0 si es el mismo día

@@ -36,6 +36,7 @@
 		3AD9502E15C7E3C0005D45D7 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */; };
 		3AD9503115C7E3C0005D45D7 /* SubjectsListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9503015C7E3C0005D45D7 /* SubjectsListVC.m */; };
 		3AE039CD15CFD54F00AB63EB /* ConfigHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */; };
+		3AEFCBBC15ED51B800AD04E1 /* ResumenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
@@ -85,6 +86,8 @@
 		3AD9503815C7E3C1005D45D7 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		3AE039CB15CFD54F00AB63EB /* ConfigHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigHelper.h; sourceTree = "<group>"; };
 		3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigHelper.m; sourceTree = "<group>"; };
+		3AEFCBBA15ED51B700AD04E1 /* ResumenVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResumenVC.h; sourceTree = "<group>"; };
+		3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResumenVC.m; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3AFF0CA215CBE4B700CD01E4 /* GData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GData.h; sourceTree = "<group>"; };
@@ -489,6 +492,8 @@
 				3AD9502915C7E3C0005D45D7 /* AppDelegate.h */,
 				3AD9502A15C7E3C0005D45D7 /* AppDelegate.m */,
 				3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */,
+				3AEFCBBA15ED51B700AD04E1 /* ResumenVC.h */,
+				3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */,
 				3A846C9D15ECD8D0007D06B5 /* AddStudentTVC.h */,
 				3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */,
 				3A238E6A15D2D8C2003C8C0C /* AttendanceStudentsVC.h */,
@@ -925,6 +930,7 @@
 				3A238E6C15D2D8C2003C8C0C /* AttendanceStudentsVC.m in Sources */,
 				3A238E8115D3EA07003C8C0C /* PickerVC.m in Sources */,
 				3A846C9F15ECD8D1007D06B5 /* AddStudentTVC.m in Sources */,
+				3AEFCBBC15ED51B800AD04E1 /* ResumenVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

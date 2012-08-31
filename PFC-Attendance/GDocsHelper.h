@@ -19,6 +19,9 @@
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error;
 - (void)respuestaUpdate: (NSError *) error;
 - (void)respuestaNewStudent: (NSError *) error;
+- (void)respuestaInsertResumen: (NSError *) error;
+- (void)respuestaExisteResumen: (BOOL) existe resumen: (NSString*) resumen error: (NSError *) error;
+
 
 @end
 
@@ -100,6 +103,26 @@
                      finishedWithFeed:(GDataFeedBase *)feed
                                 error:(NSError *)error;
 
+- (void)insertResumen:(NSString *)clase paraColumna:(NSInteger)columna conResumen:(NSString *)resumen;
+
+- (void)insertResumenTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error;
+- (void)existeResumen:(NSString *)clase paraColumna:(NSInteger)columna;
+
+- (void)existeResumenTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error;
+
+- (void)updateResumen:(NSString *)clase paraColumna:(NSInteger)columna conResumen: (NSString *) resumen;
+- (void)updateResumenTicket:(GDataServiceTicket *)ticket
+           finishedWithFeed:(GDataFeedBase *)feed
+                      error:(NSError *)error;
+
+- (void)updatedResumenTicket:(GDataServiceTicket *)ticket
+            finishedWithFeed:(GDataFeedBase *)feed
+                       error:(NSError *)error;
+
 
 
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
@@ -131,5 +154,6 @@
 @property (nonatomic, strong) NSMutableDictionary *listaCsStado;
 @property (nonatomic, strong) NSString *studentName;
 @property (nonatomic, strong) NSString *studentMail;
+@property (nonatomic, strong) NSString *resumen;
 
 @end

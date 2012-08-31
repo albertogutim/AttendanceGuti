@@ -387,6 +387,15 @@
         
     }
     
+    if ([[segue identifier] isEqualToString:@"goToResumen"])
+    {
+        ResumenVC *resumenvc = [segue destinationViewController];
+        resumenvc.alumnos = self.todos;
+        resumenvc.columna = self.columna;
+        resumenvc.clase = self.clase;
+        
+    }
+    
 }
 
 -(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date hoyEs:(NSDate *) today
@@ -396,6 +405,14 @@
     self.today = today;
     [self.attendanceButton setEnabled:NO];
     [self.calendarButton setEnabled:NO];
+    [self.refreshButton setEnabled:NO];
+    [self.informesButton setEnabled:NO];
+    [self.resumenButton setEnabled:NO];
+    [self.randomButton setEnabled:NO];
+    [self.addButton setEnabled:NO];
+   
+    
+    
     [self.navigationController dismissModalViewControllerAnimated:YES];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
@@ -420,11 +437,20 @@
 
     //Aquí hay que añadir el nuevo alumno a la spreadsheet.
     //TODO: crear un nuevo método para añadir el mail, el nombre del alumno y su estado predeterminado.
-    if(nombre!=nil) //Permitimos añadir un alumno sin mail??
+    if(nombre!=nil) //Permitimos añadir un alumno sin mail?? NO!
     {
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        [self.attendanceButton setEnabled:NO];
+        [self.calendarButton setEnabled:NO];
+        [self.refreshButton setEnabled:NO];
+        [self.informesButton setEnabled:NO];
+        [self.resumenButton setEnabled:NO];
+        [self.randomButton setEnabled:NO];
+        [self.addButton setEnabled:NO];
+
         //Tenemos que pintar de nuevo la tabla añadiendo el alumno nuevo.
         
         ConfigHelper *configH = [ConfigHelper sharedInstance];
@@ -548,6 +574,22 @@
     [midh updateAlumnosConEstados:self.clase paraUpdate:self.todos paraColumna:self.columna];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    
+}
+
+- (IBAction)randomStudent:(id)sender
+{
+   int randomKeyIndex = (arc4random()% [[self.todos allKeys] count]);
+   NSString *randomKey = [[self.todos allKeys] objectAtIndex:randomKeyIndex];
+   UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"Alumno"
+     message:[NSString stringWithFormat:@"nombre: %@", randomKey]
+     delegate:self
+     cancelButtonTitle:@"Dismiss"
+     otherButtonTitles:nil];
+     
+     [alertView show];
+    
+
     
 }
 

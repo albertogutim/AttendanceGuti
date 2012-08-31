@@ -473,10 +473,14 @@
                         <barButtonItem width="34" style="plain" systemItem="fixedSpace" id="HtH-QC-3kq"/>
                         <barButtonItem image="lapiz2.png" id="kAy-Pa-kSN">
                             <connections>
-                                <segue destination="DdU-dP-SnP" kind="push" id="ARV-Ar-8SU"/>
+                                <segue destination="DdU-dP-SnP" kind="push" identifier="goToResumen" id="ARV-Ar-8SU"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="R" id="qir-vL-HvC"/>
+                        <barButtonItem title="R" id="qir-vL-HvC">
+                            <connections>
+                                <action selector="randomStudent:" destination="gL0-ve-xDd" id="GtY-tj-yM7"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem title="S" id="Jb6-xe-41b"/>
                         <barButtonItem systemItem="pageCurl" id="M7I-Ui-Lyx">
                             <connections>
@@ -600,15 +604,21 @@
         <scene sceneID="AU9-xV-FS6">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qkf-Iu-ZJ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController title="Resumen " id="DdU-dP-SnP" userLabel="Resumen" sceneMemberID="viewController">
-                    <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="LtC-9o-rPY">
+                <viewController title="Resumen " id="DdU-dP-SnP" userLabel="Resumen" customClass="ResumenVC" sceneMemberID="viewController">
+                    <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Leo-dX-XGs">
                         <rect key="frame" x="0.0" y="64" width="320" height="372"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
                     </textView>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem title="Item" style="plain" systemItem="refresh" id="3pe-fN-zW8">
+                            <connections>
+                                <action selector="updateResumen:" destination="DdU-dP-SnP" id="eAQ-MX-rDt"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" id="Y1d-FV-5fO">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="AhT-gO-QcT">
@@ -619,9 +629,23 @@
                                 <segment title="Presentes"/>
                                 <segment title="Ausentes"/>
                             </segments>
+                            <connections>
+                                <action selector="changeSegmentedControl:" destination="DdU-dP-SnP" eventType="valueChanged" id="aYG-BR-ZO9"/>
+                            </connections>
                         </segmentedControl>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Dvp-0U-n1Z"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Dvp-0U-n1Z">
+                            <connections>
+                                <action selector="sendResumen:" destination="DdU-dP-SnP" id="gjw-zB-ntO"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="refreshButton" destination="3pe-fN-zW8" id="gD7-gw-WiG"/>
+                        <outlet property="resumenText" destination="Leo-dX-XGs" id="cbu-uB-QQh"/>
+                        <outlet property="sendButton" destination="Dvp-0U-n1Z" id="Kvj-ac-cfl"/>
+                        <outlet property="todosPresentesAusentes" destination="AhT-gO-QcT" id="cHC-34-uMi"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1957" y="479"/>
@@ -1459,6 +1483,92 @@
         <image name="check.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
     </resources>
+    <classes>
+        <class className="AddStudentTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddStudentTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="done:"/>
+                <relationship kind="outlet" name="emailField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="nameField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="AttendanceStudentsVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttendanceStudentsVC.h"/>
+            <relationships>
+                <relationship kind="action" name="attendance:"/>
+                <relationship kind="action" name="changeSegmentedControl:"/>
+                <relationship kind="action" name="randomStudent:"/>
+                <relationship kind="action" name="updateSpreadsheet:"/>
+                <relationship kind="outlet" name="addButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="attendanceButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="calendarButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="informesButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="randomButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="refreshButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="resumenButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="todosPresentesAusentes" candidateClass="UISegmentedControl"/>
+            </relationships>
+        </class>
+        <class className="ClassListTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ConfigTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="goBack:"/>
+                <relationship kind="action" name="guardarChanged:"/>
+                <relationship kind="action" name="masdeXausencias:"/>
+                <relationship kind="action" name="masdeXretrasos:"/>
+                <relationship kind="action" name="presentesChanged:"/>
+                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="PickerVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PickerVC.h"/>
+            <relationships>
+                <relationship kind="action" name="aceptarFecha:"/>
+                <relationship kind="action" name="cancelarFecha:"/>
+                <relationship kind="outlet" name="miPicker" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="ResumenVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ResumenVC.h"/>
+            <relationships>
+                <relationship kind="action" name="changeSegmentedControl:"/>
+                <relationship kind="action" name="donebutton:"/>
+                <relationship kind="action" name="sendResumen:"/>
+                <relationship kind="action" name="updateResumen:"/>
+                <relationship kind="outlet" name="keyboardToolbar" candidateClass="UIToolbar"/>
+                <relationship kind="outlet" name="refreshButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="resumenText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="sendButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="todosPresentesAusentes" candidateClass="UISegmentedControl"/>
+            </relationships>
+        </class>
+        <class className="SubjectsListVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
