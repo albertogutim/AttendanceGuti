@@ -510,6 +510,7 @@
         StudentVC *studentVC = [segue destinationViewController];
         studentVC.clase = self.clase;
         studentVC.alumno = self.alumno;
+        studentVC.delegate = self;
         studentVC.row = [[self.alumnosConOrden objectForKey:self.alumno]integerValue]+2;
     }
 
@@ -591,6 +592,28 @@
     
     [alertView show];
      */
+    }
+
+}
+
+-(void) devolverTabla:(StudentVC *)controller huboCambios: (BOOL) cambios
+{
+    
+    if(cambios)
+    {
+        
+        [self.attendanceButton setEnabled:NO];
+        [self.calendarButton setEnabled:NO];
+        [self.refreshButton setEnabled:NO];
+        [self.informesButton setEnabled:NO];
+        [self.resumenButton setEnabled:NO];
+        [self.randomButton setEnabled:NO];
+        [self.addButton setEnabled:NO];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
     }
 
 }
@@ -712,20 +735,6 @@
     
 }
 
-
--(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias
-{
-    NSMutableDictionary *filtro = [NSMutableDictionary dictionaryWithDictionary:asistencias];
-    for (int j=0; j<[asistencias count]; j++)
-    {
-        if(![[asistencias.allValues objectAtIndex:j] isEqualToString:@"3"])
-        {
-            [filtro removeObjectForKey:[asistencias.allKeys objectAtIndex:j]];
-        }
-    }
-    return filtro;
-    
-}
 
 
 

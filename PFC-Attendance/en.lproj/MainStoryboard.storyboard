@@ -715,6 +715,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="datosAlumnoTable" destination="hWU-La-RQQ" id="Xdy-U3-TBd"/>
+                        <outlet property="eliminarAlumnoButton" destination="zqf-rF-iAC" id="dkN-dO-dWt"/>
                     </connections>
                 </viewController>
             </objects>

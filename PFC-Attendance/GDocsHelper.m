@@ -886,8 +886,6 @@ finishedWithFeed:(GDataFeedBase *)feed
 }
 
 
-/////////////////////////////////////////////Aqui estan los metodos que no se si luego acabare necesitando
-
 - (void)listadoAlumnos:(NSString *)clase
 
 {
@@ -958,79 +956,6 @@ finishedWithFeed:(GDataFeedBase *)feed
     NSDictionary * listaAlumnosConMailDictionary = [NSDictionary dictionaryWithDictionary:listaAlumnosConMail];
     [self.delegate respuesta:listaAlumnosConMailDictionary error:error];
 }
-
-
-- (void)listadoAlumnosEstadisticas:(NSString *)clase
-
-{
-    self.clase = clase;
-    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
-    
-    //query para acceder a los alumnos
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:STUDENTS_COLUMN];
-    [q setMaximumColumn:STUDENTS_COLUMN];
-    [q setMinimumRow:ROW_START];
-    
-    
-    [self.miService fetchFeedWithQuery:q
-                              delegate:self
-                     didFinishSelector:@selector(listadoAlumnosEstadisticasTicket:finishedWithFeed:error:)];
-}
-
-- (void)listadoAlumnosEstadisticasTicket:(GDataServiceTicket *)ticket
-              finishedWithFeed:(GDataFeedBase *)feed
-                         error:(NSError *)error
-
-{
-    NSMutableArray *listaAlumnos = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
-    
-    
-    for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
-        
-        GDataSpreadsheetCell *theCell = [cs cell];
-        
-        [listaAlumnos addObject:theCell.inputString];
-    }
-    
-    self.alumnos = [NSArray arrayWithArray:listaAlumnos];
-    //query para acceder a las estadísticas
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:STADISTICS_COLUMN];
-    [q setMaximumColumn:STADISTICS_COLUMN];
-    [q setMinimumRow:ROW_START];
-    
-    
-    
-    [self.miService fetchFeedWithQuery:q
-                              delegate:self
-                     didFinishSelector:@selector(listadoAlumnosConEstadisticasTicket:finishedWithFeed:error:)];
-}
-
-- (void)listadoAlumnosConEstadisticasTicket:(GDataServiceTicket *)ticket
-                        finishedWithFeed:(GDataFeedBase *)feed
-                                   error:(NSError *)error
-
-{
-    NSMutableArray *stadistics = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
-    
-    for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
-        
-        GDataSpreadsheetCell *theCell = [cs cell];
-        
-        [stadistics addObject:theCell.inputString];
-    }
-    
-    
-    NSMutableDictionary *listaAlumnosConStadistics = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithArray:stadistics] forKeys:self.alumnos];
-    
-    NSDictionary * listaAlumnosConStadisticsDictionary = [NSDictionary dictionaryWithDictionary:listaAlumnosConStadistics];
-    [self.delegate respuestaEstadisticas:listaAlumnosConStadisticsDictionary error:error];
-}
-
-/////////////////////////////////////////////Aqui estan los metodos que no se si luego acabare necesitando
 
 
 - (void)listadoFechasConAsistencia:(NSString *)clase paraAlumno:(NSString *)alumno conRow: (NSInteger) row
@@ -1120,10 +1045,9 @@ finishedWithFeed:(GDataFeedBase *)feed
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
     
     //query para acceder a la row y hacer un update poniendo toda la fila a nulo
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    NSURL *feedURL = [self.miClaseWs listFeedURL];
+    /*GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
     [q setMinimumColumn:STUDENTS_COLUMN];
-    [q setMaximumColumn:STUDENTS_COLUMN];
     [q setMinimumRow:row];
     [q setMaximumRow:row];
     
@@ -1131,10 +1055,16 @@ finishedWithFeed:(GDataFeedBase *)feed
     [self.miService fetchFeedWithQuery:q
                               delegate:self
                      didFinishSelector:@selector(eliminarAlumnoTicket:finishedWithFeed:error:)];
+    
+    [self.miService deleteResourceURL:q ETag:nil delegate:self didFinishSelector:@selector(alumnoEliminadoTicket:finishedWithFeed:error:)];
+     */
+    
+    [self.miService fetchFeedWithURL:feedURL delegate:self didFinishSelector:@selector(alumnoEliminadoTicket:finishedWithFeed:error:)];
 
    
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)eliminarAlumnoTicket:(GDataServiceTicket *)ticket
                      finishedWithFeed:(GDataFeedBase *)feed
@@ -1142,18 +1072,13 @@ finishedWithFeed:(GDataFeedBase *)feed
 
 {
     
-        for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
-           
-            [[cs cell] setInputString:@""];
-        }
-    
     NSString *eTag = feed.ETag;
     self.eTag = eTag;
     
     NSArray *updatedEntries = [feed entries];
     self.updatedEntries = updatedEntries;
     
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    NSURL *feedURL = [self.miClaseWs listFeedURL];
     [self.miService fetchFeedWithURL:feedURL
                             delegate:self
                    didFinishSelector:@selector(eliminarAlumnoBatchTicket:finishedWithFeed:error:)];
@@ -1174,30 +1099,35 @@ finishedWithFeed:(GDataFeedBase *)feed
     [batchFeed setEntriesWithEntries:self.updatedEntries];
     
     GDataBatchOperation *op;
-    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationUpdate];
+    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationDelete];
     [batchFeed setBatchOperation:op];
     [batchFeed setETag:self.eTag];
     
     [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(alumnoEliminadoTicket:finishedWithFeed:error:)];
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)alumnoEliminadoTicket:(GDataServiceTicket *)ticket
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error
 {
-    //NSLog(@"termino el update");
-    [self.delegate respuestaUpdate: error];
+        [self.miService deleteEntry:[[feed entries] objectAtIndex:self.row-2] delegate:self didFinishSelector:@selector(alumnoEliminadoSITicket:finishedWithFeed:error:)];
+    
+    
+    
+    
+    
     
 }
 
 
+- (void)alumnoEliminadoSITicket:(GDataServiceTicket *)ticket
+             finishedWithFeed:(GDataFeedBase *)feed
+                        error:(NSError *)error
+{
+    NSLog(@"termino de eliminar alumno");
 
-
-
-
-
-
-
+    [self.delegate respuestaUpdate: error];
+}
 
 
 //NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.

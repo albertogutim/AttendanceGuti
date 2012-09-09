@@ -13,6 +13,7 @@
 @end
 
 @implementation StudentVC
+@synthesize eliminarAlumnoButton = _eliminarAlumnoButton;
 
 @synthesize alumno =_alumno;
 @synthesize clase = _clase;
@@ -26,6 +27,7 @@
 @synthesize pintarAusencias = _pintarAusencias;
 @synthesize pintarRetrasos =_pintarRetrasos;
 @synthesize datosAlumno = _datosAlumno;
+@synthesize cambios = _cambios;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,6 +47,7 @@
 - (void)viewDidUnload
 {
     [self setDatosAlumnoTable:nil];
+    [self setEliminarAlumnoButton:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -55,11 +58,21 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
+    self.cambios = NO;
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno conRow: self.row];
         
     [super viewWillAppear:animated];
+}
+
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    
+    [self.delegate devolverTabla:self huboCambios:self.cambios];
+	[super viewWillDisappear:animated];
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -207,8 +220,24 @@
     
 }
 
+-(void) respuestaUpdate:(NSError *)error
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+
+    self.datosAlumnoTable = nil;
+    self.pintarAusencias = nil;
+    self.pintarRetrasos = nil;
+    self.cuantasAusencias = 0;
+    self.cuantosRetrasos = 0;
+    [self.datosAlumnoTable reloadData];
+
+}
+
 - (IBAction)eliminarAlumno:(id)sender {
     
+    self.cambios = YES;
+    [self.eliminarAlumnoButton setEnabled:NO];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     GDocsHelper *midh = [GDocsHelper sharedInstance];

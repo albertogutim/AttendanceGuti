@@ -9,6 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
 
+@class StudentVC;
+
+@protocol StudentVCDelegate <NSObject>
+
+-(void) devolverTabla: (StudentVC *) controller huboCambios: (BOOL) cambios;
+
+@end
+
 @interface StudentVC : UIViewController <GDocsHelperDelegate>
 
 @property (strong, nonatomic) NSString *alumno;
@@ -23,6 +31,9 @@
 @property (strong, nonatomic) NSMutableDictionary *pintarAusencias;
 @property (strong, nonatomic) NSMutableDictionary *pintarRetrasos;
 @property (strong, nonatomic) NSArray *datosAlumno;
+@property (assign, nonatomic) BOOL cambios;
+@property (nonatomic, weak) id <StudentVCDelegate> delegate;
+@property (strong, nonatomic) IBOutlet UIButton *eliminarAlumnoButton;
 
 - (IBAction)eliminarAlumno:(id)sender;
 

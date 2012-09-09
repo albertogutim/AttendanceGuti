@@ -13,7 +13,7 @@
 #import "ResumenVC.h"
 #import "StudentVC.h"
 
-@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate>
+@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate, StudentVCDelegate>
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *todosPresentesAusentes;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
@@ -44,8 +44,6 @@
 - (IBAction)changeSegmentedControl:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
-
--(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
 
 - (IBAction)updateSpreadsheet:(id)sender;
 - (IBAction)randomStudent:(id)sender;
