@@ -37,6 +37,8 @@
 		3AD9503115C7E3C0005D45D7 /* SubjectsListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD9503015C7E3C0005D45D7 /* SubjectsListVC.m */; };
 		3AE039CD15CFD54F00AB63EB /* ConfigHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */; };
 		3AEFCBBC15ED51B800AD04E1 /* ResumenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */; };
+		3AEFCBBF15F0DDB000AD04E1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */; };
+		3AEFCBC215F6514300AD04E1 /* StudentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC115F6514300AD04E1 /* StudentVC.m */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
@@ -88,6 +90,9 @@
 		3AE039CC15CFD54F00AB63EB /* ConfigHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigHelper.m; sourceTree = "<group>"; };
 		3AEFCBBA15ED51B700AD04E1 /* ResumenVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResumenVC.h; sourceTree = "<group>"; };
 		3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResumenVC.m; sourceTree = "<group>"; };
+		3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		3AEFCBC015F6514200AD04E1 /* StudentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudentVC.h; sourceTree = "<group>"; };
+		3AEFCBC115F6514300AD04E1 /* StudentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudentVC.m; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3AFF0CA215CBE4B700CD01E4 /* GData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GData.h; sourceTree = "<group>"; };
@@ -414,6 +419,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AEFCBBF15F0DDB000AD04E1 /* MessageUI.framework in Frameworks */,
 				3A876F6E15D02F850095B2E3 /* libxml2.dylib in Frameworks */,
 				3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */,
 				3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */,
@@ -447,6 +453,7 @@
 		3AD9500B15C7E3BF005D45D7 = {
 			isa = PBXGroup;
 			children = (
+				3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */,
 				3A876F6F15D0300E0095B2E3 /* libGDataTouchStaticLib.a */,
 				3A876F6D15D02F850095B2E3 /* libxml2.dylib */,
 				3AFF0CA115CBE4B700CD01E4 /* Headers */,
@@ -498,6 +505,8 @@
 				3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */,
 				3A238E6A15D2D8C2003C8C0C /* AttendanceStudentsVC.h */,
 				3A238E6B15D2D8C2003C8C0C /* AttendanceStudentsVC.m */,
+				3AEFCBC015F6514200AD04E1 /* StudentVC.h */,
+				3AEFCBC115F6514300AD04E1 /* StudentVC.m */,
 				3A238E7F15D3EA06003C8C0C /* PickerVC.h */,
 				3A238E8015D3EA06003C8C0C /* PickerVC.m */,
 				3A238E5815D270DC003C8C0C /* ClassListTVC.h */,
@@ -931,6 +940,7 @@
 				3A238E8115D3EA07003C8C0C /* PickerVC.m in Sources */,
 				3A846C9F15ECD8D1007D06B5 /* AddStudentTVC.m in Sources */,
 				3AEFCBBC15ED51B800AD04E1 /* ResumenVC.m in Sources */,
+				3AEFCBC215F6514300AD04E1 /* StudentVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

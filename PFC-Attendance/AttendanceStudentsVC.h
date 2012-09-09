@@ -11,6 +11,7 @@
 #import "PickerVC.h"
 #import "AddStudentTVC.h"
 #import "ResumenVC.h"
+#import "StudentVC.h"
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate>
 
@@ -32,10 +33,19 @@
 @property (nonatomic, strong) NSDate *today;
 @property (nonatomic, assign) NSInteger columna;
 @property (strong, nonatomic) NSMutableDictionary *todos;
+@property (strong, nonatomic) NSMutableDictionary *presentes;
+@property (strong, nonatomic) NSMutableDictionary *ausentes;
+@property (strong, nonatomic) NSString *alumno;
+//@property (strong, nonatomic) NSString *mail;
+//@property (strong, nonatomic) NSString *ausencias;
+@property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
+//@property (strong, nonatomic) NSMutableDictionary *pintar;
 - (IBAction)attendance:(id)sender;
 - (IBAction)changeSegmentedControl:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
+
+-(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
 
 - (IBAction)updateSpreadsheet:(id)sender;
 - (IBAction)randomStudent:(id)sender;

@@ -28,6 +28,13 @@
 @synthesize columna = _columna;
 @synthesize todos = _todos;
 @synthesize today = _today;
+@synthesize presentes = _presentes;
+@synthesize ausentes = _ausentes;
+@synthesize alumno = _alumno;
+@synthesize alumnosConOrden = _alumnosConOrden;
+//@synthesize mail = _mail;
+//@synthesize ausencias = _ausencias;
+//@synthesize pintar = _pintar;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -237,6 +244,11 @@
                         //cuando lo encuentra hace el update
                         [self.todos setObject:@"2" forKey:[self.todos.allKeys objectAtIndex:i]];
                 }
+        NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
+        self.presentes = presentes;
+        NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
+        self.ausentes = ausentes;
+        
     }
          
     else if (iv.image == [UIImage imageNamed:@"cross.png"])
@@ -250,6 +262,10 @@
                             //cuando lo encuentra hace el update
                             [self.todos setObject:@"3" forKey:[self.todos.allKeys objectAtIndex:i]];
                     }
+                NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
+                self.presentes = presentes;
+                NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
+                self.ausentes = ausentes;
             }
     
         else if (iv.image == [UIImage imageNamed:@"late.png"])
@@ -262,6 +278,10 @@
                             //cuando lo encuentra hace el update
                             [self.todos setObject:@"1" forKey:[self.todos.allKeys objectAtIndex:i]];
                     }
+                NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
+                self.presentes = presentes;
+                NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
+                self.ausentes = ausentes;
  
             }
      
@@ -283,16 +303,101 @@
      }
 }
 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+    //guardo el nombre del alumno para pasárselo a la siguiente vista (StudentVC)
+    self.alumno = theCellLbl.text;
+    //voy a coger el email para pasárselo también a la siguiente vista (StudentVC)
+    
+    [self performSegueWithIdentifier:@"goToStudent" sender:self];
+    
+    
+    //GDocsHelper *midh = [GDocsHelper sharedInstance];
+    //[midh listadoAlumnos:self.clase];
+    //[midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno conRow: [[self.alumnosConOrden objectForKey:self.alumno]integerValue]+2];
+    
+
+    }
+
 
 #pragma mark - My Methods
 
-- (void)respuestaConColumna:(NSMutableDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error
+/*-(void) respuesta:(NSDictionary *)feed error:(NSError *)error
+{
+    
+    //responde a listadoAlumnos
+    for (int i=0; i<[feed count]; i++) {
+        
+        if([[feed.allKeys objectAtIndex:i] isEqualToString:self.alumno])
+        {
+            //cogemos el mail
+            self.mail = [feed.allValues objectAtIndex:i];
+            break;
+        }
+    }
+    
+    //Ahora llamamos al método que nos devuelva las ausencias del alumno y los retrasos para poder pintar las tablas de la siguiente vista
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    [midh listadoAlumnosEstadisticas:self.clase];
+    
+
+}
+
+
+-(void) respuestaEstadisticas:(NSDictionary *)feed error:(NSError *)error
+{
+    
+    //responde a listadoAlumnosEstadisticas
+    for (int i=0; i<[feed count]; i++) {
+        
+        if([[feed.allKeys objectAtIndex:i] isEqualToString:self.alumno])
+        {
+            //cogemos la estadistica
+            self.ausencias = [feed.allValues objectAtIndex:i];
+            GDocsHelper *midh = [GDocsHelper sharedInstance];
+            [midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno];
+            
+            break;
+        }
+    }
+}
+ */
+/*-(void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error
+{
+    //responde a listadoFechasConAsistencia
+  
+    
+    self.mail = [feed objectForKey:@"Email"];
+    self.ausencias = [feed objectForKey:@"Estadistica"];
+    
+    [feed removeObjectForKey:@"Email"];
+    [feed removeObjectForKey:@"Estadistica"];
+    
+    self.pintar = feed;
+    
+    //[self performSegueWithIdentifier:@"goToStudent" sender:self];
+}
+
+*/
+
+
+- (void)respuestaConColumna:(NSMutableDictionary *) feed alumnosConOrden: (NSMutableDictionary *) alumnosConOrden enColumna: (NSInteger) columna error: (NSError *) error
 
 {
     self.miListaAlumnos = feed;
     //Mantenemos una copia con todos los alumnos para poder gestionar el segmented control
     self.todos = feed;
     self.columna = columna;
+    self.alumnosConOrden = alumnosConOrden;
+    
+    NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
+    self.presentes = presentes;
+    NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
+    self.ausentes = ausentes;
+    
     [self.miTabla reloadData];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -391,10 +496,23 @@
     {
         ResumenVC *resumenvc = [segue destinationViewController];
         resumenvc.alumnos = self.todos;
+        resumenvc.presentes = self.presentes;
+        resumenvc.ausentes = self.ausentes;
         resumenvc.columna = self.columna;
         resumenvc.clase = self.clase;
+        resumenvc.fecha = self.fecha;
         
     }
+    
+    if ([[segue identifier] isEqualToString:@"goToStudent"])
+    {
+         //hay que pasarle la clase, el nombre, el mail, la fila, sus ausencias y sus retrasos.
+        StudentVC *studentVC = [segue destinationViewController];
+        studentVC.clase = self.clase;
+        studentVC.alumno = self.alumno;
+        studentVC.row = [[self.alumnosConOrden objectForKey:self.alumno]integerValue]+2;
+    }
+
     
 }
 
@@ -436,7 +554,6 @@
     [self.navigationController popViewControllerAnimated:YES];
 
     //Aquí hay que añadir el nuevo alumno a la spreadsheet.
-    //TODO: crear un nuevo método para añadir el mail, el nombre del alumno y su estado predeterminado.
     if(nombre!=nil) //Permitimos añadir un alumno sin mail?? NO!
     {
         
@@ -525,6 +642,7 @@
         NSMutableDictionary *presentes = self.todos;
         presentes = [self filtrarPresentes:presentes];
         self.miListaAlumnos = presentes;
+        self.presentes = presentes;
         [self.miTabla reloadData];
     }
         else //Ausentes
@@ -534,6 +652,7 @@
             NSMutableDictionary *ausentes = self.todos;
             ausentes = [self filtrarAusentes:ausentes];
             self.miListaAlumnos = ausentes;
+            self.ausentes = ausentes;
             [self.miTabla reloadData];
         }
     
@@ -541,7 +660,7 @@
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) alumnos
 {
-    
+   //TODO: mirar si aki hay que tener en cuenta los alumnos añadidos que tienen -1
    NSMutableDictionary *filtro = [NSMutableDictionary dictionaryWithDictionary:alumnos];
     for (int j=0; j<[alumnos count]; j++)
     {
@@ -594,6 +713,19 @@
 }
 
 
+-(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias
+{
+    NSMutableDictionary *filtro = [NSMutableDictionary dictionaryWithDictionary:asistencias];
+    for (int j=0; j<[asistencias count]; j++)
+    {
+        if(![[asistencias.allValues objectAtIndex:j] isEqualToString:@"3"])
+        {
+            [filtro removeObjectForKey:[asistencias.allKeys objectAtIndex:j]];
+        }
+    }
+    return filtro;
+    
+}
 
 
 

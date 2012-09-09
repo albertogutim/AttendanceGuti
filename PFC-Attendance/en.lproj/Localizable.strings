@@ -17,4 +17,5 @@
 "CHOOSE_DATE"="Choose date";
 "TODAY"="TODAY";
 "NO_STUDENTS"="There are no students";
-"DONE_BUTTON"="Done"; 
+"DONE_BUTTON"="Done";
+"TODAYS_CLASS"="Resume of %@";

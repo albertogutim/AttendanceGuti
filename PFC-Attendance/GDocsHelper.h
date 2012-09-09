@@ -15,12 +15,16 @@
 
 @optional
 - (void)respuesta:(NSDictionary *)feed error:(NSError *)error;
-- (void)respuestaConColumna:(NSMutableDictionary *) feed enColumna: (NSInteger) columna error: (NSError *) error;
+- (void)respuestaConColumna:(NSMutableDictionary *) feed alumnosConOrden: (NSMutableDictionary *) alumnosConOrden enColumna: (NSInteger) columna error: (NSError *) error;
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error;
 - (void)respuestaUpdate: (NSError *) error;
 - (void)respuestaNewStudent: (NSError *) error;
 - (void)respuestaInsertResumen: (NSError *) error;
 - (void)respuestaExisteResumen: (BOOL) existe resumen: (NSString*) resumen error: (NSError *) error;
+////
+- (void)respuestaEstadisticas:(NSDictionary *)feed error:(NSError *)error;
+////
+- (void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error;
 
 
 @end
@@ -123,6 +127,40 @@
             finishedWithFeed:(GDataFeedBase *)feed
                        error:(NSError *)error;
 
+- (void)listadoAlumnos:(NSString *)clase;
+- (void)listadoAlumnosConEmail:(GDataServiceTicket *)ticket
+              finishedWithFeed:(GDataFeedBase *)feed
+                         error:(NSError *)error;
+
+- (void)listadoAlumnosConEmailTicket:(GDataServiceTicket *)ticket
+                    finishedWithFeed:(GDataFeedBase *)feed
+                               error:(NSError *)error;
+
+- (void)listadoAlumnosEstadisticas:(NSString *)clase;
+- (void)listadoAlumnosEstadisticasTicket:(GDataServiceTicket *)ticket
+                        finishedWithFeed:(GDataFeedBase *)feed
+                                   error:(NSError *)error;
+- (void)listadoAlumnosConEstadisticasTicket:(GDataServiceTicket *)ticket
+                           finishedWithFeed:(GDataFeedBase *)feed
+                                      error:(NSError *)error;
+
+- (void)listadoFechasConAsistencia:(NSString *)clase paraAlumno:(NSString *)alumno conRow: (NSInteger) row;
+- (void)listadoFechasConAsistenciaTicket:(GDataServiceTicket *)ticket
+                        finishedWithFeed:(GDataFeedBase *)feed
+                                   error:(NSError *)error;
+- (void)listadoAsistenciasConFechasTicket:(GDataServiceTicket *)ticket
+                         finishedWithFeed:(GDataFeedBase *)feed
+                                    error:(NSError *)error;
+- (void)eliminarAlumno:(NSString *)clase paraRow:(NSInteger)row;
+- (void)eliminarAlumnoTicket:(GDataServiceTicket *)ticket
+            finishedWithFeed:(GDataFeedBase *)feed
+                       error:(NSError *)error;
+- (void)eliminarAlumnoBatchTicket:(GDataServiceTicket *)ticket
+                 finishedWithFeed:(GDataFeedBase *)feed
+                            error:(NSError *)error;
+- (void)alumnoEliminadoTicket:(GDataServiceTicket *)ticket
+             finishedWithFeed:(GDataFeedBase *)feed
+                        error:(NSError *)error;
 
 
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
@@ -152,8 +190,11 @@
 @property (nonatomic, strong) NSString *eTag;
 @property (nonatomic, strong) NSArray *updatedEntries;
 @property (nonatomic, strong) NSMutableDictionary *listaCsStado;
+@property (nonatomic, strong) NSMutableDictionary *alumnosConOrden;
 @property (nonatomic, strong) NSString *studentName;
 @property (nonatomic, strong) NSString *studentMail;
 @property (nonatomic, strong) NSString *resumen;
+@property (nonatomic, strong) NSArray *attendance;
+
 
 @end
