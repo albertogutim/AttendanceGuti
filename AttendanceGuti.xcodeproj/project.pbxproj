@@ -39,6 +39,7 @@
 		3AEFCBBC15ED51B800AD04E1 /* ResumenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */; };
 		3AEFCBBF15F0DDB000AD04E1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */; };
 		3AEFCBC215F6514300AD04E1 /* StudentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC115F6514300AD04E1 /* StudentVC.m */; };
+		3AEFCBC515FD0A3C00AD04E1 /* StadisticsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
@@ -93,6 +94,8 @@
 		3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		3AEFCBC015F6514200AD04E1 /* StudentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudentVC.h; sourceTree = "<group>"; };
 		3AEFCBC115F6514300AD04E1 /* StudentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudentVC.m; sourceTree = "<group>"; };
+		3AEFCBC315FD0A3B00AD04E1 /* StadisticsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StadisticsVC.h; sourceTree = "<group>"; };
+		3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StadisticsVC.m; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3AFF0CA215CBE4B700CD01E4 /* GData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GData.h; sourceTree = "<group>"; };
@@ -499,6 +502,8 @@
 				3AD9502915C7E3C0005D45D7 /* AppDelegate.h */,
 				3AD9502A15C7E3C0005D45D7 /* AppDelegate.m */,
 				3AD9502C15C7E3C0005D45D7 /* MainStoryboard.storyboard */,
+				3AEFCBC315FD0A3B00AD04E1 /* StadisticsVC.h */,
+				3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */,
 				3AEFCBBA15ED51B700AD04E1 /* ResumenVC.h */,
 				3AEFCBBB15ED51B700AD04E1 /* ResumenVC.m */,
 				3A846C9D15ECD8D0007D06B5 /* AddStudentTVC.h */,
@@ -941,6 +946,7 @@
 				3A846C9F15ECD8D1007D06B5 /* AddStudentTVC.m in Sources */,
 				3AEFCBBC15ED51B800AD04E1 /* ResumenVC.m in Sources */,
 				3AEFCBC215F6514300AD04E1 /* StudentVC.m in Sources */,
+				3AEFCBC515FD0A3C00AD04E1 /* StadisticsVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

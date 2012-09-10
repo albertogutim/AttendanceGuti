@@ -22,6 +22,7 @@
 - (void)respuestaInsertResumen: (NSError *) error;
 - (void)respuestaExisteResumen: (BOOL) existe resumen: (NSString*) resumen error: (NSError *) error;
 - (void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error;
+- (void)respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados: (NSMutableArray *) retrasados ausenteserror:(NSError *)error;
 
 
 @end
@@ -140,12 +141,7 @@
                          finishedWithFeed:(GDataFeedBase *)feed
                                     error:(NSError *)error;
 - (void)eliminarAlumno:(NSString *)clase paraRow:(NSInteger)row;
-- (void)eliminarAlumnoTicket:(GDataServiceTicket *)ticket
-            finishedWithFeed:(GDataFeedBase *)feed
-                       error:(NSError *)error;
-- (void)eliminarAlumnoBatchTicket:(GDataServiceTicket *)ticket
-                 finishedWithFeed:(GDataFeedBase *)feed
-                            error:(NSError *)error;
+
 - (void)alumnoEliminadoTicket:(GDataServiceTicket *)ticket
              finishedWithFeed:(GDataFeedBase *)feed
                         error:(NSError *)error;
@@ -153,6 +149,12 @@
 - (void)alumnoEliminadoSITicket:(GDataServiceTicket *)ticket
                finishedWithFeed:(GDataFeedBase *)feed
                           error:(NSError *)error;
+
+- (void)obtenerEstadisticasTodos:(NSString *)clase paraAlumnosAusentes: (NSArray *) rowsAusentes yParaAlumnosRetrasados: (NSArray *) rowsRetrasados;
+- (void)obtenerEstadisticasTodosTicket:(GDataServiceTicket *)ticket
+                      finishedWithFeed:(GDataFeedBase *)feed
+                                 error:(NSError *)error;
+
 
 
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
@@ -187,6 +189,9 @@
 @property (nonatomic, strong) NSString *studentMail;
 @property (nonatomic, strong) NSString *resumen;
 @property (nonatomic, strong) NSArray *attendance;
+@property (nonatomic, strong) NSArray *rowsAusentes;
+@property (nonatomic, strong) NSArray *rowsRetrasados;
+
 
 
 @end

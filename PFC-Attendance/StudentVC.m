@@ -67,14 +67,6 @@
 }
 
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    
-    [self.delegate devolverTabla:self huboCambios:self.cambios];
-	[super viewWillDisappear:animated];
-    
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -225,12 +217,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 
-    self.datosAlumnoTable = nil;
-    self.pintarAusencias = nil;
-    self.pintarRetrasos = nil;
-    self.cuantasAusencias = 0;
-    self.cuantosRetrasos = 0;
-    [self.datosAlumnoTable reloadData];
+    [self.delegate devolverTabla:self huboCambios:self.cambios];
 
 }
 

@@ -32,6 +32,7 @@
 @synthesize ausentes = _ausentes;
 @synthesize alumno = _alumno;
 @synthesize alumnosConOrden = _alumnosConOrden;
+@synthesize fechaCompleta = _fechaCompleta;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -217,6 +218,7 @@
     NSLocale *theLocale = [NSLocale currentLocale];
     [df setLocale:theLocale];
     NSString *fechaHeader = [df stringFromDate:self.fecha];
+    self.fechaCompleta = fechaHeader;
     return fechaHeader;
 
 }
@@ -515,6 +517,48 @@
     }
 
     
+    if ([[segue identifier] isEqualToString:@"goToStadistics"])
+    {
+        StadisticsVC *stadisticsVC = [segue destinationViewController];
+        stadisticsVC.fecha = self.fechaCompleta;
+        stadisticsVC.ausentes = self.ausentes;
+        NSMutableDictionary *retrasos = self.presentes;
+        stadisticsVC.retrasos = [self filtrarRetrasos:retrasos];
+        retrasos = [self filtrarRetrasos:retrasos];
+        stadisticsVC.clase = self.clase;
+        
+        NSMutableArray *ordenAusentes = [NSMutableArray arrayWithCapacity:[self.ausentes count]];
+        for (int j=0; j<[self.ausentes count]; j++)
+        {
+            for (int i=0; i<[self.alumnosConOrden count]; i++) {
+                
+                if([[self.alumnosConOrden.allKeys objectAtIndex:i] isEqualToString:[self.ausentes.allKeys objectAtIndex:j]])
+                    [ordenAusentes addObject:[self.alumnosConOrden.allValues objectAtIndex:i]];
+                    
+
+            }
+                       
+        }
+        
+        NSMutableArray *ordenRetrasados = [NSMutableArray arrayWithCapacity:[retrasos count]];
+        for (int j=0; j<[retrasos count]; j++)
+        {
+            for (int i=0; i<[self.alumnosConOrden count]; i++) {
+                
+                if([[self.alumnosConOrden.allKeys objectAtIndex:i] isEqualToString:[retrasos.allKeys objectAtIndex:j]])
+                     [ordenRetrasados addObject:[self.alumnosConOrden.allValues objectAtIndex:i]];
+                    
+                
+            }
+            
+        }
+        
+        stadisticsVC.ordenAusentes = ordenAusentes;
+        stadisticsVC.ordenRetrasos = ordenRetrasados;
+        
+    }
+    
+    
 }
 
 -(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date hoyEs:(NSDate *) today
@@ -598,7 +642,7 @@
 
 -(void) devolverTabla:(StudentVC *)controller huboCambios: (BOOL) cambios
 {
-    
+    [self.navigationController popViewControllerAnimated:YES];
     if(cambios)
     {
         
@@ -704,6 +748,20 @@
         {
             if(([[alumnos.allValues objectAtIndex:j] isEqualToString:@"2"]) || ([[alumnos.allValues objectAtIndex:j] isEqualToString:@"-1"]))
                 [filtro removeObjectForKey:[alumnos.allKeys objectAtIndex:j]];
+        }
+    }
+    return filtro;
+    
+}
+
+-(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias
+{
+    NSMutableDictionary *filtro = [NSMutableDictionary dictionaryWithDictionary:asistencias];
+    for (int j=0; j<[asistencias count]; j++)
+    {
+        if(![[asistencias.allValues objectAtIndex:j] isEqualToString:@"3"])
+        {
+            [filtro removeObjectForKey:[asistencias.allKeys objectAtIndex:j]];
         }
     }
     return filtro;

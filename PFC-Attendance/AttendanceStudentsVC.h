@@ -12,6 +12,7 @@
 #import "AddStudentTVC.h"
 #import "ResumenVC.h"
 #import "StudentVC.h"
+#import "StadisticsVC.h"
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate, StudentVCDelegate>
 
@@ -36,6 +37,7 @@
 @property (strong, nonatomic) NSMutableDictionary *presentes;
 @property (strong, nonatomic) NSMutableDictionary *ausentes;
 @property (strong, nonatomic) NSString *alumno;
+@property (strong, nonatomic) NSString *fechaCompleta;
 //@property (strong, nonatomic) NSString *mail;
 //@property (strong, nonatomic) NSString *ausencias;
 @property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
@@ -44,6 +46,7 @@
 - (IBAction)changeSegmentedControl:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
+-(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
 
 - (IBAction)updateSpreadsheet:(id)sender;
 - (IBAction)randomStudent:(id)sender;

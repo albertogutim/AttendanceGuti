@@ -44,6 +44,8 @@
 @synthesize row = _row;
 @synthesize resumen = _resumen;
 @synthesize alumnosConOrden = _alumnosConOrden;
+@synthesize rowsAusentes = _rowsAusentes;
+@synthesize rowsRetrasados = _rowsRetrasados;
 
 
 
@@ -1044,78 +1046,18 @@ finishedWithFeed:(GDataFeedBase *)feed
     self.row = row;
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
     
-    //query para acceder a la row y hacer un update poniendo toda la fila a nulo
     NSURL *feedURL = [self.miClaseWs listFeedURL];
-    /*GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:STUDENTS_COLUMN];
-    [q setMinimumRow:row];
-    [q setMaximumRow:row];
-    
-    
-    [self.miService fetchFeedWithQuery:q
-                              delegate:self
-                     didFinishSelector:@selector(eliminarAlumnoTicket:finishedWithFeed:error:)];
-    
-    [self.miService deleteResourceURL:q ETag:nil delegate:self didFinishSelector:@selector(alumnoEliminadoTicket:finishedWithFeed:error:)];
-     */
     
     [self.miService fetchFeedWithURL:feedURL delegate:self didFinishSelector:@selector(alumnoEliminadoTicket:finishedWithFeed:error:)];
 
    
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)eliminarAlumnoTicket:(GDataServiceTicket *)ticket
-                     finishedWithFeed:(GDataFeedBase *)feed
-                                error:(NSError *)error
-
-{
-    
-    NSString *eTag = feed.ETag;
-    self.eTag = eTag;
-    
-    NSArray *updatedEntries = [feed entries];
-    self.updatedEntries = updatedEntries;
-    
-    NSURL *feedURL = [self.miClaseWs listFeedURL];
-    [self.miService fetchFeedWithURL:feedURL
-                            delegate:self
-                   didFinishSelector:@selector(eliminarAlumnoBatchTicket:finishedWithFeed:error:)];
-    
-    
-}
-
-
-
-- (void)eliminarAlumnoBatchTicket:(GDataServiceTicket *)ticket
-         finishedWithFeed:(GDataFeedBase *)feed
-                    error:(NSError *)error{
-    
-    
-    NSURL *batchUrl = [[feed batchLink] URL];
-    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
-    
-    [batchFeed setEntriesWithEntries:self.updatedEntries];
-    
-    GDataBatchOperation *op;
-    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationDelete];
-    [batchFeed setBatchOperation:op];
-    [batchFeed setETag:self.eTag];
-    
-    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(alumnoEliminadoTicket:finishedWithFeed:error:)];
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)alumnoEliminadoTicket:(GDataServiceTicket *)ticket
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error
 {
         [self.miService deleteEntry:[[feed entries] objectAtIndex:self.row-2] delegate:self didFinishSelector:@selector(alumnoEliminadoSITicket:finishedWithFeed:error:)];
-    
-    
-    
-    
-    
     
 }
 
@@ -1124,10 +1066,89 @@ finishedWithFeed:(GDataFeedBase *)feed
              finishedWithFeed:(GDataFeedBase *)feed
                         error:(NSError *)error
 {
-    NSLog(@"termino de eliminar alumno");
-
     [self.delegate respuestaUpdate: error];
 }
+
+
+- (void)obtenerEstadisticasTodos:(NSString *)clase paraAlumnosAusentes: (NSArray *) rowsAusentes yParaAlumnosRetrasados: (NSArray *) rowsRetrasados
+{
+    
+    self.clase = clase;
+    self.rowsAusentes = rowsAusentes;
+    self.rowsRetrasados = rowsRetrasados;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+    
+    NSURL *feedURL = [self.miClaseWs listFeedURL];
+    
+    [self.miService fetchFeedWithURL:feedURL delegate:self didFinishSelector:@selector(obtenerEstadisticasTodosTicket:finishedWithFeed:error:)];
+}
+
+
+- (void)obtenerEstadisticasTodosTicket:(GDataServiceTicket *)ticket
+               finishedWithFeed:(GDataFeedBase *)feed
+                          error:(NSError *)error
+{
+
+    NSMutableArray *alumnosAusentes = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
+    for (int i=0; i<[self.rowsAusentes count]; i++) {
+        [alumnosAusentes addObject:[[feed entries] objectAtIndex:[[self.rowsAusentes objectAtIndex:i] integerValue]]];
+        
+    }
+    NSMutableArray *alumnosRetrasados = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
+    for (int i=0; i<[self.rowsRetrasados count]; i++) {
+        [alumnosRetrasados addObject:[[feed entries] objectAtIndex:[[self.rowsRetrasados objectAtIndex:i] integerValue]]];
+    }
+    
+    
+    NSMutableArray *ausentesTodos = [NSMutableArray arrayWithCapacity: [alumnosAusentes count]];
+    NSMutableArray *retrasadosTodos = [NSMutableArray arrayWithCapacity: [alumnosRetrasados count]];
+   
+    
+    
+    
+    for (GDataEntrySpreadsheetList *listEntry in alumnosAusentes) {
+        NSMutableArray *ausentes = [NSMutableArray arrayWithCapacity: [alumnosAusentes count]];
+        int o = 0;
+        NSArray *customElements = [listEntry customElements];
+        
+        NSEnumerator *enumerator = [customElements objectEnumerator];
+        GDataSpreadsheetCustomElement *element;
+        
+        while ((element = [enumerator nextObject]) != nil) {
+            if((o>=3)||(o==0))
+                [ausentes addObject:[element stringValue]];
+            o++;
+            
+        }
+        [ausentesTodos addObject:ausentes];
+        
+    }
+    
+    
+    
+    for (GDataEntrySpreadsheetList *listEntry in alumnosRetrasados) {
+        NSMutableArray *retrasados = [NSMutableArray arrayWithCapacity: [alumnosRetrasados count]];
+        int o = 0;
+        NSArray *customElements = [listEntry customElements];
+        
+        NSEnumerator *enumerator = [customElements objectEnumerator];
+        GDataSpreadsheetCustomElement *element;
+        
+        while ((element = [enumerator nextObject]) != nil) {
+            if((o>=3)||(o==0))
+                [retrasados addObject:[element stringValue]];
+            o++;
+            
+        }
+        [retrasadosTodos addObject:retrasados];
+        
+    }
+    
+    [self.delegate respuestaEstadisticas:ausentesTodos yRetrasados:retrasadosTodos ausenteserror:error];
+}
+
+
+
 
 
 //NSDate compara a nivel de milisegundo y sólo necesitamos que compare entre días.
