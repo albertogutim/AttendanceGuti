@@ -7,12 +7,14 @@
 //
 
 #import "StadisticsVC.h"
+#import "ConfigHelper.h"
 
 @interface StadisticsVC ()
 
 @end
 
 @implementation StadisticsVC
+@synthesize ambosAusentesImpuntuales = _ambosAusentesImpuntuales;
 @synthesize fecha = _fecha;
 @synthesize lblfecha = _lblfecha;
 @synthesize ausentes = _ausentes;
@@ -42,6 +44,7 @@
 - (void)viewDidUnload
 {
     [self setMiTabla:nil];
+    [self setAmbosAusentesImpuntuales:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -60,7 +63,7 @@
     self.lblfecha.text = self.fecha;
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:self.ordenAusentes yParaAlumnosRetrasados:self.ordenRetrasos];
+    [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:self.ordenAusentes yParaAlumnosRetrasados:self.ordenRetrasos paraTodos: NO];
     
     [super viewWillAppear:animated];
 }
@@ -162,7 +165,7 @@
 
 #pragma mark - My methods
 
--(void) respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados:(NSMutableArray *)retrasados ausenteserror:(NSError *)error
+-(void) respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados:(NSMutableArray *)retrasados error:(NSError *)error todos: (NSMutableArray *) todos
 {
     self.contadorAusentes = ausentes;
     self.contadorRetrasos = retrasados;
@@ -170,5 +173,127 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
+
+
+- (IBAction)sendMail:(id)sender {
+    
+    GDocsHelper *midh = [GDocsHelper sharedInstance];
+    [midh listadoAlumnos:self.clase];
+}
+
+-(void) respuesta:(NSDictionary *)feed error:(NSError *)error
+{
+    
+    
+    NSMutableArray *mails = [NSMutableArray arrayWithCapacity: [feed count]];
+    if (self.ambosAusentesImpuntuales.selectedSegmentIndex == 0) {
+       
+        for (int j=0; j<[feed count]; j++) {
+            for (int i=0; i<[self.ausentes count]; i++) {
+                
+                if([[feed.allKeys objectAtIndex:j] isEqualToString:[self.ausentes.allKeys objectAtIndex:i]])
+                {
+                    //nos vamos creando el array de mails
+                    [mails addObject:[feed.allValues objectAtIndex:j]];
+                    break;
+                }
+            }
+            
+        }
+        
+        for (int j=0; j<[feed count]; j++) {
+            for (int i=0; i<[self.retrasos count]; i++) {
+                
+                if([[feed.allKeys objectAtIndex:j] isEqualToString:[self.retrasos.allKeys objectAtIndex:i]])
+                {
+                    //nos vamos creando el array de mails
+                    [mails addObject:[feed.allValues objectAtIndex:j]];
+                    break;
+                }
+            }
+        }
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setToRecipients:mails];
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],self.nombreClase]];
+            [composer setMessageBody:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS" value:@"" table:nil],configH.ausencias, configH.retrasos] isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+
+
+    }
+    else if (self.ambosAusentesImpuntuales.selectedSegmentIndex == 1)
+    {
+        //tengo que cotejar los alumnos con los ausentes
+        
+        
+        for (int j=0; j<[feed count]; j++) {
+            for (int i=0; i<[self.ausentes count]; i++) {
+                
+                if([[feed.allKeys objectAtIndex:j] isEqualToString:[self.ausentes.allKeys objectAtIndex:i]])
+                {
+                    //nos vamos creando el array de mails
+                    [mails addObject:[feed.allValues objectAtIndex:j]];
+                    break;
+                }
+            }
+        
+        }
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setToRecipients:mails];
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],self.nombreClase]];
+            [composer setMessageBody:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_MISSED" value:@"" table:nil],self.fecha, configH.ausencias] isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+
+        
+    }
+    else ////tengo que cotejar los alumnos con los retrasados
+    {
+        for (int j=0; j<[feed count]; j++) {
+            for (int i=0; i<[self.retrasos count]; i++) {
+                
+                if([[feed.allKeys objectAtIndex:j] isEqualToString:[self.retrasos.allKeys objectAtIndex:i]])
+                {
+                    //nos vamos creando el array de mails
+                    [mails addObject:[feed.allValues objectAtIndex:j]];
+                    break;
+                }
+            }
+        }
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setToRecipients:mails];
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],self.nombreClase]];
+            [composer setMessageBody:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_LATE" value:@"" table:nil],self.fecha, configH.retrasos] isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+
+    }
+    
+        
+}
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    if (!error) {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
+}
+
 
 @end

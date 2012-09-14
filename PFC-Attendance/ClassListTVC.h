@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
 #import "AttendanceStudentsVC.h"
+#import "ClassVC.h"
 
 @interface ClassListTVC : UITableViewController <GDocsHelperDelegate>
 
@@ -18,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *asignatura;
 @property (strong, nonatomic) NSString *clase;
+@property (strong, nonatomic) NSString *nombreClase;
 @property (strong, nonatomic) NSDictionary *miListaClases;
 
 @end

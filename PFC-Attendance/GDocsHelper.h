@@ -22,7 +22,7 @@
 - (void)respuestaInsertResumen: (NSError *) error;
 - (void)respuestaExisteResumen: (BOOL) existe resumen: (NSString*) resumen error: (NSError *) error;
 - (void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error;
-- (void)respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados: (NSMutableArray *) retrasados ausenteserror:(NSError *)error;
+- (void)respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados: (NSMutableArray *) retrasados todos:(NSMutableArray *) todos error:(NSError *)error;
 
 
 @end
@@ -150,7 +150,7 @@
                finishedWithFeed:(GDataFeedBase *)feed
                           error:(NSError *)error;
 
-- (void)obtenerEstadisticasTodos:(NSString *)clase paraAlumnosAusentes: (NSArray *) rowsAusentes yParaAlumnosRetrasados: (NSArray *) rowsRetrasados;
+- (void)obtenerEstadisticasTodos:(NSString *)clase paraAlumnosAusentes: (NSArray *) rowsAusentes yParaAlumnosRetrasados: (NSArray *) rowsRetrasados paraTodos: (BOOL) todos;
 - (void)obtenerEstadisticasTodosTicket:(GDataServiceTicket *)ticket
                       finishedWithFeed:(GDataFeedBase *)feed
                                  error:(NSError *)error;
@@ -173,6 +173,7 @@
 @property (nonatomic, strong) NSDictionary *mListWorksheetId;
 
 @property (nonatomic, assign) BOOL estados;
+@property (nonatomic, assign) BOOL paraTodos;
 @property (nonatomic, assign) BOOL encontrada;
 @property (nonatomic, assign) NSInteger columna;
 @property (nonatomic, assign) NSInteger row;

@@ -28,6 +28,7 @@
 @synthesize pintarRetrasos =_pintarRetrasos;
 @synthesize datosAlumno = _datosAlumno;
 @synthesize cambios = _cambios;
+@synthesize nombreClase = _nombreClase;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,7 +63,11 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno conRow: self.row];
-        
+    
+
+     
+     
+     
     [super viewWillAppear:animated];
 }
 
@@ -180,7 +185,6 @@
         
         if([[self.pintar.allValues objectAtIndex:i] isEqualToString:@"2"])
         {
-            //No asistió. Hay que poner la fecha en el label
             cuantasAusencias++;
         }
     }
@@ -192,7 +196,6 @@
         
         if([[self.pintar.allValues objectAtIndex:i] isEqualToString:@"3"])
         {
-            //No asistió. Hay que poner la fecha en el label
             cuantosRetrasos++;
         }
     }

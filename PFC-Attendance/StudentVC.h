@@ -21,6 +21,7 @@
 
 @property (strong, nonatomic) NSString *alumno;
 @property (strong, nonatomic) NSString *clase;
+@property (strong, nonatomic) NSString *nombreClase;
 @property (strong, nonatomic) NSString *mail;
 @property (strong, nonatomic) NSString *ausencias;
 @property (assign, nonatomic) NSInteger cuantasAusencias;
@@ -34,6 +35,7 @@
 @property (assign, nonatomic) BOOL cambios;
 @property (nonatomic, weak) id <StudentVCDelegate> delegate;
 @property (strong, nonatomic) IBOutlet UIButton *eliminarAlumnoButton;
+
 
 - (IBAction)eliminarAlumno:(id)sender;
 

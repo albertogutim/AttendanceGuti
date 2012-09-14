@@ -46,6 +46,7 @@
 @synthesize alumnosConOrden = _alumnosConOrden;
 @synthesize rowsAusentes = _rowsAusentes;
 @synthesize rowsRetrasados = _rowsRetrasados;
+@synthesize paraTodos = _paraTodos;
 
 
 
@@ -1070,12 +1071,13 @@ finishedWithFeed:(GDataFeedBase *)feed
 }
 
 
-- (void)obtenerEstadisticasTodos:(NSString *)clase paraAlumnosAusentes: (NSArray *) rowsAusentes yParaAlumnosRetrasados: (NSArray *) rowsRetrasados
+- (void)obtenerEstadisticasTodos:(NSString *)clase paraAlumnosAusentes: (NSArray *) rowsAusentes yParaAlumnosRetrasados: (NSArray *) rowsRetrasados paraTodos: (BOOL) todos
 {
     
     self.clase = clase;
     self.rowsAusentes = rowsAusentes;
     self.rowsRetrasados = rowsRetrasados;
+    self.paraTodos = todos;
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
     
     NSURL *feedURL = [self.miClaseWs listFeedURL];
@@ -1089,6 +1091,8 @@ finishedWithFeed:(GDataFeedBase *)feed
                           error:(NSError *)error
 {
 
+    if(!self.paraTodos)
+    {
     NSMutableArray *alumnosAusentes = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
     for (int i=0; i<[self.rowsAusentes count]; i++) {
         [alumnosAusentes addObject:[[feed entries] objectAtIndex:[[self.rowsAusentes objectAtIndex:i] integerValue]]];
@@ -1143,8 +1147,34 @@ finishedWithFeed:(GDataFeedBase *)feed
         [retrasadosTodos addObject:retrasados];
         
     }
+         [self.delegate respuestaEstadisticas:ausentesTodos yRetrasados:retrasadosTodos todos:nil error:error];
+    }
+    else
+    //lo que queremos es la lista de todos los alumnos
+    {
     
-    [self.delegate respuestaEstadisticas:ausentesTodos yRetrasados:retrasadosTodos ausenteserror:error];
+        NSMutableArray *alumnosTodos = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
+        for (GDataEntrySpreadsheetList *listEntry in [feed entries]) {
+            NSMutableArray *toditos = [NSMutableArray arrayWithCapacity:[[feed entries] count]];
+            int o = 0;
+            NSArray *customElements = [listEntry customElements];
+            
+            NSEnumerator *enumerator = [customElements objectEnumerator];
+            GDataSpreadsheetCustomElement *element;
+            
+            while ((element = [enumerator nextObject]) != nil) {
+                if((o>=3)||(o==0)||(o==1))
+                    [toditos addObject:[element stringValue]];
+                o++;
+                
+            }
+            [alumnosTodos addObject:toditos];
+            
+        }
+
+        [self.delegate respuestaEstadisticas:nil yRetrasados:nil todos:alumnosTodos error:error];
+    }
+   
 }
 
 

@@ -33,6 +33,7 @@
 @synthesize alumno = _alumno;
 @synthesize alumnosConOrden = _alumnosConOrden;
 @synthesize fechaCompleta = _fechaCompleta;
+@synthesize nombreClase = _nombreClase;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -108,11 +109,6 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    
-    
-    
-   
-
     [super viewWillAppear:animated];
 }
 
@@ -315,75 +311,11 @@
     //voy a coger el email para pasárselo también a la siguiente vista (StudentVC)
     
     [self performSegueWithIdentifier:@"goToStudent" sender:self];
-    
-    
-    //GDocsHelper *midh = [GDocsHelper sharedInstance];
-    //[midh listadoAlumnos:self.clase];
-    //[midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno conRow: [[self.alumnosConOrden objectForKey:self.alumno]integerValue]+2];
-    
 
-    }
+}
 
 
 #pragma mark - My Methods
-
-/*-(void) respuesta:(NSDictionary *)feed error:(NSError *)error
-{
-    
-    //responde a listadoAlumnos
-    for (int i=0; i<[feed count]; i++) {
-        
-        if([[feed.allKeys objectAtIndex:i] isEqualToString:self.alumno])
-        {
-            //cogemos el mail
-            self.mail = [feed.allValues objectAtIndex:i];
-            break;
-        }
-    }
-    
-    //Ahora llamamos al método que nos devuelva las ausencias del alumno y los retrasos para poder pintar las tablas de la siguiente vista
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    [midh listadoAlumnosEstadisticas:self.clase];
-    
-
-}
-
-
--(void) respuestaEstadisticas:(NSDictionary *)feed error:(NSError *)error
-{
-    
-    //responde a listadoAlumnosEstadisticas
-    for (int i=0; i<[feed count]; i++) {
-        
-        if([[feed.allKeys objectAtIndex:i] isEqualToString:self.alumno])
-        {
-            //cogemos la estadistica
-            self.ausencias = [feed.allValues objectAtIndex:i];
-            GDocsHelper *midh = [GDocsHelper sharedInstance];
-            [midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno];
-            
-            break;
-        }
-    }
-}
- */
-/*-(void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error
-{
-    //responde a listadoFechasConAsistencia
-  
-    
-    self.mail = [feed objectForKey:@"Email"];
-    self.ausencias = [feed objectForKey:@"Estadistica"];
-    
-    [feed removeObjectForKey:@"Email"];
-    [feed removeObjectForKey:@"Estadistica"];
-    
-    self.pintar = feed;
-    
-    //[self performSegueWithIdentifier:@"goToStudent" sender:self];
-}
-
-*/
 
 
 - (void)respuestaConColumna:(NSMutableDictionary *) feed alumnosConOrden: (NSMutableDictionary *) alumnosConOrden enColumna: (NSInteger) columna error: (NSError *) error
@@ -503,6 +435,7 @@
         resumenvc.columna = self.columna;
         resumenvc.clase = self.clase;
         resumenvc.fecha = self.fecha;
+        resumenvc.nombreClase = self.nombreClase;
         
     }
     
@@ -514,6 +447,7 @@
         studentVC.alumno = self.alumno;
         studentVC.delegate = self;
         studentVC.row = [[self.alumnosConOrden objectForKey:self.alumno]integerValue]+2;
+        studentVC.nombreClase = self.nombreClase;
     }
 
     
@@ -526,6 +460,7 @@
         stadisticsVC.retrasos = [self filtrarRetrasos:retrasos];
         retrasos = [self filtrarRetrasos:retrasos];
         stadisticsVC.clase = self.clase;
+        stadisticsVC.nombreClase = self.nombreClase;
         
         NSMutableArray *ordenAusentes = [NSMutableArray arrayWithCapacity:[self.ausentes count]];
         for (int j=0; j<[self.ausentes count]; j++)

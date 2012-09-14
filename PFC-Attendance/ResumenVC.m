@@ -24,6 +24,7 @@
 @synthesize fecha = _fecha;
 @synthesize ausentes = _ausentes;
 @synthesize presentes = _presentes;
+@synthesize nombreClase =_nombreClase;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

@@ -29,6 +29,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *clase;
+@property (strong, nonatomic) NSString *nombreClase;
 @property (strong, nonatomic) NSMutableDictionary *miListaAlumnos;
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, strong) NSDate *today;
@@ -38,10 +39,7 @@
 @property (strong, nonatomic) NSMutableDictionary *ausentes;
 @property (strong, nonatomic) NSString *alumno;
 @property (strong, nonatomic) NSString *fechaCompleta;
-//@property (strong, nonatomic) NSString *mail;
-//@property (strong, nonatomic) NSString *ausencias;
 @property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
-//@property (strong, nonatomic) NSMutableDictionary *pintar;
 - (IBAction)attendance:(id)sender;
 - (IBAction)changeSegmentedControl:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
