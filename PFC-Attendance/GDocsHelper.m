@@ -9,15 +9,18 @@
 #import "GDocsHelper.h"
 #import "../Headers/GData.h"
 #import "../Headers/GDataSpreadsheet.h"
-#define COLUMN_START 3
+#define COLUMN_START 5
 #define ROW_START 3
-#define DATES_START 4
+#define DATES_START 6
 #define DATES_ROW 1
 #define MAIL_COLUMN 2
 #define STUDENTS_COLUMN 1
 #define RESUMEN_ROW 2
-#define MAIL_COLUMN 2
-#define STADISTICS_COLUMN 3
+//#define MAIL_COLUMN 2
+//#define STADISTICS_COLUMN 3
+#define ASISTENCIAS_COLUMN 3
+#define AUSENCIAS_COLUMN 4
+#define PORCENTAJE_COLUMN 5
 
 @implementation GDocsHelper
 @synthesize miService = _miService;
@@ -51,7 +54,7 @@
 
 
 
-
+//Para crear instancia desde cualquier vista y poder acceder a los métodos que interactúan con la spreadsheet.
 +(GDocsHelper *)sharedInstance {
     
     static GDocsHelper *sharedInstance = nil;
@@ -64,6 +67,7 @@
     return sharedInstance;
 }
 
+//Para crear el servicio
 - (void)createSpreadsheetService {
     
     self.miService = [[GDataServiceGoogleSpreadsheet alloc] init];
@@ -72,6 +76,7 @@
     
 }
 
+//Para añadir los credenciales al servicio.
 -(void)credentialsWithUsr:(NSString *)newUsr andPwd:(NSString *)newPwd{
 
     [self.miService setUserCredentialsWithUsername:newUsr
@@ -79,6 +84,8 @@
     
 }
 
+
+//Es llamado desde la vista SubjectsListVC. Una vez formada la URL se llama a listadoAsignaturasTicket que es el que retorna información a la vista que ha llamado.
 - (void)listadoAsignaturas {
     
     
@@ -134,6 +141,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         i++;
     }
     
+    //Creamos el dictionario. Las claves son los identificadores y los valores las asignaturas
      NSMutableDictionary *listaSsId = [NSMutableDictionary dictionaryWithObjects:listaFeeds forKeys:identifiers];
     
      NSDictionary * listaSsIdDictionary = [NSDictionary dictionaryWithDictionary:listaSsId];
@@ -141,13 +149,13 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
      self.mListSpreadsheetId = listaSsIdDictionary;
      [self.delegate respuesta: listaSsIdDictionary error:error];
     
-    //[self.delegate respuesta:[NSArray arrayWithArray:listaFeeds] error:error];
-    //devolvemos un array.
+    //devolvemos un NSDictionary conteniendo pares de valores con el nombre de la asignatura y su identificador.
      
 }
 
 
 
+//Es llamado desde la vista ClassListVC. Una vez formada la URL se llama a listadoClasesAsignaturaTicket que es el que retorna información a la vista que ha llamado.
 - (void)listadoClasesAsignatura:(NSString *)asignatura
 {
     
@@ -185,6 +193,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     [alertView show];*/
      
     
+    //nos vamos creando los arrays de identificadores y de nombres de las clases.
     NSMutableArray *listaWorksheetFeeds = [NSMutableArray arrayWithCapacity: [[self.mWorksheetFeed entries] count]];
     NSMutableArray *identifiers = [NSMutableArray arrayWithCapacity: [[self.mWorksheetFeed entries] count]];
     NSInteger i = 0;
@@ -201,10 +210,12 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     NSDictionary * listaWsIdDictionary = [NSDictionary dictionaryWithDictionary:listaWsId];
     self.mListWorksheetId = listaWsIdDictionary;
     [self.delegate respuesta: listaWsIdDictionary error:error];
+    //retornamos un NSDictionary donde las claves son los identificadores y los valores los nombres de las clases.
     
 }
 
 
+//Es llamado desde la vista PickerVC. Una vez formada la URL se llama a fechasValidasParaTicket que es el que retorna información a la vista que ha llamado.
 -(void)fechasValidasPara:(NSString *)miClase {
     
     
@@ -212,6 +223,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:miClase];
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    //queremos formar la query para acceder a la fila de las fechas
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
     [q setMinimumColumn:DATES_START];
     [q setMinimumRow:1];
@@ -232,6 +244,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                        error:(NSError *)error {
     
     
+    //si existen fechas (se ha utilizado la app alguna vez)
     if ([[feed entries] count]) {
         
         NSMutableArray *fechasValidas = [NSMutableArray arrayWithCapacity:[[feed entries] count]];
@@ -239,10 +252,13 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             
             GDataSpreadsheetCell *theCell = [cs cell];
             
+            //nos creamos un array donde guardamos todas las fechas que encontramos en la spreadsheet.
+            
             [fechasValidas addObject:theCell.inputString];
         }
 
         
+        //devolvemos el array con las fechas
         [self.delegate respuestaFechasValidas:[NSArray arrayWithArray:fechasValidas] error:error];
         
         
@@ -255,6 +271,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 }
 
 
+//Es llamado desde la vista AttendanceStudentsVC. Una vez formada la URL se llama a consultaFechasTicket.
 - (void)listadoAlumnosClase:(NSString *)clase paraFecha:(NSDate *)newFecha paraEstadosPorDefecto:(BOOL)estados;
 
 {
@@ -270,6 +287,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    //queremos formar la query para acceder a la fila de las fechas
     [q setMinimumColumn:DATES_START];
     [q setMinimumRow:1];
     [q setMaximumRow:1];
@@ -287,9 +305,9 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
                  finishedWithFeed:(GDataFeedBase *)feed
                             error:(NSError *)error {
     
-    
+    //si ya existen fechas en la spreadsheet.
     if ([[feed entries] count]) {
-        //TODO: Buscar fecha
+
         self.mListFechas = feed;
         self.encontrada=NO;
         NSInteger col = 1;
@@ -732,15 +750,36 @@ finishedWithFeed:(GDataFeedBase *)feed
     //Ya se subió todo a la spreadsheet.
     NSLog(@"Ya se subió todo a la spreadsheet");
     
-    //ahora hay que compensar los días anteriores si los hubiera, poniendo un estado diferente
-    //que no contabilizara para las estadisticas (-1).
+    //ahora hay que compensar los días anteriores y posteriores si los hubiera, poniendo un estado diferente
+    //que no contabilizara para las estadisticas (0).
     
-        if (self.columna>DATES_START) //hay fechas anteriores
+    if((self.columna<[[self.mListFechas entries ]count]+5) && (self.columna>DATES_START))
+    {
+        
+        for (int i=DATES_START; i<[[self.mListFechas entries ]count]+COLUMN_START+1; i++) {
+            
+            if(i!=self.columna) //no queremos transcribir el estado predeterminado del dia de hoy
+            
+            {
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:i inputString:@"0" numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            
+            NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+            
+            [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertePastStateStudentTicket:finishedWithFeed:error:)];
+            }
+            
+        }
+        [self.delegate respuestaNewStudent: error];
+        
+    }
+        else if (self.columna>DATES_START)
         {
+           
             
             for (int i=DATES_START; i<self.columna; i++) {
                 
-                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:i inputString:@"-1" numericValue:nil resultString:nil];
+                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:i inputString:@"0" numericValue:nil resultString:nil];
                 GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
                 
                 NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
@@ -749,10 +788,26 @@ finishedWithFeed:(GDataFeedBase *)feed
                 
             }
             [self.delegate respuestaNewStudent: error];
-        
         }
-    else
-        [self.delegate respuestaNewStudent: error];
+        else if (self.columna<[[self.mListFechas entries ]count]+COLUMN_START)
+        {
+            
+            for (int i=self.columna+1; i<[[self.mListFechas entries ]count]+COLUMN_START+1; i++) {
+                
+                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row column:i inputString:@"0" numericValue:nil resultString:nil];
+                GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+                
+                NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+                
+                [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertePastStateStudentTicket:finishedWithFeed:error:)];
+                
+            }
+            [self.delegate respuestaNewStudent: error];
+           
+        }
+        //caso en el que solo se haya creado una fecha, la de hoy. no hay nadie por delante ni por detras.
+        else
+            [self.delegate respuestaNewStudent: error];
 
 }
 
@@ -1119,7 +1174,7 @@ finishedWithFeed:(GDataFeedBase *)feed
         GDataSpreadsheetCustomElement *element;
         
         while ((element = [enumerator nextObject]) != nil) {
-            if((o>=3)||(o==0))
+            if((o>=COLUMN_START)||(o==0))
                 [ausentes addObject:[element stringValue]];
             o++;
             
@@ -1139,7 +1194,7 @@ finishedWithFeed:(GDataFeedBase *)feed
         GDataSpreadsheetCustomElement *element;
         
         while ((element = [enumerator nextObject]) != nil) {
-            if((o>=3)||(o==0))
+            if((o>=COLUMN_START)||(o==0))
                 [retrasados addObject:[element stringValue]];
             o++;
             
@@ -1163,7 +1218,7 @@ finishedWithFeed:(GDataFeedBase *)feed
             GDataSpreadsheetCustomElement *element;
             
             while ((element = [enumerator nextObject]) != nil) {
-                if((o>=3)||(o==0)||(o==1))
+                if((o>=COLUMN_START)||(o==0)||(o==1))
                     [toditos addObject:[element stringValue]];
                 o++;
                 

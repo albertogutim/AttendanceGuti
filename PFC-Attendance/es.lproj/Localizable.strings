@@ -21,7 +21,8 @@
 "TODAYS_CLASS"="Resumen del %@";
 "STADISTICS_SUBJECT"="Informe Estadísticas %@";
 "STADISTICS"="Recuerde que sólo están permitidas %d ausencias y %d retrasos";
-"STADISTICS_MISSED"="Hoy, %@ usted ha faltado a clase. Recuerde que se permiten %d ausencias";
+"STADISTICS_MISSED"="Hoy, %@ usted ha faltado a clase. Recuerde que se permite un máximo de %d ausencias";
 "STADISTICS_MISSED_ALERT"="Hoy, %@ usted ha faltado a clase. Ha superado el límite de ausencias permitidas.";
-"STADISTICS_LATE"="Hoy, %@ usted ha llegado tarde a clase. Recuerde que se permiten %d retrasos";
+"STADISTICS_LATE"="Hoy, %@ usted ha llegado tarde a clase. Recuerde que se permite un máximo de %d retrasos";
 "STADISTICS_LATE_ALERT"="Hoy, %@ usted ha llegado tarde a clase. Ha superado el límite de retrasos permitidos";
+"RESUME_LIST"="Lista de Resúmenes de %@";

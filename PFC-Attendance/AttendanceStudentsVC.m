@@ -34,6 +34,7 @@
 @synthesize alumnosConOrden = _alumnosConOrden;
 @synthesize fechaCompleta = _fechaCompleta;
 @synthesize nombreClase = _nombreClase;
+@synthesize nombreAsignatura = _nombreAsignatura;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -109,6 +110,8 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
+    self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+
     [super viewWillAppear:animated];
 }
 
@@ -337,10 +340,7 @@
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     //animar boton pasar asistencia
     [self.attendanceButton setEnabled:YES];
-    
-    //solo se podra añadir un alumno si se trata del dia de hoy porque si no quedaria la spreadsheet incompleta
-    if([self.today isEqualToDate:self.fecha])
-        [self.addButton setEnabled:YES];
+    [self.addButton setEnabled:YES];
     [self.refreshButton setEnabled:YES];
     [self.informesButton setEnabled:YES];
     [self.resumenButton setEnabled:YES];
@@ -448,6 +448,7 @@
         studentVC.delegate = self;
         studentVC.row = [[self.alumnosConOrden objectForKey:self.alumno]integerValue]+2;
         studentVC.nombreClase = self.nombreClase;
+        studentVC.nombreAsignatura = self.nombreAsignatura;
     }
 
     
@@ -461,6 +462,7 @@
         retrasos = [self filtrarRetrasos:retrasos];
         stadisticsVC.clase = self.clase;
         stadisticsVC.nombreClase = self.nombreClase;
+        stadisticsVC.nombreAsignatura = self.nombreAsignatura;
         
         NSMutableArray *ordenAusentes = [NSMutableArray arrayWithCapacity:[self.ausentes count]];
         for (int j=0; j<[self.ausentes count]; j++)
@@ -714,10 +716,10 @@
 
 - (IBAction)randomStudent:(id)sender
 {
-   int randomKeyIndex = (arc4random()% [[self.todos allKeys] count]);
-   NSString *randomKey = [[self.todos allKeys] objectAtIndex:randomKeyIndex];
-   UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"Alumno"
-     message:[NSString stringWithFormat:@"nombre: %@", randomKey]
+   int randomKeyIndex = (arc4random()% [[self.presentes allKeys] count]);
+   NSString *randomKey = [[self.presentes allKeys] objectAtIndex:randomKeyIndex];
+   UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@""
+     message:[NSString stringWithFormat:@"%@", randomKey]
      delegate:self
      cancelButtonTitle:@"Dismiss"
      otherButtonTitles:nil];

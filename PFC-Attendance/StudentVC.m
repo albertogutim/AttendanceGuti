@@ -13,7 +13,7 @@
 @end
 
 @implementation StudentVC
-@synthesize eliminarAlumnoButton = _eliminarAlumnoButton;
+@synthesize fichaAlumnoLbl = _fichaAlumnoLbl;
 
 @synthesize alumno =_alumno;
 @synthesize clase = _clase;
@@ -29,6 +29,7 @@
 @synthesize datosAlumno = _datosAlumno;
 @synthesize cambios = _cambios;
 @synthesize nombreClase = _nombreClase;
+@synthesize nombreAsignatura = _nombreAsignatura;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,7 +49,7 @@
 - (void)viewDidUnload
 {
     [self setDatosAlumnoTable:nil];
-    [self setEliminarAlumnoButton:nil];
+    [self setFichaAlumnoLbl:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -60,6 +61,7 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     self.cambios = NO;
+    self.fichaAlumnoLbl.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno conRow: self.row];
@@ -83,7 +85,7 @@
 {
     //#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -106,39 +108,99 @@
         
         return self.cuantosRetrasos;
     }
+    else if(section==3)
+    {
+        
+        
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
-    cell = [tableView
-            dequeueReusableCellWithIdentifier:@"datos"];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
-    }
+    
     
     if(indexPath.section==0)
     {
+        UITableViewCell *cell;
+        cell = [tableView
+                dequeueReusableCellWithIdentifier:@"datos"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
+        }
         
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         theCellLbl.text = [self.datosAlumno objectAtIndex:indexPath.row];
+        return cell;
 
     }
     else if(indexPath.section==1)
         
     {
+        UITableViewCell *cell;
+        cell = [tableView
+                dequeueReusableCellWithIdentifier:@"datos"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
+        }
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         theCellLbl.text = [self.pintarAusencias.allKeys objectAtIndex:indexPath.row];
+        return cell;
         
     }
     else if(indexPath.section==2)
     {
 
+        UITableViewCell *cell;
+        cell = [tableView
+                dequeueReusableCellWithIdentifier:@"datos"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
+        }
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         theCellLbl.text = [self.pintarRetrasos.allKeys objectAtIndex:indexPath.row];
+        theCellLbl.textAlignment = UITextAlignmentCenter;
+        return cell;
         
     }
-    return cell;
+    else if(indexPath.section==3)
+    {
+        
+        UITableViewCell *cell;
+        cell = [tableView
+                dequeueReusableCellWithIdentifier:@"eliminarAlumno"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"eliminarAlumno"];
+        }
+        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:3];
+        theCellLbl.text = [NSString stringWithFormat:@"Eliminar Alumno"];
+        theCellLbl.textAlignment = UITextAlignmentCenter;
+        return cell;
+        
+    }
+    
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UILabel *theCellLbl = (UILabel *)[cell viewWithTag:3];
+    if([theCellLbl.text isEqualToString:@"Eliminar Alumno"])
+    {
+        self.cambios = YES;
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        [midh eliminarAlumno: self.clase paraRow:self.row];
+        
+    }
+    
+    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -156,7 +218,16 @@
     {
         return [NSString stringWithFormat:@"Retrasos (%d)",self.cuantosRetrasos];
     }
+    if(section == 3)
+    {
+        return @"";
+    }
     
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return 44;
 }
 
 #pragma mark - My Methods
@@ -222,16 +293,6 @@
 
     [self.delegate devolverTabla:self huboCambios:self.cambios];
 
-}
-
-- (IBAction)eliminarAlumno:(id)sender {
-    
-    self.cambios = YES;
-    [self.eliminarAlumnoButton setEnabled:NO];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    [midh eliminarAlumno: self.clase paraRow:self.row];
 }
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) asistencias

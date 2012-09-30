@@ -197,7 +197,7 @@
     MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
     [composer setMailComposeDelegate:self];
     if ([MFMailComposeViewController canSendMail]) {
-        [composer setToRecipients:mails];
+        [composer setBccRecipients:mails];
         [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAYS_CLASS" value:@"" table:nil],dateStr]];
         [composer setMessageBody:self.resumenText.text isHTML:NO];
         [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];

@@ -25,3 +25,4 @@
 "STADISTICS_MISSED_ALERT"="Today, %@ you missed the class. You have reached the limit of absents";
 "STADISTICS_LATE"="Today, %@ you arrived late. Remember only %d delays are permitted";
 "STADISTICS_LATE_ALERT"="Today, %@ you arrived late. You have reached the limit of delays";
+"RESUME_LIST"="Resume list of %@";

@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSString *asignatura;
 @property (strong, nonatomic) NSString *clase;
 @property (strong, nonatomic) NSString *nombreClase;
+@property (strong, nonatomic) NSString *nombreAsignatura;
 @property (strong, nonatomic) NSDictionary *miListaClases;
 
 @end

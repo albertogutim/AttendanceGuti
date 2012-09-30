@@ -25,6 +25,8 @@
 @synthesize contadorAusentes = _contadorAusentes;
 @synthesize contadorRetrasos = _contadorRetrasos;
 @synthesize miTabla = _miTabla;
+@synthesize nombreAsignatura = _nombreAsignatura;
+@synthesize nombreClase = _nombreClase;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,6 +63,7 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     self.lblfecha.text = self.fecha;
+    self.lblAsignaturaGrupo.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:self.ordenAusentes yParaAlumnosRetrasados:self.ordenRetrasos paraTodos: NO];
@@ -114,7 +117,7 @@
         int contador = 0;
         for (int i=0; i<[self.contadorAusentes count]; i++) {
             if([[self.ausentes.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
-                //si coincide tengo que hace la cuenta
+                //si coincide tengo que hacer la cuenta
                 for(int u=1; u<[[self.contadorAusentes objectAtIndex:i] count]; u++)
                 {
                     if([[[self.contadorAusentes objectAtIndex:i] objectAtIndex:u] isEqualToString:@"2"])
@@ -122,7 +125,8 @@
                 }
                 
         }
-        num.text = [NSString stringWithFormat:@"%d",contador];
+        //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.ausentes.allKeys objectAtIndex:indexPath.row],contador];
+        num.text = [NSString stringWithFormat:@"(%d)",contador];
         
     }
     else if(indexPath.section==1)
@@ -130,8 +134,8 @@
     {
         //mostramos el nombre del alumno que ha llegado tarde
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        theCellLbl.text = [self.retrasos.allKeys objectAtIndex:indexPath.row];
         
+        theCellLbl.text = [self.retrasos.allKeys objectAtIndex:indexPath.row];
         UILabel *num = (UILabel *)[cell viewWithTag:2];
         int contador = 0;
         for (int i=0; i<[self.contadorRetrasos count]; i++) {
@@ -144,7 +148,8 @@
                 }
             
         }
-        num.text = [NSString stringWithFormat:@"%d",contador];
+        //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.retrasos.allKeys objectAtIndex:indexPath.row],contador];
+        num.text = [NSString stringWithFormat:@"(%d)",contador];
     }
     return cell;
 }
@@ -165,7 +170,7 @@
 
 #pragma mark - My methods
 
--(void) respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados:(NSMutableArray *)retrasados error:(NSError *)error todos: (NSMutableArray *) todos
+-(void) respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados:(NSMutableArray *)retrasados todos: (NSMutableArray *) todos error:(NSError *)error 
 {
     self.contadorAusentes = ausentes;
     self.contadorRetrasos = retrasados;
@@ -217,8 +222,8 @@
         MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
         [composer setMailComposeDelegate:self];
         if ([MFMailComposeViewController canSendMail]) {
-            [composer setToRecipients:mails];
-            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],self.nombreClase]];
+            [composer setBccRecipients:mails];
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase]]];
             [composer setMessageBody:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS" value:@"" table:nil],configH.ausencias, configH.retrasos] isHTML:NO];
             [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
             [self presentModalViewController:composer animated:YES];
@@ -248,8 +253,8 @@
         MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
         [composer setMailComposeDelegate:self];
         if ([MFMailComposeViewController canSendMail]) {
-            [composer setToRecipients:mails];
-            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],self.nombreClase]];
+            [composer setBccRecipients:mails];
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase]]];
             [composer setMessageBody:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_MISSED" value:@"" table:nil],self.fecha, configH.ausencias] isHTML:NO];
             [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
             [self presentModalViewController:composer animated:YES];
@@ -275,8 +280,8 @@
         MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
         [composer setMailComposeDelegate:self];
         if ([MFMailComposeViewController canSendMail]) {
-            [composer setToRecipients:mails];
-            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],self.nombreClase]];
+            [composer setBccRecipients:mails];
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase]]];
             [composer setMessageBody:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_LATE" value:@"" table:nil],self.fecha, configH.retrasos] isHTML:NO];
             [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
             [self presentModalViewController:composer animated:YES];

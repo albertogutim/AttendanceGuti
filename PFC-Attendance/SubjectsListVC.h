@@ -24,5 +24,6 @@
 @property (weak, nonatomic) NSDictionary *miListaAsignaturas;
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) id asignatura;
+@property (strong, nonatomic) NSString *nombreAsignatura;
 
 @end

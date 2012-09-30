@@ -27,6 +27,8 @@
 @synthesize contadorRetrasosGlobal = _contadorRetrasosGlobal;
 @synthesize ausenciasArray = _ausenciasArray;
 @synthesize retrasosArray = _retrasosArray;
+@synthesize fechas = _fechas;
+@synthesize nombreAsignatura = _nombreAsignatura;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,7 +64,9 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    self.classLbl.text = self.nombreClase;
+    self.classLbl.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    self.contadorRetrasosGlobal = 0;
+    self.contadorAusenciasGlobal = 0;
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:nil yParaAlumnosRetrasados:nil paraTodos:YES];
@@ -141,14 +145,16 @@
         float total = [[self.todos objectAtIndex:indexPath.row +1] count]-2;
         float porcentaje1 = [[self.ausenciasArray objectAtIndex:indexPath.row] floatValue]/ total;
         float porcentaje2 = [[self.retrasosArray objectAtIndex:indexPath.row] floatValue]/ total;
+        porcentaje1 = porcentaje1 * 100;
+        porcentaje2 = porcentaje2 * 100;
         
         NSNumberFormatter* nf = [[NSNumberFormatter alloc] init];
-        nf.positiveFormat = @"0.##";
+        nf.positiveFormat = @"0.#";
         NSString* s1 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje1]];
         NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje2]];
         
-        numAusencias.text = [NSString stringWithFormat:@"%f (%@)",[[self.ausenciasArray objectAtIndex:indexPath.row] floatValue],s1];
-        numRestrasos.text = [NSString stringWithFormat:@"%f (%@)",[[self.retrasosArray objectAtIndex:indexPath.row] floatValue],s2];
+        numAusencias.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.ausenciasArray objectAtIndex:indexPath.row] integerValue],s1];
+        numRestrasos.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.retrasosArray objectAtIndex:indexPath.row] integerValue],s2];
         return cell;
 
         
@@ -188,6 +194,7 @@
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
         theCellLbl.text =@"Ver Resúmenes";
         theCellLbl.textAlignment= UITextAlignmentCenter;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         return cell;
 
     }
@@ -219,12 +226,14 @@
         float total =  totalAlumnos * totalFechas;
         float porcentajeGlobalAusencias = self.contadorAusenciasGlobal /total;
         float porcentajeGlobalRetrasos = self.contadorRetrasosGlobal /total;
+        porcentajeGlobalAusencias = porcentajeGlobalAusencias *100;
+        porcentajeGlobalRetrasos = porcentajeGlobalRetrasos *100;
         
         NSNumberFormatter* nf = [[NSNumberFormatter alloc] init];
-        nf.positiveFormat = @"0.##";
+        nf.positiveFormat = @"0.#";
         NSString* s1 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentajeGlobalAusencias]];
         NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentajeGlobalRetrasos]];
-        return [NSString stringWithFormat:@"%@ %@\n%@ %@",s1,@"Total Ausencias",s2,@"Total Retrasos"];
+        return [NSString stringWithFormat:@"%@ %% %@\n%@ %% %@",s1,@"Total Ausencias",s2,@"Total Retrasos"];
 
     }
     else if((section == 1)||(section == 2))
@@ -250,6 +259,25 @@
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
+    if([theCellLbl.text isEqualToString:@"Ver Resúmenes"])
+    {
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        [midh fechasValidasPara:self.clase];
+
+    }
+       
+    
+}
+
+
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -257,7 +285,6 @@
     UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
     //guardo el nombre del alumno para pasárselo a la siguiente vista (StudentVC)
     self.alumno = theCellLbl.text;
-    //voy a coger el email para pasárselo también a la siguiente vista (StudentVC)
     self.row = indexPath.row+1;
     [self performSegueWithIdentifier:@"goToStudentInfo" sender:self];
     
@@ -273,10 +300,20 @@
             studentVC.clase = self.clase;
             studentVC.alumno = self.alumno;
             studentVC.delegate = self;
-            studentVC.row = self.row;
+            studentVC.row = self.row+2;
             studentVC.nombreClase = self.nombreClase;
     
         }
+    
+    if ([[segue identifier] isEqualToString:@"goToResumenList"])
+    {
+        
+        ResumenesVC *resumenesvc = [segue destinationViewController];
+        resumenesvc.resumenes = [self.todos objectAtIndex:0];
+        resumenesvc.fechas = self.fechas;
+        resumenesvc.nombreClase = self.nombreClase;
+        resumenesvc.nombreAsignatura = self.nombreAsignatura;
+    }
 }
 
 
@@ -287,8 +324,8 @@
 
     self.todos = todos;
     self.cuantos = [todos count]-1;
-    float contadorAusencias;
-    float contadorRetrasos;
+    int contadorAusencias;
+    int contadorRetrasos;
     
     NSMutableArray *contadoresAusenciasArray = [NSMutableArray arrayWithCapacity:[self.todos count]-1];
     NSMutableArray *contadoresRetrasosArray = [NSMutableArray arrayWithCapacity:[self.todos count]-1];
@@ -309,8 +346,8 @@
                 
             
         }
-        [contadoresAusenciasArray addObject:[NSString stringWithFormat:@"%f",contadorAusencias]];
-        [contadoresRetrasosArray addObject:[NSString stringWithFormat:@"%f",contadorRetrasos]];
+        [contadoresAusenciasArray addObject:[NSString stringWithFormat:@"%d",contadorAusencias]];
+        [contadoresRetrasosArray addObject:[NSString stringWithFormat:@"%d",contadorRetrasos]];
         
     }
     self.ausenciasArray = contadoresAusenciasArray;
@@ -333,6 +370,13 @@
        [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:nil yParaAlumnosRetrasados:nil paraTodos:YES];
     }
     
+}
+-(void) respuestaFechasValidas:(NSArray *)fechas error:(NSError *)error
+{
+
+    self.fechas = fechas;
+    [self performSegueWithIdentifier:@"goToResumenList" sender:self];
+        
 }
 
 @end

@@ -17,6 +17,7 @@
 @synthesize miListaClases = _miListaClases;
 @synthesize clase = _clase;
 @synthesize nombreClase = _nombreClase;
+@synthesize nombreAsignatura = _nombreAsignatura;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -40,7 +41,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"CLASS_TITLE", nil);
+    //self.title = NSLocalizedString(@"CLASS_TITLE", nil);
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -65,6 +66,7 @@
     //NSLog(@"%@", [self.asignatura description]); 
     
     [self connectIntent];
+    self.title = self.nombreAsignatura;
     
     [super viewWillAppear:animated];
 }
@@ -202,6 +204,7 @@
         AttendanceStudentsVC *attendanceStudentView = [segue destinationViewController];
         attendanceStudentView.clase = self.clase;
         attendanceStudentView.nombreClase = self.nombreClase;
+        attendanceStudentView.nombreAsignatura = self.nombreAsignatura;
     
         
         
@@ -214,6 +217,7 @@
         ClassVC *classvc = [segue destinationViewController];
         classvc.clase = self.clase;
         classvc.nombreClase = self.nombreClase;
+        classvc.nombreAsignatura = self.nombreAsignatura;
         
     }
     

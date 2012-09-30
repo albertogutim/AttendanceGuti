@@ -14,10 +14,12 @@
 
 @property (strong, nonatomic) NSString *fecha;
 @property (weak, nonatomic) IBOutlet UILabel *lblfecha;
+@property (strong, nonatomic) IBOutlet UILabel *lblAsignaturaGrupo;
 @property (strong, nonatomic) NSMutableDictionary *ausentes;
 @property (strong, nonatomic) NSMutableDictionary *retrasos;
 @property (strong, nonatomic) NSString *clase;
 @property (strong, nonatomic) NSString *nombreClase;
+@property (strong, nonatomic) NSString *nombreAsignatura;
 @property (strong, nonatomic) NSMutableArray *ordenAusentes;
 @property (strong, nonatomic) NSMutableArray *ordenRetrasos;
 @property (strong, nonatomic) NSMutableArray *contadorAusentes;

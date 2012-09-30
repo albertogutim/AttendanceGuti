@@ -19,6 +19,7 @@
 @synthesize miListaAsignaturas = _miListaAsignaturas;
 @synthesize miTabla = _miTabla;
 @synthesize asignatura = _asignatura;
+@synthesize nombreAsignatura = _nombreAsignatura;
 
 - (void)didReceiveMemoryWarning
 {
@@ -139,6 +140,7 @@
 
     
     self.asignatura= [self.miListaAsignaturas.allKeys objectAtIndex:indexPath.row];
+    self.nombreAsignatura = [self.miListaAsignaturas.allValues objectAtIndex:indexPath.row];
     
     /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"SubjectsView"
                                                          message:[NSString stringWithFormat:@"asignatura: %@", self.asignatura]
@@ -259,6 +261,7 @@
          
          ClassListTVC *classListView = [segue destinationViewController];
          classListView.asignatura = self.asignatura;
+         classListView.nombreAsignatura = self.nombreAsignatura;
          
         
          
