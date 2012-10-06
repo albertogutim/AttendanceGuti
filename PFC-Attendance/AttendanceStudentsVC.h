@@ -13,8 +13,9 @@
 #import "ResumenVC.h"
 #import "StudentVC.h"
 #import "StadisticsVC.h"
+#import "MessageUI/MFMailComposeViewController.h"
 
-@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate, StudentVCDelegate>
+@interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate, StudentVCDelegate, MFMailComposeViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *todosPresentesAusentes;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
@@ -41,8 +42,10 @@
 @property (strong, nonatomic) NSString *alumno;
 @property (strong, nonatomic) NSString *fechaCompleta;
 @property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
+@property (strong, nonatomic) NSArray *sortedKeys;
 - (IBAction)attendance:(id)sender;
 - (IBAction)changeSegmentedControl:(id)sender;
+- (IBAction)sendEmail:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;

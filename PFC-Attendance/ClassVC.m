@@ -24,11 +24,15 @@
 @synthesize mail =_mail;
 @synthesize row = _row;
 @synthesize contadorAusenciasGlobal = _contadorAusenciasGlobal;
-@synthesize contadorRetrasosGlobal = _contadorRetrasosGlobal;
+@synthesize contadorPresenciasGlobal = _contadorPresenciasGlobal;
 @synthesize ausenciasArray = _ausenciasArray;
-@synthesize retrasosArray = _retrasosArray;
+@synthesize presenciasArray = _presenciasArray;
 @synthesize fechas = _fechas;
 @synthesize nombreAsignatura = _nombreAsignatura;
+@synthesize sortedKeys = _sortedKeys;
+@synthesize nombres = _nombres;
+@synthesize noMatriculadosArray = _noMatriculadosArray;
+@synthesize contadorNoMatriculadoGlobal = _contadorNoMatriculadoGlobal;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,8 +69,9 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     self.classLbl.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
-    self.contadorRetrasosGlobal = 0;
+    self.contadorPresenciasGlobal = 0;
     self.contadorAusenciasGlobal = 0;
+    self.contadorNoMatriculadoGlobal = 0;
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:nil yParaAlumnosRetrasados:nil paraTodos:YES];
@@ -120,12 +125,16 @@
 
         //mostramos el nombre del alumno
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        theCellLbl.text = [[self.todos objectAtIndex:indexPath.row +1] objectAtIndex:0];
+        //theCellLbl.text = [[self.todos objectAtIndex:indexPath.row +1] objectAtIndex:0];
+        
+        theCellLbl.text = [self.sortedKeys objectAtIndex:indexPath.row];
+        
+        
         
         UILabel *numAusencias = (UILabel *)[cell viewWithTag:2];
         UILabel *numRestrasos = (UILabel *)[cell viewWithTag:3];
         //int contadorAusencias = 0;
-        //int contadorRetrasos = 0;
+        //int contadorPresencias = 0;
 
         
         /*for(int u=2; u<[[self.todos objectAtIndex:indexPath.row +1] count]; u++)
@@ -136,28 +145,40 @@
                     self.contadorAusenciasGlobal++;}
                 
                 if([[[self.todos objectAtIndex:indexPath.row +1] objectAtIndex:u] isEqualToString:@"3"])
-                {contadorRetrasos++;
-                    self.contadorRetrasosGlobal++;}
+                {contadorPresencias++;
+                    self.contadorPresenciasGlobal++;}
 
             }
          */
             
         float total = [[self.todos objectAtIndex:indexPath.row +1] count]-2;
-        float porcentaje1 = [[self.ausenciasArray objectAtIndex:indexPath.row] floatValue]/ total;
-        float porcentaje2 = [[self.retrasosArray objectAtIndex:indexPath.row] floatValue]/ total;
-        porcentaje1 = porcentaje1 * 100;
-        porcentaje2 = porcentaje2 * 100;
+        if([[self.noMatriculadosArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue] > 0)
+        {
+            total = total - [[self.noMatriculadosArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] floatValue];
+ 
+        }
+            
+      
+            
+            float porcentaje1 = [[self.ausenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] floatValue]/ total;
+            float porcentaje2 = [[self.presenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] floatValue]/ total;
+            
+            //float porcentaje1 = [[self.ausenciasArray objectAtIndex:indexPath.row] floatValue]/ total;
+            //float porcentaje2 = [[self.presenciasArray objectAtIndex:indexPath.row] floatValue]/ total;
+            porcentaje1 = porcentaje1 * 100;
+            porcentaje2 = porcentaje2 * 100;
+            
+            NSNumberFormatter* nf = [[NSNumberFormatter alloc] init];
+            nf.positiveFormat = @"0.#";
+            NSString* s1 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje1]];
+            NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje2]];
+            
+            numAusencias.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.presenciasArray  objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue],s2];
+            numRestrasos.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.ausenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue],s1];
+            return cell;
         
-        NSNumberFormatter* nf = [[NSNumberFormatter alloc] init];
-        nf.positiveFormat = @"0.#";
-        NSString* s1 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje1]];
-        NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje2]];
-        
-        numAusencias.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.ausenciasArray objectAtIndex:indexPath.row] integerValue],s1];
-        numRestrasos.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.retrasosArray objectAtIndex:indexPath.row] integerValue],s2];
-        return cell;
-
-        
+       
+            
 
     }
     else if(indexPath.section==1)
@@ -219,21 +240,31 @@
 {
     if(section == 0)
     {
-        
-        
-        float totalFechas = [[self.todos objectAtIndex:0]count] -2;
-        float totalAlumnos = [self.todos count]-1;
-        float total =  totalAlumnos * totalFechas;
+        float totalFechas,totalAlumnos,total;
+        totalFechas = [[self.todos objectAtIndex:0]count] -2;
+        totalAlumnos = [self.todos count]-1;
+        if(self.contadorNoMatriculadoGlobal == 0)
+        {
+            total =  totalAlumnos * totalFechas;
+            
+        }
+        else if (self.contadorNoMatriculadoGlobal > 0)
+        {
+            
+            total =  totalAlumnos * totalFechas;
+            total = total - self.contadorNoMatriculadoGlobal;
+            
+        }
         float porcentajeGlobalAusencias = self.contadorAusenciasGlobal /total;
-        float porcentajeGlobalRetrasos = self.contadorRetrasosGlobal /total;
+        float porcentajeGlobalPresencias = self.contadorPresenciasGlobal /total;
         porcentajeGlobalAusencias = porcentajeGlobalAusencias *100;
-        porcentajeGlobalRetrasos = porcentajeGlobalRetrasos *100;
+        porcentajeGlobalPresencias = porcentajeGlobalPresencias *100;
         
         NSNumberFormatter* nf = [[NSNumberFormatter alloc] init];
         nf.positiveFormat = @"0.#";
         NSString* s1 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentajeGlobalAusencias]];
-        NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentajeGlobalRetrasos]];
-        return [NSString stringWithFormat:@"%@ %% %@\n%@ %% %@",s1,@"Total Ausencias",s2,@"Total Retrasos"];
+        NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentajeGlobalPresencias]];
+        return [NSString stringWithFormat:@"%@ %% %@\n%@ %% %@",s2,@"Total Asistencias",s1,@"Total Ausencias "];
 
     }
     else if((section == 1)||(section == 2))
@@ -325,13 +356,29 @@
     self.todos = todos;
     self.cuantos = [todos count]-1;
     int contadorAusencias;
-    int contadorRetrasos;
+    int contadorPresencias;
+    int contadorNoMatriculado;
+    
+    NSMutableArray *nombres = [NSMutableArray arrayWithCapacity:[todos count]-1];
+    
+    for (int i=1; i<[todos count]; i++) {
+        [nombres addObject:[[todos objectAtIndex:i] objectAtIndex:0]];
+    }
+    
+    self.nombres = nombres;
+    
+    
+    NSArray * sortedKeys = [nombres sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeys = sortedKeys;
     
     NSMutableArray *contadoresAusenciasArray = [NSMutableArray arrayWithCapacity:[self.todos count]-1];
-    NSMutableArray *contadoresRetrasosArray = [NSMutableArray arrayWithCapacity:[self.todos count]-1];
+    NSMutableArray *contadoresPresenciasArray = [NSMutableArray arrayWithCapacity:[self.todos count]-1];
+    NSMutableArray *contadoresNoMatriculadoArray = [NSMutableArray arrayWithCapacity:[self.todos count]-1];
     for (int i=1; i<[self.todos count]; i++) {
         contadorAusencias=0;
-        contadorRetrasos=0;
+        contadorPresencias=0;
+        contadorNoMatriculado=0;
         for(int u=2; u<[[self.todos objectAtIndex:i] count]; u++)
         {
             
@@ -340,18 +387,26 @@
                     self.contadorAusenciasGlobal++;}
                 
             
-            if([[[self.todos objectAtIndex:i] objectAtIndex:u] isEqualToString:@"3"])
-                { contadorRetrasos++;
-                    self.contadorRetrasosGlobal++;}
+            if(([[[self.todos objectAtIndex:i] objectAtIndex:u] isEqualToString:@"1"]) || ([[[self.todos objectAtIndex:i] objectAtIndex:u] isEqualToString:@"3"]))
+                { contadorPresencias++;
+                    self.contadorPresenciasGlobal++;}
+            
+            
+            if([[[self.todos objectAtIndex:i] objectAtIndex:u] isEqualToString:@"0"])
+               { contadorNoMatriculado++;
+                self.contadorNoMatriculadoGlobal++;}
                 
             
         }
         [contadoresAusenciasArray addObject:[NSString stringWithFormat:@"%d",contadorAusencias]];
-        [contadoresRetrasosArray addObject:[NSString stringWithFormat:@"%d",contadorRetrasos]];
+        [contadoresPresenciasArray addObject:[NSString stringWithFormat:@"%d",contadorPresencias]];
+        [contadoresNoMatriculadoArray addObject:[NSString stringWithFormat:@"%d",contadorNoMatriculado]];
         
     }
     self.ausenciasArray = contadoresAusenciasArray;
-    self.retrasosArray = contadoresRetrasosArray;
+    self.presenciasArray = contadoresPresenciasArray;
+    self.noMatriculadosArray = contadoresNoMatriculadoArray;
+
     [self.miTabla reloadData];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];

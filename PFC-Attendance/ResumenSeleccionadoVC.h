@@ -10,4 +10,14 @@
 
 @interface ResumenSeleccionadoVC : UIViewController
 
+
+@property (strong, nonatomic) NSString *nombreClase;
+@property (strong, nonatomic) NSString *nombreAsignatura;
+@property (strong, nonatomic) NSString *fechaResumen;
+@property (strong, nonatomic) NSString *resumenSeleccionado;
+
+@property (strong, nonatomic) IBOutlet UILabel *nombreAsignaturaGrupolbl;
+@property (strong, nonatomic) IBOutlet UILabel *fechalbl;
+@property (strong, nonatomic) IBOutlet UITextView *resumenView;
+
 @end

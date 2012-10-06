@@ -466,12 +466,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="refresh" id="Lqh-kp-Qbz">
+                        <barButtonItem style="plain" systemItem="reply" id="Lqh-kp-Qbz">
                             <connections>
                                 <action selector="updateSpreadsheet:" destination="gL0-ve-xDd" id="mre-V9-r3G"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem width="34" style="plain" systemItem="fixedSpace" id="HtH-QC-3kq"/>
                         <barButtonItem image="lapiz2.png" id="kAy-Pa-kSN">
                             <connections>
                                 <segue destination="DdU-dP-SnP" kind="push" identifier="goToResumen" id="ARV-Ar-8SU"/>
@@ -493,7 +492,11 @@
                                 <segue destination="Yg7-RB-d7a" kind="modal" identifier="goToPicker" modalTransitionStyle="partialCurl" id="Nb7-a8-qw4"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem width="34" style="plain" systemItem="fixedSpace" id="x7T-8n-jfm"/>
+                        <barButtonItem systemItem="action" id="sqZ-8U-sc7">
+                            <connections>
+                                <action selector="sendEmail:" destination="gL0-ve-xDd" id="N2j-9h-7QZ"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem systemItem="add" id="6nP-Tv-uin">
                             <connections>
                                 <action selector="addStudent:" destination="gL0-ve-xDd" id="xUC-wq-Pje"/>
@@ -635,7 +638,7 @@
                         </connections>
                     </textView>
                     <toolbarItems>
-                        <barButtonItem title="Item" style="plain" systemItem="refresh" id="3pe-fN-zW8">
+                        <barButtonItem style="plain" systemItem="reply" id="3pe-fN-zW8">
                             <connections>
                                 <action selector="updateResumen:" destination="DdU-dP-SnP" id="eAQ-MX-rDt"/>
                             </connections>
@@ -906,29 +909,52 @@
             </objects>
             <point key="canvasLocation" x="-420" y="-591"/>
         </scene>
-        <!--Resumen-->
-        <scene sceneID="QYp-TS-I5V">
+        <!--Resumen SeleccionadoVC-->
+        <scene sceneID="3Q9-EK-Cjf">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="o7l-Ws-Y1B" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController title="Resumen desde lista resumenes" id="NA9-OJ-7Zl" userLabel="Resumen" customClass="ResumenSeleccionadoVC" sceneMemberID="viewController">
-                    <textView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="OMl-m1-CFu">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SKn-Kg-8qO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="tta-k3-tKJ" customClass="ResumenSeleccionadoVC" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gh5-Nt-g81">
                         <rect key="frame" x="0.0" y="64" width="320" height="372"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                    </textView>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" indicatorStyle="white" id="xdQ-7j-tFo">
+                                <rect key="frame" x="0.0" y="65" width="320" height="307"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no"/>
+                            </textView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="FVq-RE-ODb">
+                                <rect key="frame" x="13" y="12" width="294" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="15" id="Wug-8h-pun">
+                                <rect key="frame" x="13" y="38" width="294" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="refresh" id="ixO-1p-TMc"/>
+                        <barButtonItem style="plain" systemItem="reply" id="4t3-FB-I0P"/>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="1kk-NP-IfF">
-                        <nil key="title"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="cyF-KF-JvU"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="Oxl-vp-j1y"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="fechalbl" destination="Wug-8h-pun" id="1eV-EA-JH1"/>
+                        <outlet property="nombreAsignaturaGrupolbl" destination="FVq-RE-ODb" id="Ogw-No-PgM"/>
+                        <outlet property="resumenView" destination="xdQ-7j-tFo" id="jWf-cn-Pwj"/>
+                    </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2561" y="2439"/>
+            <point key="canvasLocation" x="2408" y="2439"/>
         </scene>
         <!--ClassVC - Informe Asignatura-->
         <scene sceneID="PYV-Ei-DzB">
@@ -958,22 +984,22 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" image="cross.png" id="T9X-X9-rx0">
+                                                <imageView userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" image="check.png" id="T9X-X9-rx0">
                                                     <rect key="frame" x="114" y="35" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" tag="5" contentMode="scaleToFill" image="late.png" id="Zke-DR-Z56">
+                                                <imageView userInteractionEnabled="NO" tag="5" contentMode="scaleToFill" image="cross.png" id="Zke-DR-Z56">
                                                     <rect key="frame" x="189" y="35" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="6Uv-Fb-4YK">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="6Uv-Fb-4YK">
                                                     <rect key="frame" x="145" y="39" width="44" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Xfa-pE-om2">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" id="Xfa-pE-om2">
                                                     <rect key="frame" x="220" y="39" width="44" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
@@ -1571,7 +1597,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="NA9-OJ-7Zl" kind="push" identifier="goToResumenView" id="9jb-z2-kLw"/>
+                        <segue destination="tta-k3-tKJ" kind="push" identifier="goToResumenSeleccionado" id="hZJ-AU-pcF"/>
                     </connections>
                 </viewController>
             </objects>
@@ -1582,7 +1608,6 @@
         <image name="check.png" width="30" height="30"/>
         <image name="cross.png" width="30" height="30"/>
         <image name="lapiz2.png" width="20" height="20"/>
-        <image name="late.png" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -1590,6 +1615,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="xEU-Wt-Aso"/>
+        <segue reference="P4f-xr-FeK"/>
     </inferredMetricsTieBreakers>
 </document>

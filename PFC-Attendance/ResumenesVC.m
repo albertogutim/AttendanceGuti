@@ -17,6 +17,8 @@
 @synthesize fechas = _fechas;
 @synthesize nombreAsignatura = _nombreAsignatura;
 @synthesize nombreClase = _nombreClase;
+@synthesize resumenSeleccionado = _resumenSeleccionado;
+@synthesize fecharesumen = _fecharesumen;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -94,6 +96,18 @@
         
 }
 
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    
+    self.resumenSeleccionado= [self.resumenes objectAtIndex:indexPath.row+2];
+    self.fecharesumen = [self.fechas objectAtIndex:indexPath.row];
+    
+    [self performSegueWithIdentifier:@"goToResumenSeleccionado" sender:self];
+}
+
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
     if (!error) {
@@ -102,6 +116,24 @@
     
 }
 
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
+    if ([[segue identifier] isEqualToString:@"goToResumenSeleccionado"])
+    {
+        
+        //cuando el usuario selecciona una clase se le pasa el id de la misma al viewcontroller siguiente
+        
+        
+        ResumenSeleccionadoVC *resumenSeleccionado = [segue destinationViewController];
+        resumenSeleccionado.fechaResumen = self.fecharesumen;
+        resumenSeleccionado.resumenSeleccionado = self.resumenSeleccionado;
+        resumenSeleccionado.nombreClase = self.nombreClase;
+        resumenSeleccionado.nombreAsignatura = self.nombreAsignatura;
+
+    }
+}
 - (IBAction)enviarResumenes:(id)sender {
     
     

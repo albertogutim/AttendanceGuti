@@ -25,10 +25,16 @@
 @property (strong, nonatomic) NSString *mail;
 @property (assign, nonatomic) NSInteger row;
 @property (assign, nonatomic) NSInteger contadorAusenciasGlobal;
-@property (assign, nonatomic) NSInteger contadorRetrasosGlobal;
+@property (assign, nonatomic) NSInteger contadorPresenciasGlobal;
+@property (assign, nonatomic) NSInteger contadorNoMatriculadoGlobal;
 @property (strong, nonatomic) NSMutableArray *ausenciasArray;
-@property (strong, nonatomic) NSMutableArray *retrasosArray;
+@property (strong, nonatomic) NSMutableArray *presenciasArray;
+@property (strong, nonatomic) NSMutableArray *noMatriculadosArray;
 @property (strong, nonatomic) NSArray *fechas;
+@property (strong, nonatomic) NSArray *sortedKeys;
+@property (strong, nonatomic) NSMutableArray *nombres;
+
+
 
 
 @end

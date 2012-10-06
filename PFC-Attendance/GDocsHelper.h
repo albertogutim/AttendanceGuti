@@ -53,6 +53,10 @@
     (GDataServiceTicket *)ticket
             finishedWithFeed:(GDataFeedBase *)feed
                        error:(NSError *)error;
+
+- (void)introducirFormulasTicket:(GDataServiceTicket *)ticket
+                finishedWithFeed:(GDataFeedBase *)feed
+                           error:(NSError *)error;
 - (void)columnaConFechaDeHoyCreada:(GDataServiceTicket *)ticket
                   finishedWithFeed:(GDataFeedBase *)feed
                              error:(NSError *)errror;

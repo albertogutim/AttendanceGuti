@@ -150,6 +150,7 @@
         }
         //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.retrasos.allKeys objectAtIndex:indexPath.row],contador];
         num.text = [NSString stringWithFormat:@"(%d)",contador];
+        
     }
     return cell;
 }

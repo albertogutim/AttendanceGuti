@@ -35,6 +35,7 @@
 @synthesize fechaCompleta = _fechaCompleta;
 @synthesize nombreClase = _nombreClase;
 @synthesize nombreAsignatura = _nombreAsignatura;
+@synthesize sortedKeys = _sortedKeys;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -171,8 +172,13 @@
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
         
-        theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
-        switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
+        //theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
+        
+        theCellLbl.text =[self.sortedKeys objectAtIndex:indexPath.row];
+                            
+        
+        //switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
+        switch ([[self.miListaAlumnos valueForKey:[self.sortedKeys objectAtIndex:indexPath.row]]integerValue]) {
             case 1: //Atendió
                 iv.image = [UIImage imageNamed:@"check.png"];
                 break;
@@ -330,6 +336,11 @@
     self.columna = columna;
     self.alumnosConOrden = alumnosConOrden;
     
+    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeys = sortedKeys;
+   
+    
     NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
     self.presentes = presentes;
     NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
@@ -415,6 +426,8 @@
         pickerV.clase = self.clase;
         pickerV.delegate = self;
         pickerV.fecha=self.fecha;
+        
+        
         
         
         
@@ -637,6 +650,10 @@
     if(self.todosPresentesAusentes.selectedSegmentIndex == 0) {
         //Todos
         self.miListaAlumnos = self.todos;
+        NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+        
+        self.sortedKeys = sortedKeys;
+
         [self.miTabla reloadData];
 
     }
@@ -647,6 +664,9 @@
         presentes = [self filtrarPresentes:presentes];
         self.miListaAlumnos = presentes;
         self.presentes = presentes;
+        NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+        
+        self.sortedKeys = sortedKeys;
         [self.miTabla reloadData];
     }
         else //Ausentes
@@ -657,14 +677,130 @@
             ausentes = [self filtrarAusentes:ausentes];
             self.miListaAlumnos = ausentes;
             self.ausentes = ausentes;
+            NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+            
+            self.sortedKeys = sortedKeys;
             [self.miTabla reloadData];
         }
     
 }
 
+- (IBAction)sendEmail:(id)sender {
+    
+    if(self.todosPresentesAusentes.selectedSegmentIndex == 0)
+    {
+        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *dateStr = [df stringFromDate:self.fecha];
+        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
+        [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
+        [presentes appendString:@"Presentes\n\n"];
+        for (int i=0; i<[self.presentes count]; i++) {
+            if([[self.presentes.allValues objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%d",3]])
+                [presentes appendString:[NSString stringWithFormat:@"%@ (Llegó tarde)\n",[self.presentes.allKeys objectAtIndex:i]]];
+            else
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.presentes.allKeys objectAtIndex:i]]];
+
+        }
+        
+        if([self.ausentes count]>0)
+        {
+        [presentes appendString:@"\n\nAusentes\n\n"];
+        for (int i=0; i<[self.ausentes count]; i++) {
+            [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.ausentes.allKeys objectAtIndex:i]]];
+            
+        }
+        }
+        
+        
+        
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
+            [composer setMessageBody:presentes isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+    }
+    
+    if(self.todosPresentesAusentes.selectedSegmentIndex == 1)
+    {
+        
+        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *dateStr = [df stringFromDate:self.fecha];
+        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
+        [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
+        [presentes appendString:@"Presentes\n\n"];
+        for (int i=0; i<[self.presentes count]; i++) {
+            if([[self.presentes.allValues objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%d",3]])
+                [presentes appendString:[NSString stringWithFormat:@"%@ (Llegó tarde)\n",[self.presentes.allKeys objectAtIndex:i]]];
+            else
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.presentes.allKeys objectAtIndex:i]]];
+            
+        }
+
+
+        
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
+            [composer setMessageBody:presentes isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+
+    }
+    
+    if(self.todosPresentesAusentes.selectedSegmentIndex == 2)
+    {
+        
+        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *dateStr = [df stringFromDate:self.fecha];
+        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
+        [presentes appendString:dateStr];
+        if([self.ausentes count]>0)
+        {
+             [presentes appendString:@"\n\nAusentes\n\n"];
+            for (int i=0; i<[self.ausentes count]; i++) {
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.ausentes.allKeys objectAtIndex:i]]];
+                
+            }
+        }
+        
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
+            [composer setMessageBody:presentes isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+    }
+
+}
+
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) alumnos
 {
-   //TODO: mirar si aki hay que tener en cuenta los alumnos añadidos que tienen -1
+   //TODO: mirar si aki hay que tener en cuenta los alumnos añadidos que tienen 0
    NSMutableDictionary *filtro = [NSMutableDictionary dictionaryWithDictionary:alumnos];
     for (int j=0; j<[alumnos count]; j++)
     {
@@ -683,7 +819,7 @@
     {
         if(![[alumnos.allValues objectAtIndex:j] isEqualToString:@"1"])
         {
-            if(([[alumnos.allValues objectAtIndex:j] isEqualToString:@"2"]) || ([[alumnos.allValues objectAtIndex:j] isEqualToString:@"-1"]))
+            if(([[alumnos.allValues objectAtIndex:j] isEqualToString:@"2"]) || ([[alumnos.allValues objectAtIndex:j] isEqualToString:@"0"]))
                 [filtro removeObjectForKey:[alumnos.allKeys objectAtIndex:j]];
         }
     }
@@ -727,6 +863,14 @@
      [alertView show];
     
 
+    
+}
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    if (!error) {
+        [self dismissModalViewControllerAnimated:YES];
+    }
     
 }
 

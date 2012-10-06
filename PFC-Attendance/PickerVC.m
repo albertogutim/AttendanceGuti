@@ -188,12 +188,17 @@
         [fechaLong addObject:NSLocalizedString(@"TODAY", nil)];
     self.fechas = fechaLong;
     
+    if ([fechas count] !=0)
+    {
     NSDateFormatter *df = [NSDateFormatter new];
     [df setTimeStyle:NSDateFormatterNoStyle];
     [df setDateStyle:NSDateFormatterFullStyle];
     NSDate *fechaDefecto = [df dateFromString:[self.fechas objectAtIndex:0]];
     
     self.fecha = fechaDefecto;//Le damos el valor de la primera fecha que sale por defecto que es siempre la primera de self.fechas.
+    }
+    else
+        self.fecha = todayOk;
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     [self.miPicker reloadAllComponents];

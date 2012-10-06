@@ -371,32 +371,84 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         
     } else { //Es la primera vez, y no existe ninguna fecha. Añadir fecha en el header
         
-        //Creamos la fecha en español para el día de hoy
-        //TODO: Generalizarlo para cualquier fecha
-        self.encontrada=NO;
-        NSDateFormatter *df = [NSDateFormatter new];
-        [df setDateFormat:@"dd/MM/yy"];
-        [df setTimeStyle:NSDateFormatterNoStyle];
-        [df setDateStyle:NSDateFormatterShortStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
         
-        self.columna = DATES_START;
-        
-        NSDate *d =[NSDate date];
-        NSString *dateStr = [df stringFromDate:d];
-       
-        GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:DATES_START inputString:dateStr numericValue:nil resultString:nil];
-        GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+        //como es la primera vez que vamos a utilizar la app con esta spreadsheet tenemos que añadir las formulas correspondientes para que se realicen los calculos necesarios.
         
         NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+        GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+        //queremos formar la query para acceder a las columnas donde iran los sumatorios y los porcentajes
+        [q setMinimumColumn:STUDENTS_COLUMN];
+        [q setMaximumColumn:STUDENTS_COLUMN];
+        [q setMinimumRow:ROW_START];
         
-        [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(columnaConFechaDeHoyCreada:finishedWithFeed:error:)];
+        [self.miService fetchFeedWithQuery:q
+                                  delegate:self
+                         didFinishSelector:@selector(introducirFormulasTicket:finishedWithFeed:error:)];
         
+ 
         
     }
 }
 
+
+- (void)introducirFormulasTicket:(GDataServiceTicket *)ticket
+                  finishedWithFeed:(GDataFeedBase *)feed
+                             error:(NSError *)error {
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    for (int i=0; i<[[feed entries] count];i++) {
+        for (int j=0;j<3;j++)
+        {
+            if(j==0)
+            {
+                NSString * formula1 = [NSString stringWithFormat:@"=COUNTIF(F%d:%d,1)+COUNTIF(F%d:%d,3)",i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START];
+                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:ASISTENCIAS_COLUMN inputString:formula1 numericValue:nil resultString:nil];
+                GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+                [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+            }
+            if(j==1)
+            {
+                NSString * formula2 = [NSString stringWithFormat:@"=COUNTIF(F%d:%d,2)",i+ROW_START,i+ROW_START];
+                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:AUSENCIAS_COLUMN inputString:formula2 numericValue:nil resultString:nil];
+                GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+                [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+            }
+            if(j==2)
+            {
+                NSString * formula3 = [NSString stringWithFormat:@"=(COUNTIF(F%d:%d,1)+COUNTIF(F%d:%d,3))/(COUNTIF(F%d:%d,1)+COUNTIF(F%d:%d,3)+COUNTIF(F%d:%d,2))*100",i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START];
+                GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:PORCENTAJE_COLUMN inputString:formula3 numericValue:nil resultString:nil];
+                GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+                [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+            }
+        
+        }
+        
+    }
+     
+
+    
+    //Creamos la fecha en español para el día de hoy
+    //TODO: Generalizarlo para cualquier fecha
+    self.encontrada=NO;
+    NSDateFormatter *df = [NSDateFormatter new];
+    [df setDateFormat:@"dd/MM/yy"];
+    [df setTimeStyle:NSDateFormatterNoStyle];
+    [df setDateStyle:NSDateFormatterShortStyle];
+    NSLocale *theLocale = [NSLocale currentLocale];
+    [df setLocale:theLocale];
+    
+    self.columna = DATES_START;
+    
+    NSDate *d =[NSDate date];
+    NSString *dateStr = [df stringFromDate:d];
+    
+    GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:DATES_START inputString:dateStr numericValue:nil resultString:nil];
+    GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+    
+    //NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    
+    [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(columnaConFechaDeHoyCreada:finishedWithFeed:error:)];
+}
 
 
 - (void)columnaConFechaDeHoyCreada:(GDataServiceTicket *)ticket
