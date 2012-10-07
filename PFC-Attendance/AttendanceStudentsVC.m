@@ -112,6 +112,13 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+
+    [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+
+    ConfigHelper *configH = [ConfigHelper sharedInstance];
+    [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
 
     [super viewWillAppear:animated];
 }
@@ -131,18 +138,18 @@
 {
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    if ([self.miListaAlumnos count]) {
+    //if ([self.miListaAlumnos count]) {
         return [self.miListaAlumnos count];
-    } else{
-        return 1;
-    }
+    //} else{
+      //  return 1;
+    //}
     
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
-    if (self.fecha == nil){
+    /*if (self.fecha == nil){
         
         
         cell = [tableView
@@ -156,9 +163,10 @@
         cell.imageView.image = [UIImage imageNamed:@"curlButt.png"];
         
     }
-
+*/
     
-    else  if ([self.miListaAlumnos count]){
+    //else
+    if ([self.miListaAlumnos count]){
         
         
        cell = [tableView 
@@ -418,18 +426,10 @@
     
     if ([[segue identifier] isEqualToString:@"goToPicker"])
     {
-        
-        //cuando el usuario selecciona una clase se le pasa el id de la misma al viewcontroller siguiente
-        
-        
         PickerVC *pickerV = [segue destinationViewController];
         pickerV.clase = self.clase;
         pickerV.delegate = self;
         pickerV.fecha=self.fecha;
-        
-        
-        
-        
         
     }
     if ([[segue identifier] isEqualToString:@"goToAddStudent"])

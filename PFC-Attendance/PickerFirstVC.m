@@ -1,22 +1,27 @@
 //
-//  PickerVC.m
+//  PickerFirstVC.m
 //  AttendanceGuti
 //
-//  Created by ANA GUTIÉRREZ ESGUEVILLAS GUTIERREZ ESGUEVILLAS on 09/08/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by ANA GUTIERREZ ESGUEVILLAS on 06/10/12.
+//
 //
 
-#import "PickerVC.h"
+#import "PickerFirstVC.h"
 #import "GDocsHelper.h"
 #import "ConfigHelper.h"
 
-@implementation PickerVC
-@synthesize fechas = _fechas;
-@synthesize miPicker = _miPicker;
-@synthesize clase = _clase;
-@synthesize fecha = _fecha;
-@synthesize today = _today;
+@interface PickerFirstVC ()
 
+@end
+
+@implementation PickerFirstVC
+@synthesize nombreAsignatura = _nombreAsignatura;
+@synthesize nombreClase = _nombreClase;
+@synthesize fecha = _fecha;
+@synthesize clase = _clase;
+@synthesize fechas = _fechas;
+@synthesize today = _today;
+@synthesize miPicker = _miPicker;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,29 +32,11 @@
     return self;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
 
-#pragma mark - View lifecycle
-
-/*
- // Implement loadView to create a view hierarchy programmatically, without using a nib.
- - (void)loadView
- {
- }
- */
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+   
     
 }
 
@@ -206,17 +193,16 @@
 }
 
 
-//el usuario ha elegido fecha y quiere volver a la pantalla anterior
-- (IBAction)aceptarFecha:(id)sender {
-    
-    [self.delegate devolverFecha:self didSelectDate:self.fecha hoyEs: self.today];
-    
-    
-}
-
 //el usuario no quiere elegir fecha y quiere volver a la pantalla anterior
 - (IBAction)cancelarFecha:(id)sender {
-    
     [self.delegate devolverFecha:self didSelectDate:nil hoyEs: self.today];
+    }
+
+- (IBAction)aceptarfecha:(id)sender {
+    [self.delegate devolverFecha:self didSelectDate:self.fecha hoyEs: self.today];
 }
+
+
+
+
 @end

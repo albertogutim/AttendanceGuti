@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
-#import "AttendanceStudentsVC.h"
 #import "ClassVC.h"
+#import "PickerFirstVC.h"
 
-@interface ClassListTVC : UITableViewController <GDocsHelperDelegate>
+@interface ClassListTVC : UITableViewController <GDocsHelperDelegate, PickerFirstVCDelegate>
 
 
-- (IBAction)refreshData:(id)sender;
+-(IBAction)refreshData:(id)sender;
 -(void) connectIntent;
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *asignatura;
@@ -22,5 +22,7 @@
 @property (strong, nonatomic) NSString *nombreClase;
 @property (strong, nonatomic) NSString *nombreAsignatura;
 @property (strong, nonatomic) NSDictionary *miListaClases;
+@property (nonatomic, strong) NSDate *fecha;
+@property (nonatomic, strong) NSDate *today;
 
 @end

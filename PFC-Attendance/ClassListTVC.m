@@ -18,6 +18,8 @@
 @synthesize clase = _clase;
 @synthesize nombreClase = _nombreClase;
 @synthesize nombreAsignatura = _nombreAsignatura;
+@synthesize fecha = _fecha;
+@synthesize today = _today;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -125,7 +127,7 @@
     
      self.clase= [self.miListaClases.allKeys objectAtIndex:indexPath.row];
      self.nombreClase = [self.miListaClases.allValues objectAtIndex:indexPath.row];
-    [self performSegueWithIdentifier:@"goToAsistenciaAlumnos" sender:self];
+    [self performSegueWithIdentifier:@"goToPickerFromClassList" sender:self];
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
@@ -195,16 +197,19 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
-    if ([[segue identifier] isEqualToString:@"goToAsistenciaAlumnos"])
+    if ([[segue identifier] isEqualToString:@"goToPickerFromClassList"])
     {
         
         //cuando el usuario selecciona una clase se le pasa el id de la misma al viewcontroller siguiente
         
         
-        AttendanceStudentsVC *attendanceStudentView = [segue destinationViewController];
-        attendanceStudentView.clase = self.clase;
-        attendanceStudentView.nombreClase = self.nombreClase;
-        attendanceStudentView.nombreAsignatura = self.nombreAsignatura;
+        
+        PickerFirstVC *pickerFirstvc = [segue destinationViewController];
+        pickerFirstvc.clase = self.clase;
+        pickerFirstvc.fecha = self.fecha;
+        pickerFirstvc.delegate = self;
+        pickerFirstvc.nombreClase = self.nombreClase;
+        pickerFirstvc.nombreAsignatura = self.nombreAsignatura;
     
         
         
@@ -222,9 +227,35 @@
     }
     
     
+    if ([[segue identifier] isEqualToString:@"goToAttendanceStudents"])
+    {
+        [self.navigationController dismissModalViewControllerAnimated:YES];
+        
+        AttendanceStudentsVC *attendanceStudentsvc = [segue destinationViewController];
+        
+        
+        attendanceStudentsvc.clase = self.clase;
+        attendanceStudentsvc.fecha = self.fecha;
+        attendanceStudentsvc.today = self.today;
+        attendanceStudentsvc.nombreAsignatura = self.nombreAsignatura;
+        attendanceStudentsvc.nombreClase = self.nombreClase;
+        
+    }
+    
 }
 
+-(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date hoyEs:(NSDate *) today
 
+{
+    self.fecha = date;
+    self.today = today;
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    if(date!=nil)
+        [self performSegueWithIdentifier:@"goToAttendanceStudents" sender:self];
+    [self.miTabla reloadData];
+    
+    
+}
 
 
 @end
