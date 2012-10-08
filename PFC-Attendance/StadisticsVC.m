@@ -114,6 +114,7 @@
         theCellLbl.text = [self.ausentes.allKeys objectAtIndex:indexPath.row];
         
         UILabel *num = (UILabel *)[cell viewWithTag:2];
+        [num setTextColor:[UIColor blackColor]];
         int contador = 0;
         for (int i=0; i<[self.contadorAusentes count]; i++) {
             if([[self.ausentes.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
@@ -127,6 +128,12 @@
         }
         //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.ausentes.allKeys objectAtIndex:indexPath.row],contador];
         num.text = [NSString stringWithFormat:@"(%d)",contador];
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        if(contador>=configH.ausencias)
+            [num setTextColor:[UIColor redColor]];
+        if(contador+1==configH.ausencias)
+            [num setTextColor:[UIColor orangeColor]];
+            
         
     }
     else if(indexPath.section==1)
@@ -137,6 +144,7 @@
         
         theCellLbl.text = [self.retrasos.allKeys objectAtIndex:indexPath.row];
         UILabel *num = (UILabel *)[cell viewWithTag:2];
+        [num setTextColor:[UIColor blackColor]];
         int contador = 0;
         for (int i=0; i<[self.contadorRetrasos count]; i++) {
             if([[self.retrasos.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorRetrasos objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
@@ -150,6 +158,12 @@
         }
         //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.retrasos.allKeys objectAtIndex:indexPath.row],contador];
         num.text = [NSString stringWithFormat:@"(%d)",contador];
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        if(contador>=configH.retrasos)
+            [num setTextColor:[UIColor redColor]];
+        if(contador+1==configH.retrasos)
+            [num setTextColor:[UIColor orangeColor]];
+    
         
     }
     return cell;

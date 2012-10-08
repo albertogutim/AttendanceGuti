@@ -247,15 +247,25 @@
 -(void) devolverFecha: (PickerVC *) controller didSelectDate: (NSDate *) date hoyEs:(NSDate *) today
 
 {
+    
+    
     self.fecha = date;
     self.today = today;
     [self.navigationController dismissModalViewControllerAnimated:YES];
-    if(date!=nil)
-        [self performSegueWithIdentifier:@"goToAttendanceStudents" sender:self];
-    [self.miTabla reloadData];
-    
-    
+
+    if(date==nil)
+        [self.miTabla reloadData];
+  
 }
+
+-(void) termino:(PickerFirstVC *)controller
+{
+    if(self.fecha!=nil)
+        [self performSegueWithIdentifier:@"goToAttendanceStudents" sender:self];
+
+}
+
+
 
 
 @end

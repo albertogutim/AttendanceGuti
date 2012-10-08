@@ -7,6 +7,7 @@
 //
 
 #import "ClassVC.h"
+#import "ConfigHelper.h"
 
 @interface ClassVC ()
 
@@ -132,7 +133,10 @@
         
         
         UILabel *numAusencias = (UILabel *)[cell viewWithTag:2];
-        UILabel *numRestrasos = (UILabel *)[cell viewWithTag:3];
+        UILabel *numPresencias = (UILabel *)[cell viewWithTag:3];
+        [numPresencias setTextColor:[UIColor blackColor]];
+        [numAusencias setTextColor:[UIColor blackColor]];
+        
         //int contadorAusencias = 0;
         //int contadorPresencias = 0;
 
@@ -174,7 +178,16 @@
             NSString* s2 = [nf stringFromNumber: [NSNumber numberWithFloat: porcentaje2]];
             
             numAusencias.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.presenciasArray  objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue],s2];
-            numRestrasos.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.ausenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue],s1];
+        
+                   
+            numPresencias.text = [NSString stringWithFormat:@"%d (%@%%)",[[self.ausenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue],s1];
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        if([[self.ausenciasArray  objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue]>=configH.ausencias)
+            [numPresencias setTextColor:[UIColor redColor]];
+        if([[self.ausenciasArray  objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue]+1==configH.ausencias)
+            [numPresencias setTextColor:[UIColor orangeColor]];
+
             return cell;
         
        

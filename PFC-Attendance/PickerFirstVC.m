@@ -22,6 +22,7 @@
 @synthesize fechas = _fechas;
 @synthesize today = _today;
 @synthesize miPicker = _miPicker;
+@synthesize contador = _contador;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -66,6 +67,13 @@
     [super viewWillAppear:animated];
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+
+    [self.delegate termino:self];
+    [super viewDidDisappear:animated];
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -86,11 +94,50 @@
 }
 
 #pragma mark Picker Delegate methods
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+/*-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     
     return [self.fechas objectAtIndex:row];
     
 }
+ */
+
+- (UIView *)pickerView:(UIPickerView *)pickerView
+            viewForRow:(NSInteger)row
+          forComponent:(NSInteger)component
+           reusingView:(UIView *)view {
+    
+    UILabel *pickerLabel = (UILabel *)view;
+    
+    int contador = self.contador;
+    if (pickerLabel == nil) {
+        CGRect frame = CGRectMake(0.0, 0.0, 280, 32);
+        pickerLabel = [[UILabel alloc] initWithFrame:frame];
+        [pickerLabel setTextAlignment:UITextAlignmentLeft];
+        [pickerLabel setBackgroundColor:[UIColor clearColor]];
+        [pickerLabel setFont:[UIFont boldSystemFontOfSize:16]];
+        [pickerLabel setTextColor:[UIColor blackColor]];
+   
+    }
+    
+    if(contador>0) //tengo que pintar alguna linea de rojo
+    {
+        if(row>0)
+        {
+            [pickerLabel setTextColor:[UIColor redColor]];
+            contador--;
+            self.contador=contador;
+        }
+            
+    }
+    
+    [pickerLabel setText:[self.fechas objectAtIndex:row]];
+    
+    return pickerLabel;
+    
+}
+
+
+
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     
@@ -171,19 +218,74 @@
         [fechaLong addObject:dateStr];
         
     }
+    //Hay que añadir al picker las fechas comprendidas entre la última fecha de la spreadsheet y el día de hoy por si el usuario no pudo pasar asistencia esos dias darle la oportunidad de hacerlo ahora.
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        [df setDateFormat:@"dd/MM/yy"];
+        NSDate *ultimaFecha = [df dateFromString:[fechas lastObject]];
+        int contador;   
+        if(![ultimaFecha isEqualToDate:self.today])
+        {
+            contador=0;
+            int daysToAdd = 1;
+            while ([ultimaFecha earlierDate:self.today]) {
+                NSDate *newDate1 = [ultimaFecha dateByAddingTimeInterval:60*60*24*daysToAdd];
+                
+                if(![newDate1 isEqualToDate:self.today])
+                {
+                    [df setTimeStyle:NSDateFormatterNoStyle];
+                    [df setDateStyle:NSDateFormatterFullStyle];
+                    NSLocale *theLocale = [NSLocale currentLocale];
+                    [df setLocale:theLocale];
+                    NSString *dateStr = [df stringFromDate:newDate1];
+                    [fechaLong addObject:dateStr];
+                    
+                    ultimaFecha = newDate1;
+                    contador++;
+                }
+                else
+                {
+                    self.contador = contador;
+                    break;
+                }
+                
+            }
+        }
+            
+          
     //si no encontro la fecha de hoy en el spreadsheet hay que añadirla al picker para que pueda seleccionarla y pasar lista.
     if(!encontradoHoy)
         [fechaLong addObject:NSLocalizedString(@"TODAY", nil)];
     self.fechas = fechaLong;
     
+    //Aqui habrá que darle la vuelta a las fechas para que la primera que salga sea HOY!
+    
+    NSMutableArray *fechaDelReves = [NSMutableArray arrayWithCapacity:[fechas count]];
+    for (int i=[self.fechas count]-1; i>=0; i--) {
+        [fechaDelReves addObject:[self.fechas objectAtIndex:i]];
+    }
+    self.fechas = fechaDelReves;
+    
     if ([fechas count] !=0)
     {
+        if([[self.fechas objectAtIndex:0] isEqualToString:@"HOY"])
+        {
+            self.fecha = todayOk;
+        }
+        else
+        {
+        
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
         NSDate *fechaDefecto = [df dateFromString:[self.fechas objectAtIndex:0]];
         
         self.fecha = fechaDefecto;//Le damos el valor de la primera fecha que sale por defecto que es siempre la primera de self.fechas.
+        }
     }
     else
         self.fecha = todayOk;
