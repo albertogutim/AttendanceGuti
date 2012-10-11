@@ -29,7 +29,7 @@
 @property (nonatomic,strong) NSArray *fechas;
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, strong) NSDate *today;
-
+@property (assign, nonatomic) int contador;
 @property (nonatomic, weak) id <PickerVCDelegate> delegate;
 
 

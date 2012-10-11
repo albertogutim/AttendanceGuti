@@ -121,16 +121,33 @@
     
     if(contador>0) //tengo que pintar alguna linea de rojo
     {
-        if(row>0)
+        
+        if(row==0)
+        {
+            
+            [pickerLabel setText:[self.fechas objectAtIndex:row]];
+            [pickerLabel setTextColor:[UIColor blackColor]];
+        }
+        if((row<=contador)&& (row!=0))
         {
             [pickerLabel setTextColor:[UIColor redColor]];
-            contador--;
-            self.contador=contador;
+            [pickerLabel setText:[self.fechas objectAtIndex:row]];
         }
+        else
+        {
+            
+            [pickerLabel setText:[self.fechas objectAtIndex:row]];
+            [pickerLabel setTextColor:[UIColor blackColor]];
+        }
+        
             
     }
     
-    [pickerLabel setText:[self.fechas objectAtIndex:row]];
+    else
+    {
+        [pickerLabel setText:[self.fechas objectAtIndex:row]];
+        [pickerLabel setTextColor:[UIColor blackColor]];
+    }
     
     return pickerLabel;
     

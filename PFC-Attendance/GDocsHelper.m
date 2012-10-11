@@ -349,6 +349,11 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         if (!self.encontrada)
         {
            // NSLog(@"no encontrada es el dia de hoy");
+            
+            
+            //OJO. con el cambio del tutor tambien se permite ingresar una fecha comprendida entre el ultimo dia que aparece en la spreadsheet y el dia de hoy. Por lo tanto hay que comprobar si es hoy u otro dia anterior.
+            
+            
 
             NSDateFormatter *df = [NSDateFormatter new];
             [df setTimeStyle:NSDateFormatterNoStyle];
@@ -358,7 +363,18 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             
             
             NSDate *d =[NSDate date];
-            NSString *dateStr = [df stringFromDate:d];
+            NSString *dateStr = [[NSString alloc] init];
+            
+            if([self.fecha isEqualToDate:d])
+            {
+                //es el dia de hoy
+                dateStr = [df stringFromDate:d];
+            
+            }
+            else
+                dateStr = [df stringFromDate:self.fecha];
+            
+            
             self.columna = [[feed entries] count]+DATES_START;
             
             GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:[[feed entries] count]+DATES_START inputString:dateStr numericValue:nil resultString:nil];
@@ -401,21 +417,22 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         {
             if(j==0)
             {
-                NSString * formula1 = [NSString stringWithFormat:@"=COUNTIF(F%d:%d,1)+COUNTIF(F%d:%d,3)",i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START];
+                
+                NSString * formula1 = [NSString stringWithFormat:@"=COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3)",i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START];
                 GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:ASISTENCIAS_COLUMN inputString:formula1 numericValue:nil resultString:nil];
                 GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
                 [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
             }
             if(j==1)
             {
-                NSString * formula2 = [NSString stringWithFormat:@"=COUNTIF(F%d:%d,2)",i+ROW_START,i+ROW_START];
+                NSString * formula2 = [NSString stringWithFormat:@"=COUNTIF(F%d:$IV%d,2)",i+ROW_START,i+ROW_START];
                 GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:AUSENCIAS_COLUMN inputString:formula2 numericValue:nil resultString:nil];
                 GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
                 [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
             }
             if(j==2)
             {
-                NSString * formula3 = [NSString stringWithFormat:@"=(COUNTIF(F%d:%d,1)+COUNTIF(F%d:%d,3))/(COUNTIF(F%d:%d,1)+COUNTIF(F%d:%d,3)+COUNTIF(F%d:%d,2))*100",i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START];
+                NSString * formula3 = [NSString stringWithFormat:@"=(COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3))/(COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3)+COUNTIF(F%d:$IV%d,2))*100",i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START,i+ROW_START];
                 GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:i+ROW_START column:PORCENTAJE_COLUMN inputString:formula3 numericValue:nil resultString:nil];
                 GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
                 [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
@@ -802,6 +819,37 @@ finishedWithFeed:(GDataFeedBase *)feed
     //Ya se subió todo a la spreadsheet.
     NSLog(@"Ya se subió todo a la spreadsheet");
     
+    
+    //insertamos sus formulas
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    for (int j=0;j<3;j++)
+    {
+        if(j==0)
+        {
+            
+            NSString * formula1 = [NSString stringWithFormat:@"=COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3)",self.row ,self.row ,self.row ,self.row ];
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row  column:ASISTENCIAS_COLUMN inputString:formula1 numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+        }
+        if(j==1)
+        {
+            NSString * formula2 = [NSString stringWithFormat:@"=COUNTIF(F%d:$IV%d,2)",self.row ,self.row ];
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row  column:AUSENCIAS_COLUMN inputString:formula2 numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+        }
+        if(j==2)
+        {
+            NSString * formula3 = [NSString stringWithFormat:@"=(COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3))/(COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3)+COUNTIF(F%d:$IV%d,2))*100",self.row ,self.row ,self.row ,self.row ,self.row ,self.row ,self.row ,self.row ,self.row ,self.row];
+            GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:self.row  column:PORCENTAJE_COLUMN inputString:formula3 numericValue:nil resultString:nil];
+            GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
+            [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertedCellsTicket:finishedWithFeed:error:)];
+        }
+        
+    }
+    
     //ahora hay que compensar los días anteriores y posteriores si los hubiera, poniendo un estado diferente
     //que no contabilizara para las estadisticas (0).
     
@@ -839,6 +887,7 @@ finishedWithFeed:(GDataFeedBase *)feed
                 [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(insertePastStateStudentTicket:finishedWithFeed:error:)];
                 
             }
+
             [self.delegate respuestaNewStudent: error];
         }
         else if (self.columna<[[self.mListFechas entries ]count]+COLUMN_START)
@@ -1174,7 +1223,9 @@ finishedWithFeed:(GDataFeedBase *)feed
              finishedWithFeed:(GDataFeedBase *)feed
                         error:(NSError *)error
 {
-    [self.delegate respuestaUpdate: error];
+    
+    [self updateFormulas:self.clase];
+    
 }
 
 
@@ -1283,6 +1334,104 @@ finishedWithFeed:(GDataFeedBase *)feed
     }
    
 }
+
+
+
+
+- (void)updateFormulas:(NSString *)clase
+{
+    self.clase = clase;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
+    
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:ASISTENCIAS_COLUMN];
+    [q setMaximumColumn:PORCENTAJE_COLUMN];
+    [q setMinimumRow:ROW_START];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(updateFormulasTicket:finishedWithFeed:error:)];
+    
+}
+
+- (void)updateFormulasTicket:(GDataServiceTicket *)ticket
+                     finishedWithFeed:(GDataFeedBase *)feed
+                                error:(NSError *)error
+
+{
+
+        int row = 0;
+        for(int k=0;k<[[feed entries]count];k=k+3)
+        {
+            [[[[feed entries] objectAtIndex:k]  cell] setInputString:[NSString stringWithFormat:@"=COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3)",row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START]];
+            row++;
+        
+        }
+        row=0;
+        for(int k=1;k<[[feed entries]count];k=k+3)
+        {
+            [[[[feed entries] objectAtIndex:k]  cell] setInputString:[NSString stringWithFormat:@"=COUNTIF(F%d:$IV%d,2)",row+ROW_START,row+ROW_START]];
+            row++;
+        }
+        
+        row=0;
+        for(int k=2;k<[[feed entries]count];k=k+3)
+        {
+            [[[[feed entries] objectAtIndex:k]  cell] setInputString:[NSString stringWithFormat:@"=(COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3))/(COUNTIF(F%d:$IV%d,1)+COUNTIF(F%d:$IV%d,3)+COUNTIF(F%d:$IV%d,2))*100",row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START,row+ROW_START]];
+            row++;
+        }
+        
+    
+    NSString *eTag = feed.ETag;
+    self.eTag = eTag;
+    
+    NSArray *updatedEntries = [feed entries];
+    self.updatedEntries = updatedEntries;
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    [self.miService fetchFeedWithURL:feedURL
+                            delegate:self
+                   didFinishSelector:@selector(updateFormulasBatchTicket:finishedWithFeed:error:)];
+    
+    
+}
+
+
+
+- (void)updateFormulasBatchTicket:(GDataServiceTicket *)ticket
+         finishedWithFeed:(GDataFeedBase *)feed
+                    error:(NSError *)error{
+    
+    
+    NSURL *batchUrl = [[feed batchLink] URL];
+    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
+    
+    [batchFeed setEntriesWithEntries:self.updatedEntries];
+    
+    GDataBatchOperation *op;
+    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationUpdate];
+    [batchFeed setBatchOperation:op];
+    [batchFeed setETag:self.eTag];
+    
+    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(updatedFormulasTicket:finishedWithFeed:error:)];
+}
+
+- (void)updatedFormulasTicket:(GDataServiceTicket *)ticket
+          finishedWithFeed:(GDataFeedBase *)feed
+                     error:(NSError *)error
+{
+    //NSLog(@"termino el update");
+    [self.delegate respuestaUpdate: error];
+    
+}
+
+
+
+
+
 
 
 
