@@ -16,6 +16,7 @@
 		3A4462E015CAAF4B008B1FA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A4462E215CAAF4B008B1FA3 /* Localizable.strings */; };
 		3A4BA4EC1600C32900DC408F /* ClassVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4BA4EB1600C32800DC408F /* ClassVC.m */; };
 		3A60ABAE16203C3D00EB8298 /* PickerFirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A60ABAD16203C3C00EB8298 /* PickerFirstVC.m */; };
+		3A7F3E6C162784BD0028425D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7F3E6B162784BD0028425D /* MBProgressHUD.m */; };
 		3A846C9F15ECD8D1007D06B5 /* AddStudentTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */; };
 		3A864B6C15C9E1CF00DE7D8A /* ConfigTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A864B6B15C9E1CF00DE7D8A /* ConfigTVC.m */; };
 		3A876F6E15D02F850095B2E3 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A876F6D15D02F850095B2E3 /* libxml2.dylib */; };
@@ -66,6 +67,8 @@
 		3A4BA4EB1600C32800DC408F /* ClassVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassVC.m; sourceTree = "<group>"; };
 		3A60ABAC16203C3C00EB8298 /* PickerFirstVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerFirstVC.h; sourceTree = "<group>"; };
 		3A60ABAD16203C3C00EB8298 /* PickerFirstVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerFirstVC.m; sourceTree = "<group>"; };
+		3A7F3E6A162784BD0028425D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		3A7F3E6B162784BD0028425D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		3A846C9D15ECD8D0007D06B5 /* AddStudentTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddStudentTVC.h; sourceTree = "<group>"; };
 		3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddStudentTVC.m; sourceTree = "<group>"; };
 		3A864B6A15C9E1CF00DE7D8A /* ConfigTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigTVC.h; path = ../ConfigTVC.h; sourceTree = "<group>"; };
@@ -448,6 +451,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A7F3E691627844B0028425D /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				3A7F3E6A162784BD0028425D /* MBProgressHUD.h */,
+				3A7F3E6B162784BD0028425D /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		3AD0AEC415C944FA00B67EED /* resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,6 +480,7 @@
 		3AD9500B15C7E3BF005D45D7 = {
 			isa = PBXGroup;
 			children = (
+				3A7F3E691627844B0028425D /* MBProgressHUD */,
 				3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */,
 				3A876F6F15D0300E0095B2E3 /* libGDataTouchStaticLib.a */,
 				3A876F6D15D02F850095B2E3 /* libxml2.dylib */,
@@ -971,6 +984,7 @@
 				3A93E7A6160224BB00320DB0 /* ResumenesVC.m in Sources */,
 				3A93E7AA1602250300320DB0 /* ResumenSeleccionadoVC.m in Sources */,
 				3A60ABAE16203C3D00EB8298 /* PickerFirstVC.m in Sources */,
+				3A7F3E6C162784BD0028425D /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

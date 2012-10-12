@@ -27,3 +27,8 @@
 "STADISTICS_LATE_ALERT"="Today, %@ you arrived late. You have reached the limit of delays";
 "RESUME_LIST"="Resume list of %@";
 "TODAY_STUDENTS_LIST" = "%@ Students %@";
+"LOADING"="Loading...";
+"UPLOADING"="Uploading...";
+"DELETING"="Deleting...";
+"ADDING_STUDENT"="Adding student...";
+"UPDATING"="Updating...";

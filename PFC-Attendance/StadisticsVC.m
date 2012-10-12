@@ -8,6 +8,7 @@
 
 #import "StadisticsVC.h"
 #import "ConfigHelper.h"
+#import "MBProgressHUD.h"
 
 @interface StadisticsVC ()
 
@@ -64,6 +65,9 @@
     midh.delegate = self;
     self.lblfecha.text = self.fecha;
     self.lblAsignaturaGrupo.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:self.ordenAusentes yParaAlumnosRetrasados:self.ordenRetrasos paraTodos: NO];
@@ -190,6 +194,7 @@
     self.contadorAusentes = ausentes;
     self.contadorRetrasos = retrasados;
     [self.miTabla reloadData];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }

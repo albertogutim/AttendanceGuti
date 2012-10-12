@@ -9,6 +9,7 @@
 #import "PickerFirstVC.h"
 #import "GDocsHelper.h"
 #import "ConfigHelper.h"
+#import "MBProgressHUD.h"
 
 @interface PickerFirstVC ()
 
@@ -57,6 +58,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
@@ -306,6 +311,7 @@
     }
     else
         self.fecha = todayOk;
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     [self.miPicker reloadAllComponents];

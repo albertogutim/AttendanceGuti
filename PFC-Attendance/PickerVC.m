@@ -9,6 +9,7 @@
 #import "PickerVC.h"
 #import "GDocsHelper.h"
 #import "ConfigHelper.h"
+#import "MBProgressHUD.h"
 
 @implementation PickerVC
 @synthesize fechas = _fechas;
@@ -71,6 +72,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     GDocsHelper *dh = [GDocsHelper sharedInstance];
@@ -314,6 +317,7 @@
     }
     else
         self.fecha = todayOk;
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     [self.miPicker reloadAllComponents];

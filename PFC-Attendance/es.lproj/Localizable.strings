@@ -27,3 +27,8 @@
 "STADISTICS_LATE_ALERT"="Hoy, %@ usted ha llegado tarde a clase. Ha superado el límite de retrasos permitidos";
 "RESUME_LIST"="Lista de Resúmenes de %@";
 "TODAY_STUDENTS_LIST" = "Lista de Alumnos %@ %@";
+"LOADING"="Cargando...";
+"UPLOADING"="Subiendo...";
+"DELETING"="Eliminando...";
+"ADDING_STUDENT"="Añadiendo alumno...";
+"UPDATING"="Subiendo informacion...";

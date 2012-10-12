@@ -9,6 +9,7 @@
 #import "AttendanceStudentsVC.h"
 #import "GDocsHelper.h"
 #import "ConfigHelper.h"
+#import "MBProgressHUD.h"
 
 @implementation AttendanceStudentsVC
 
@@ -114,6 +115,9 @@
     self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     [self.navigationController dismissModalViewControllerAnimated:YES];
 
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
@@ -249,13 +253,20 @@
         iv.image = [UIImage imageNamed:@"cross.png"];
         //cambiar el valor del estado en self.miListaAlumnos para que cuando se repinte la tabla ponga la imagen correcta.
         
-        [self.miListaAlumnos setObject:@"2" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+        
+        //[self.miListaAlumnos setObject:@"2" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+        [self.miListaAlumnos setObject:@"2" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                
+        
+        
+        
+        
         //también tenemos que hacer el update de self.todos que es el NSDictionary que mantiene siempre una copia de la lista de alumnos completa, por si se da el caso de estar dentro de un filtro y hacer cambios en los estados.
     
                 //buscamos por el nombre en self.todos
         //TO DO: COMPRUEBA SI ESTO MISMO NO LO PUEDES HACER DIRECTAMENTE USANDO EL MÉTODO valueForKey DE self.todos
                 for (int i=0; i<[self.todos count]; i++) {
-                    if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]])
+                    if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.sortedKeys objectAtIndex:indexPath.row]])
                         //cuando lo encuentra hace el update
                         [self.todos setObject:@"2" forKey:[self.todos.allKeys objectAtIndex:i]];
                 }
@@ -269,14 +280,18 @@
     else if (iv.image == [UIImage imageNamed:@"cross.png"])
             {
                 iv.image = [UIImage imageNamed:@"late.png"];
-                [self.miListaAlumnos setObject:@"3" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+                //[self.miListaAlumnos setObject:@"3" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+                
+                [self.miListaAlumnos setObject:@"3" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                
                 
                     //buscamos por el nombre en self.todos
                     for (int i=0; i<[self.todos count]; i++) {
-                        if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]])
+                        if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.sortedKeys objectAtIndex:indexPath.row]])
                             //cuando lo encuentra hace el update
                             [self.todos setObject:@"3" forKey:[self.todos.allKeys objectAtIndex:i]];
                     }
+               
                 NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
                 self.presentes = presentes;
                 NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
@@ -286,10 +301,14 @@
         else if (iv.image == [UIImage imageNamed:@"late.png"])
             {
                 iv.image = [UIImage imageNamed:@"check.png"];
-                [self.miListaAlumnos setObject:@"1" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+                
+                //[self.miListaAlumnos setObject:@"1" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+                
+                [self.miListaAlumnos setObject:@"1" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                
                     //buscamos por el nombre en self.todos
                     for (int i=0; i<[self.todos count]; i++) {
-                        if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]])
+                        if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.sortedKeys objectAtIndex:indexPath.row]])
                             //cuando lo encuentra hace el update
                             [self.todos setObject:@"1" forKey:[self.todos.allKeys objectAtIndex:i]];
                     }
@@ -355,6 +374,8 @@
     self.ausentes = ausentes;
     
     [self.miTabla reloadData];
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     //animar boton pasar asistencia
@@ -389,6 +410,7 @@
     }
     else
     {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     }
@@ -533,6 +555,9 @@
     //comprobamos que el usuario realmente seleccionó una fecha y le dió a aceptar y no a cancelar sin seleccionar nada.
     if(date!=nil)
     {
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"LOADING", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         GDocsHelper *midh = [GDocsHelper sharedInstance];
@@ -552,6 +577,8 @@
     if(nombre!=nil) //Permitimos añadir un alumno sin mail?? NO!
     {
         
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"ADDING_STUDENT", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
@@ -603,6 +630,8 @@
         [self.resumenButton setEnabled:NO];
         [self.randomButton setEnabled:NO];
         [self.addButton setEnabled:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"LOADING", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         GDocsHelper *midh = [GDocsHelper sharedInstance];
@@ -845,6 +874,10 @@
     
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     [midh updateAlumnosConEstados:self.clase paraUpdate:self.todos paraColumna:self.columna];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"UPDATING", nil);
+    
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     

@@ -7,6 +7,7 @@
 //
 
 #import "ResumenVC.h"
+#import "MBProgressHUD.h"
 
 @interface ResumenVC ()
 
@@ -75,6 +76,8 @@
     toolbar.items = items;
     
     self.resumenText.inputAccessoryView = toolbar;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh existeResumen:self.clase paraColumna:self.columna];
@@ -113,6 +116,8 @@
 - (IBAction)updateResumen:(id)sender {
     
     GDocsHelper *midh = [GDocsHelper sharedInstance];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"UPLOADING", nil);
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
@@ -127,6 +132,7 @@
 
 - (void)respuestaInsertResumen: (NSError *) error
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
@@ -134,6 +140,8 @@
 
 - (void) respuestaExisteResumen:(BOOL)existe resumen:(NSString *)resumen error:(NSError *)error
 {
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     if(existe) //ya había un resumen en la spreadsheet

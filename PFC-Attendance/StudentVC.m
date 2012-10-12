@@ -7,6 +7,7 @@
 //
 
 #import "StudentVC.h"
+#import "MBProgressHUD.h"
 
 @interface StudentVC ()
 
@@ -62,6 +63,9 @@
     midh.delegate = self;
     self.cambios = NO;
     self.fichaAlumnoLbl.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh listadoFechasConAsistencia:self.clase paraAlumno:self.alumno conRow: self.row];
@@ -193,6 +197,8 @@
     if([theCellLbl.text isEqualToString:@"Eliminar Alumno"])
     {
         self.cambios = YES;
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"DELETING", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         GDocsHelper *midh = [GDocsHelper sharedInstance];
@@ -281,6 +287,7 @@
     self.pintarRetrasos = retrasos;
     
     [self.datosAlumnoTable reloadData];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
@@ -288,6 +295,7 @@
 
 -(void) respuestaUpdate:(NSError *)error
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 
