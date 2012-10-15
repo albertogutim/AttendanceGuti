@@ -368,8 +368,28 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="372"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="75" sectionHeaderHeight="10" sectionFooterHeight="10" id="W2A-tF-XIu">
-                                <rect key="frame" x="0.0" y="71" width="320" height="301"/>
+                            <searchBar contentMode="redraw" id="Z29-fh-TRZ">
+                                <rect key="frame" x="0.0" y="29" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="gL0-ve-xDd" id="f0Z-VA-33L"/>
+                                </connections>
+                            </searchBar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="ZOU-qQ-uyZ">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Todos"/>
+                                    <segment title="Presentes"/>
+                                    <segment title="Ausentes"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeSegmentedControl:" destination="gL0-ve-xDd" eventType="valueChanged" id="axn-cX-8gk"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="75" sectionHeaderHeight="10" sectionFooterHeight="10" id="W2A-tF-XIu">
+                                <rect key="frame" x="0.0" y="73" width="320" height="344"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -446,23 +466,6 @@
                                     <outlet property="delegate" destination="gL0-ve-xDd" id="wPA-nO-feO"/>
                                 </connections>
                             </tableView>
-                            <searchBar contentMode="redraw" id="GgV-Ak-JyN">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="ZOU-qQ-uyZ">
-                                <rect key="frame" x="0.0" y="44" width="320" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="Todos"/>
-                                    <segment title="Presentes"/>
-                                    <segment title="Ausentes"/>
-                                </segments>
-                                <connections>
-                                    <action selector="changeSegmentedControl:" destination="gL0-ve-xDd" eventType="valueChanged" id="axn-cX-8gk"/>
-                                </connections>
-                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -472,6 +475,7 @@
                                 <action selector="updateSpreadsheet:" destination="gL0-ve-xDd" id="mre-V9-r3G"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem title="A-Z" id="bd4-ia-DGR"/>
                         <barButtonItem image="lapiz2.png" id="kAy-Pa-kSN">
                             <connections>
                                 <segue destination="DdU-dP-SnP" kind="push" identifier="goToResumen" id="ARV-Ar-8SU"/>
@@ -493,11 +497,6 @@
                                 <segue destination="Yg7-RB-d7a" kind="modal" identifier="goToPicker" modalTransitionStyle="partialCurl" id="Nb7-a8-qw4"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="action" id="sqZ-8U-sc7">
-                            <connections>
-                                <action selector="sendEmail:" destination="gL0-ve-xDd" id="N2j-9h-7QZ"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem systemItem="add" id="6nP-Tv-uin">
                             <connections>
                                 <action selector="addStudent:" destination="gL0-ve-xDd" id="xUC-wq-Pje"/>
@@ -507,27 +506,31 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="CK8-EM-Ggx">
                         <barButtonItem key="backBarButtonItem" title="Back" id="bX8-7E-dN0"/>
-                        <barButtonItem key="rightBarButtonItem" tag="4" style="done" systemItem="compose" id="iX9-ix-2Ks">
-                            <connections>
-                                <action selector="attendance:" destination="gL0-ve-xDd" id="1Wb-30-mxf"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="addButton" destination="6nP-Tv-uin" id="i5t-NE-585"/>
-                        <outlet property="attendanceButton" destination="iX9-ix-2Ks" id="rKV-JS-JIo"/>
+                        <outlet property="buscador" destination="Z29-fh-TRZ" id="nzM-wR-cRi"/>
                         <outlet property="calendarButton" destination="M7I-Ui-Lyx" id="Tg1-6Q-9G4"/>
                         <outlet property="informesButton" destination="Jb6-xe-41b" id="S1X-zO-Odu"/>
                         <outlet property="miTabla" destination="W2A-tF-XIu" id="REb-Gt-Qgc"/>
                         <outlet property="randomButton" destination="qir-vL-HvC" id="HfE-hO-YL2"/>
                         <outlet property="refreshButton" destination="Lqh-kp-Qbz" id="qyt-Gz-smE"/>
                         <outlet property="resumenButton" destination="kAy-Pa-kSN" id="bYB-wv-XBs"/>
+                        <outlet property="searchDisplayController" destination="Wi8-sV-Tv8" id="R0o-r1-2BB"/>
                         <outlet property="todosPresentesAusentes" destination="ZOU-qQ-uyZ" id="wf6-9g-phd"/>
                         <segue destination="zxp-Oh-Eep" kind="push" identifier="goToStudent" id="P4f-xr-FeK"/>
                     </connections>
                 </viewController>
+                <searchDisplayController id="Wi8-sV-Tv8">
+                    <connections>
+                        <outlet property="delegate" destination="gL0-ve-xDd" id="S6r-1l-UH6"/>
+                        <outlet property="searchContentsController" destination="gL0-ve-xDd" id="6ZI-QF-D3S"/>
+                        <outlet property="searchResultsDataSource" destination="gL0-ve-xDd" id="yq6-9B-aXw"/>
+                        <outlet property="searchResultsDelegate" destination="gL0-ve-xDd" id="ALc-en-5YR"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1979" y="358"/>
         </scene>
@@ -540,15 +543,8 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="372"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="15" id="mV6-yk-UNS">
-                                <rect key="frame" x="13" y="37" width="294" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="67" sectionHeaderHeight="10" sectionFooterHeight="10" id="Go3-6r-D3b">
-                                <rect key="frame" x="0.0" y="66" width="320" height="306"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -585,13 +581,6 @@
                                     <outlet property="delegate" destination="C5P-Ao-qYk" id="MLL-SG-vRU"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="8Hq-5h-ueG">
-                                <rect key="frame" x="13" y="11" width="294" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -616,8 +605,6 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="ambosAusentesImpuntuales" destination="zUI-Uy-ogn" id="fpC-Bg-qwz"/>
-                        <outlet property="lblAsignaturaGrupo" destination="8Hq-5h-ueG" id="4Nw-NI-583"/>
-                        <outlet property="lblfecha" destination="mV6-yk-UNS" id="MeK-4U-BWD"/>
                         <outlet property="miTabla" destination="Go3-6r-D3b" id="XEz-Bq-de9"/>
                     </connections>
                 </viewController>
@@ -687,7 +674,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="58" sectionHeaderHeight="10" sectionFooterHeight="10" id="hWU-La-RQQ">
-                                <rect key="frame" x="0.0" y="36" width="320" height="336"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -733,22 +720,12 @@
                                     <outlet property="delegate" destination="zxp-Oh-Eep" id="7dm-8Q-BNy"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="GvU-FD-cb8">
-                                <rect key="frame" x="20" y="7" width="280" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Ficha Alumno" id="pS8-a1-ey8">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="xwS-uy-iNc"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="pS8-a1-ey8"/>
                     <connections>
                         <outlet property="datosAlumnoTable" destination="hWU-La-RQQ" id="Xdy-U3-TBd"/>
-                        <outlet property="fichaAlumnoLbl" destination="GvU-FD-cb8" id="9JQ-xX-uBO"/>
                     </connections>
                 </viewController>
             </objects>
@@ -968,7 +945,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="100" sectionHeaderHeight="10" sectionFooterHeight="10" id="WQW-rt-zhz">
-                                <rect key="frame" x="0.0" y="36" width="320" height="336"/>
+                                <rect key="frame" x="0.0" y="-5" width="320" height="377"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
@@ -1036,13 +1013,6 @@
                                     <outlet property="delegate" destination="vQU-QC-dxc" id="ieA-hG-bPQ"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="rYh-6I-iOm">
-                                <rect key="frame" x="11" y="7" width="289" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -1050,7 +1020,6 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="q7j-20-T36"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="classLbl" destination="rYh-6I-iOm" id="DlX-u9-rfI"/>
                         <outlet property="miTabla" destination="WQW-rt-zhz" id="mTj-hX-BDh"/>
                         <segue destination="1iF-ty-GzR" kind="push" identifier="goToResumenList" id="cQt-eq-3WR"/>
                         <segue destination="zxp-Oh-Eep" kind="push" identifier="goToStudentInfo" id="xEU-Wt-Aso"/>
@@ -1671,10 +1640,10 @@
                 <relationship kind="action" name="attendance:"/>
                 <relationship kind="action" name="changeSegmentedControl:"/>
                 <relationship kind="action" name="randomStudent:"/>
-                <relationship kind="action" name="sendEmail:"/>
                 <relationship kind="action" name="updateSpreadsheet:"/>
                 <relationship kind="outlet" name="addButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="attendanceButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="buscador" candidateClass="UISearchBar"/>
                 <relationship kind="outlet" name="calendarButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="informesButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
@@ -1694,7 +1663,6 @@
         <class className="ClassVC" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassVC.h"/>
             <relationships>
-                <relationship kind="outlet" name="classLbl" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
             </relationships>
         </class>
@@ -1794,6 +1762,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="P4f-xr-FeK"/>
+        <segue reference="xEU-Wt-Aso"/>
     </inferredMetricsTieBreakers>
 </document>

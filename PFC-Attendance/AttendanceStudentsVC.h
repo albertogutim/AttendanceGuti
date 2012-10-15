@@ -16,6 +16,15 @@
 #import "MessageUI/MFMailComposeViewController.h"
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate, StudentVCDelegate, MFMailComposeViewControllerDelegate>
+{
+    BOOL searching;
+    BOOL letUserSelectRow;
+}
+
+- (void) searchTableView;
+- (void) doneSearching_Clicked:(id)sender;
+
+@property (strong, nonatomic) IBOutlet UISearchBar *buscador;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *todosPresentesAusentes;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
@@ -43,15 +52,17 @@
 @property (strong, nonatomic) NSString *fechaCompleta;
 @property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
 @property (strong, nonatomic) NSArray *sortedKeys;
+@property (assign, nonatomic) CGRect tamano;
 - (IBAction)attendance:(id)sender;
 - (IBAction)changeSegmentedControl:(id)sender;
-- (IBAction)sendEmail:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
 
 - (IBAction)updateSpreadsheet:(id)sender;
 - (IBAction)randomStudent:(id)sender;
+//-(void)keyboardShown: (NSNotification *)note;
+//-(void)keyboardHidden: (NSNotification *)note;
 
 
 

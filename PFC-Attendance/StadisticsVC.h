@@ -13,8 +13,6 @@
 @interface StadisticsVC : UIViewController <GDocsHelperDelegate, MFMailComposeViewControllerDelegate>
 
 @property (strong, nonatomic) NSString *fecha;
-@property (weak, nonatomic) IBOutlet UILabel *lblfecha;
-@property (strong, nonatomic) IBOutlet UILabel *lblAsignaturaGrupo;
 @property (strong, nonatomic) NSMutableDictionary *ausentes;
 @property (strong, nonatomic) NSMutableDictionary *retrasos;
 @property (strong, nonatomic) NSString *clase;
@@ -25,6 +23,9 @@
 @property (strong, nonatomic) NSMutableArray *contadorAusentes;
 @property (strong, nonatomic) NSMutableArray *contadorRetrasos;
 @property (strong, nonatomic) IBOutlet UITableView *miTabla;
+@property (strong, nonatomic) NSArray *sortedKeysAusentes;
+@property (strong, nonatomic) NSArray *sortedKeysRetrasos;
+
 - (IBAction)sendMail:(id)sender;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *ambosAusentesImpuntuales;
 

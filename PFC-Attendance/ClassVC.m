@@ -15,7 +15,7 @@
 
 @implementation ClassVC
 
-@synthesize classLbl = _classLbl;
+
 @synthesize miTabla = _miTabla;
 @synthesize nombreClase = _nombreClase;
 @synthesize clase =_clase;
@@ -52,7 +52,6 @@
 
 - (void)viewDidUnload
 {
-    [self setClassLbl:nil];
     [self setMiTabla:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
@@ -69,7 +68,6 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    self.classLbl.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     self.contadorPresenciasGlobal = 0;
     self.contadorAusenciasGlobal = 0;
     self.contadorNoMatriculadoGlobal = 0;
@@ -243,7 +241,8 @@
     
     if(section == 0)
     {
-        return @"Estadísticas";
+    
+        return [NSString stringWithFormat:@"%@_%@\n\nEstadísticas",self.nombreAsignatura,self.nombreClase];
     }
     else if((section == 1)||(section == 2))
         return @"";
@@ -346,6 +345,7 @@
             studentVC.delegate = self;
             studentVC.row = self.row+2;
             studentVC.nombreClase = self.nombreClase;
+            studentVC.nombreAsignatura = self.nombreAsignatura;
     
         }
     

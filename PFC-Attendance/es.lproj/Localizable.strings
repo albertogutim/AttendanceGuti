@@ -32,3 +32,4 @@
 "DELETING"="Eliminando...";
 "ADDING_STUDENT"="Añadiendo alumno...";
 "UPDATING"="Subiendo informacion...";
+"SURE?"="Seguro que quiere eliminar el alumno?";

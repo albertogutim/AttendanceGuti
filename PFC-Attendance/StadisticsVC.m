@@ -17,7 +17,6 @@
 @implementation StadisticsVC
 @synthesize ambosAusentesImpuntuales = _ambosAusentesImpuntuales;
 @synthesize fecha = _fecha;
-@synthesize lblfecha = _lblfecha;
 @synthesize ausentes = _ausentes;
 @synthesize retrasos = _retrasos;
 @synthesize clase = _clase;
@@ -28,6 +27,8 @@
 @synthesize miTabla = _miTabla;
 @synthesize nombreAsignatura = _nombreAsignatura;
 @synthesize nombreClase = _nombreClase;
+@synthesize sortedKeysAusentes = _sortedKeysAusentes;
+@synthesize sortedKeysRetrasos = _sortedKeysRetrasos;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,8 +64,17 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    self.lblfecha.text = self.fecha;
-    self.lblAsignaturaGrupo.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    
+    NSArray * sortedKeysAusentes = [[self.ausentes allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeysAusentes = sortedKeysAusentes;
+
+    NSArray * sortedKeysRetrasos = [[self.retrasos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeysRetrasos = sortedKeysRetrasos;
+
+    
+    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"LOADING", nil);
     
@@ -115,13 +125,18 @@
         
         //mostramos el nombre del alumno ausente
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        theCellLbl.text = [self.ausentes.allKeys objectAtIndex:indexPath.row];
+        
+        theCellLbl.text = [self.sortedKeysAusentes objectAtIndex:indexPath.row];
+       // theCellLbl.text = [self.ausentes.allKeys objectAtIndex:indexPath.row];
         
         UILabel *num = (UILabel *)[cell viewWithTag:2];
         [num setTextColor:[UIColor blackColor]];
         int contador = 0;
         for (int i=0; i<[self.contadorAusentes count]; i++) {
-            if([[self.ausentes.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
+            
+            
+            if([[self.sortedKeysAusentes objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]])
+            //if([[self.ausentes.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
                 //si coincide tengo que hacer la cuenta
                 for(int u=1; u<[[self.contadorAusentes objectAtIndex:i] count]; u++)
                 {
@@ -146,12 +161,16 @@
         //mostramos el nombre del alumno que ha llegado tarde
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         
-        theCellLbl.text = [self.retrasos.allKeys objectAtIndex:indexPath.row];
+        theCellLbl.text = [self.sortedKeysRetrasos objectAtIndex:indexPath.row];
+        //theCellLbl.text = [self.retrasos.allKeys objectAtIndex:indexPath.row];
         UILabel *num = (UILabel *)[cell viewWithTag:2];
         [num setTextColor:[UIColor blackColor]];
         int contador = 0;
         for (int i=0; i<[self.contadorRetrasos count]; i++) {
-            if([[self.retrasos.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorRetrasos objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
+            
+            
+            if([[self.sortedKeysRetrasos objectAtIndex:indexPath.row] isEqualToString:[[self.contadorRetrasos objectAtIndex:i] objectAtIndex:0]])
+            //if([[self.retrasos.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorRetrasos objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
                 //si coincide tengo que hace la cuenta
                 for(int u=1; u<[[self.contadorRetrasos objectAtIndex:i] count]; u++)
                 {
@@ -177,8 +196,9 @@
 {
     
     if(section == 0)
+        
     {
-        return [NSString stringWithFormat:@"Ausentes (%d)",[self.ausentes count]];
+        return [NSString stringWithFormat:@"%@\n%@_%@\n\nAusentes (%d)",self.fecha,self.nombreAsignatura,self.nombreClase,[self.ausentes count]];
     }
     else if(section == 1)
     {

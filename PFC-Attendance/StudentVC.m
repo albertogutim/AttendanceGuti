@@ -14,7 +14,6 @@
 @end
 
 @implementation StudentVC
-@synthesize fichaAlumnoLbl = _fichaAlumnoLbl;
 
 @synthesize alumno =_alumno;
 @synthesize clase = _clase;
@@ -50,7 +49,6 @@
 - (void)viewDidUnload
 {
     [self setDatosAlumnoTable:nil];
-    [self setFichaAlumnoLbl:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -62,7 +60,38 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     self.cambios = NO;
-    self.fichaAlumnoLbl.text = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    
+    
+    UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 105, 44.01)];
+    
+    // create the array to hold the buttons, which then gets added to the toolbar
+    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
+    
+    UIBarButtonItem* editButton = [[UIBarButtonItem alloc]
+                                              initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonAction)];
+    editButton.style = UIBarButtonItemStyleBordered;
+    [buttons addObject:editButton];
+    
+    
+    
+    UIBarButtonItem* mailButton =[[UIBarButtonItem alloc]
+                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(mailButtonAction)];
+    mailButton.style = UIBarButtonItemStyleBordered;
+    
+    [buttons addObject:mailButton];
+    
+
+    // stick the buttons in the toolbar
+    [tools setItems:buttons animated:NO];
+    
+    
+    
+    // and put the toolbar in the nav bar
+    
+    UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
+    self.navigationItem.rightBarButtonItem = rightButtonBar;
+    
+     
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"LOADING", nil);
@@ -77,6 +106,58 @@
     [super viewWillAppear:animated];
 }
 
+-(void)mailButtonAction
+{
+
+    NSMutableString *ausenciasYretrasos = [NSMutableString stringWithCapacity:[self.pintarAusencias count]+[self.pintarRetrasos count]+2];
+
+    
+    if([self.pintarAusencias count]>0) //hay ausencias
+    {
+        [ausenciasYretrasos appendString:@"Ausencias:\n\n"];
+        for (int i=0; i<[self.pintarAusencias count]; i++) {
+                [ausenciasYretrasos appendString:[NSString stringWithFormat:@"%@\n",[self.pintarAusencias.allKeys objectAtIndex:i]]];
+
+            
+        }
+
+    
+    }
+    
+    if([self.pintarRetrasos count]>0) //hay retrasos
+    {
+        [ausenciasYretrasos appendString:@"\n\nRetrasos:\n\n"];
+        for (int i=0; i<[self.pintarRetrasos count]; i++) {
+            [ausenciasYretrasos appendString:[NSString stringWithFormat:@"%@\n",[self.pintarRetrasos.allKeys objectAtIndex:i]]];
+            
+            
+        }
+
+    }
+    
+    NSMutableArray *mail = [[NSMutableArray alloc] init];
+    
+    [mail addObject: self.mail];
+    
+    MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+    [composer setMailComposeDelegate:self];
+    if ([MFMailComposeViewController canSendMail]) {
+        [composer setBccRecipients:mail];
+        [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"STADISTICS_SUBJECT" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase]]];
+        [composer setMessageBody:ausenciasYretrasos isHTML:NO];
+        [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+        [self presentModalViewController:composer animated:YES];
+
+}
+}
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    if (!error) {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -197,16 +278,27 @@
     if([theCellLbl.text isEqualToString:@"Eliminar Alumno"])
     {
         self.cambios = YES;
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"SURE", nil) delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        
+        [alertView show];
+    }
+    
+    
+}
+
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // the user clicked one of the OK/Cancel buttons
+    if(buttonIndex ==1)
+    {
+        //ok
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.labelText = NSLocalizedString(@"DELETING", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         GDocsHelper *midh = [GDocsHelper sharedInstance];
         [midh eliminarAlumno: self.clase paraRow:self.row];
-        
     }
-    
-    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -214,7 +306,7 @@
     
     if(section == 0)
     {
-        return @"";
+        return [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     }
     else if(section == 1)
     {

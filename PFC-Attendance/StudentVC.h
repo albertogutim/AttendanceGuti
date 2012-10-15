@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GDocsHelper.h"
+#import "MessageUI/MFMailComposeViewController.h"
 
 @class StudentVC;
 
@@ -17,7 +18,7 @@
 
 @end
 
-@interface StudentVC : UIViewController <GDocsHelperDelegate>
+@interface StudentVC : UIViewController <GDocsHelperDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
 
 @property (strong, nonatomic) NSString *alumno;
 @property (strong, nonatomic) NSString *clase;
@@ -35,7 +36,7 @@
 @property (strong, nonatomic) NSArray *datosAlumno;
 @property (assign, nonatomic) BOOL cambios;
 @property (nonatomic, weak) id <StudentVCDelegate> delegate;
-@property (strong, nonatomic) IBOutlet UILabel *fichaAlumnoLbl;
+
 
 
 - (IBAction)eliminarAlumno:(id)sender;

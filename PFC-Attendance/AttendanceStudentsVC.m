@@ -14,6 +14,7 @@
 @implementation AttendanceStudentsVC
 
 
+@synthesize buscador = _buscador;
 @synthesize todosPresentesAusentes = _todosPresentesAusentes;
 @synthesize attendanceButton = _attendanceButton;
 @synthesize addButton = _addButton;
@@ -37,6 +38,7 @@
 @synthesize nombreClase = _nombreClase;
 @synthesize nombreAsignatura = _nombreAsignatura;
 @synthesize sortedKeys = _sortedKeys;
+@synthesize tamano = _tamano;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -79,9 +81,197 @@
     [self.informesButton setEnabled:NO];
     [self.resumenButton setEnabled:NO];
     [self.randomButton setEnabled:NO];
+    self.tamano = self.miTabla.frame;
+    
+    
+    searching = NO;
+    letUserSelectRow = YES;
+    
+    //self.miTabla.tableHeaderView = self.buscador;
+    //self.buscador.autocorrectionType = UITextAutocorrectionTypeNo;
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShown:) name:UIKeyboardDidShowNotification object:nil];
+    
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHidden:) name:UIKeyboardWillHideNotification object:nil];
+    
+    
+    UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 105, 44.01)];
+    
+    // create the array to hold the buttons, which then gets added to the toolbar
+    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
+    
+    UIBarButtonItem* pasarAsistenciaButton = [[UIBarButtonItem alloc]
+                                  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(pasarAsistenciaButtonAction)];
+    pasarAsistenciaButton.style = UIBarButtonItemStyleBordered;
+    [buttons addObject:pasarAsistenciaButton];
+    
+    
+   
+    UIBarButtonItem* mailButton =[[UIBarButtonItem alloc]
+                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(mailButtonAction)];
+    mailButton.style = UIBarButtonItemStyleBordered;
+
+    [buttons addObject:mailButton];
+
+    
+    // stick the buttons in the toolbar
+    [tools setItems:buttons animated:NO];
+    
+ 
+    
+    // and put the toolbar in the nav bar
+    
+    UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
+    self.navigationItem.rightBarButtonItem = rightButtonBar;
 }
 
 
+
+
+- (void) searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
+    
+    [self.buscador setShowsCancelButton:YES animated:YES];
+    searching = YES;
+    letUserSelectRow = NO;
+    self.miTabla.scrollEnabled = NO;
+    
+    //Add the done button.
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                               initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                               target:self action:@selector(doneSearching_Clicked:)];
+}
+
+- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if(letUserSelectRow)
+        return indexPath;
+    else
+        return nil;
+}
+
+- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
+    
+    //Remove all objects first.
+    //[copyListOfItems removeAllObjects];
+    
+    if([searchText length]>0) {
+        
+        searching = YES;
+        letUserSelectRow = YES;
+        self.miTabla.scrollEnabled = YES;
+        [self searchTableView];
+    }
+    else {
+        
+        searching = NO;
+        letUserSelectRow = NO;
+        self.miTabla.scrollEnabled = NO;
+    }
+    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeys = sortedKeys;
+    
+    [self.miTabla reloadData];
+}
+
+
+- (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
+    
+    [self.buscador setShowsCancelButton:YES animated:YES];
+    [self.buscador resignFirstResponder];
+    
+}
+
+-(void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [self.buscador setShowsCancelButton:NO animated:NO];
+    self.buscador.text = @"";
+    [self.buscador resignFirstResponder];
+    
+    letUserSelectRow = YES;
+    searching = NO;
+    self.navigationItem.rightBarButtonItem = nil;
+    self.miTabla.scrollEnabled = YES;
+    
+    self.miListaAlumnos = self.todos;
+    
+    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeys = sortedKeys;
+    [self.miTabla reloadData];
+
+}
+
+- (void) searchTableView {
+    
+    
+    NSString *searchText = self.buscador.text;
+    NSMutableArray *searchArray = [[NSMutableArray alloc] init];
+    NSMutableArray *copy = [[NSMutableArray alloc] init];
+    NSMutableArray *value = [[NSMutableArray alloc] init];
+    
+    
+    //nos guardamos en searchArray todos los nombres de los alumnos
+    for (NSString *str in self.miListaAlumnos.allKeys)
+    {
+        [searchArray addObject:str];
+    }
+    
+    //Ahora buscamos lo que se ha escrito en el buscardor en los nombres de los alumnos
+    for (NSString *sTemp in searchArray)
+    {
+        NSRange titleResultsRange = [sTemp rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        
+        if (titleResultsRange.length > 0)
+        {
+            [copy addObject:sTemp];
+            [value addObject:[self.miListaAlumnos valueForKey:sTemp]];
+        }
+    }
+    
+    NSMutableDictionary *copyListOfItems = [NSMutableDictionary dictionaryWithObjects:value forKeys:copy];
+    searchArray = nil;
+    self.miListaAlumnos = copyListOfItems;
+}
+
+
+- (void) doneSearching_Clicked:(id)sender {
+    
+    self.buscador.text = @"";
+    [self.buscador resignFirstResponder];
+    
+    letUserSelectRow = YES;
+    searching = NO;
+    self.navigationItem.rightBarButtonItem = nil;
+    self.miTabla.scrollEnabled = YES;
+    
+    self.miListaAlumnos = self.todos;
+    
+    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeys = sortedKeys;
+    [self.miTabla reloadData];
+}
+/*
+-(void)keyboardShown: (NSNotification *)note
+{
+    
+    //[self.buscador setShowsCancelButton:YES];
+    CGRect keyboardFrame;
+    [[[note userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
+
+    CGRect tableViewFrame = self.miTabla.frame;
+    CGRect searchFrame = self.buscador.frame;
+    tableViewFrame.size.height = tableViewFrame.size.height - keyboardFrame.size.height + searchFrame.size.height;
+    [self.miTabla setFrame:tableViewFrame];
+}
+
+-(void)keyboardHidden: (NSNotification *)note
+{
+
+    [self.miTabla setFrame:self.tamano];
+}
+*/
 - (void)viewDidUnload
 {
     [self setAttendanceButton:nil];
@@ -92,6 +282,7 @@
     [self setRandomButton:nil];
     [self setResumenButton:nil];
     [self setCalendarButton:nil];
+    [self setBuscador:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -112,7 +303,7 @@
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
+    //self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     [self.navigationController dismissModalViewControllerAnimated:YES];
 
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -135,6 +326,7 @@
 {
     //#warning Potentially incomplete method implementation.
     // Return the number of sections.
+    
     return 1;
 }
 
@@ -143,7 +335,11 @@
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
     //if ([self.miListaAlumnos count]) {
+       
         return [self.miListaAlumnos count];
+        //return [[self filterContactsWithLastName:searchString]count];
+        
+    
     //} else{
       //  return 1;
     //}
@@ -153,23 +349,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
-    /*if (self.fecha == nil){
-        
-        
-        cell = [tableView
-                dequeueReusableCellWithIdentifier:@"infoCell"];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"infoCell"];
-        }
-        
-        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:3];
-        theCellLbl.text = NSLocalizedString(@"CHOOSE_DATE", nil);
-        cell.imageView.image = [UIImage imageNamed:@"curlButt.png"];
-        
-    }
-*/
-    
-    //else
+
     if ([self.miListaAlumnos count]){
         
         
@@ -187,6 +367,8 @@
         //theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
         
         theCellLbl.text =[self.sortedKeys objectAtIndex:indexPath.row];
+        
+        //theCellLbl.text = [[self filterContactsWithLastName:searchString]objectAtIndex:indexPath.row];
                             
         
         //switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
@@ -236,7 +418,9 @@
     [df setLocale:theLocale];
     NSString *fechaHeader = [df stringFromDate:self.fecha];
     self.fechaCompleta = fechaHeader;
-    return fechaHeader;
+    return [NSString stringWithFormat:@"%@_%@\n%@",self.nombreAsignatura,self.nombreClase,fechaHeader];
+    
+    
 
 }
 
@@ -641,7 +825,7 @@
 
 }
 
-- (IBAction)attendance:(id)sender {
+- (void)pasarAsistenciaButtonAction {
     
     
     //TODO: habrá que controlar si le ha dado al boton para pasar asistencia o para hacer el update.
@@ -714,7 +898,8 @@
     
 }
 
-- (IBAction)sendEmail:(id)sender {
+- (void)mailButtonAction
+{
     
     if(self.todosPresentesAusentes.selectedSegmentIndex == 0)
     {
@@ -906,6 +1091,51 @@
     }
     
 }
+
+/*
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+}
+ 
+
+-(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if([searchText length] == 0)
+    {
+        NSMutableDictionary *todoss = self.todos;
+        self.miListaAlumnos = todoss;
+    }
+    else
+    {
+        NSMutableDictionary *todoss = [NSMutableDictionary dictionaryWithCapacity:[self.todos count]];
+        for(NSString *string in self.todos.allKeys)
+        {
+            NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
+            if(r.location != NSNotFound)
+            {
+                [todoss setObject:[self.todos valueForKey:string] forKey:string];
+            
+            }
+        
+        
+        }
+        self.miListaAlumnos = todoss;
+    }
+   
+    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    self.sortedKeys = sortedKeys;
+    [self.miTabla reloadData];
+    
+
+
+}
+*/
 
 
 

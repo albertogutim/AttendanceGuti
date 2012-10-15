@@ -13,7 +13,7 @@
 
 @interface ClassVC : UIViewController <GDocsHelperDelegate, StudentVCDelegate>
 
-@property (strong, nonatomic) IBOutlet UILabel *classLbl;
+
 @property (strong, nonatomic) IBOutlet UITableView *miTabla;
 
 @property (strong, nonatomic) NSString *nombreClase;
