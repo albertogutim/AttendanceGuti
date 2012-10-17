@@ -124,6 +124,10 @@
     UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
     self.navigationItem.rightBarButtonItem = rightButtonBar;
     
+    CGRect bounds = self.miTabla.bounds;
+    bounds.origin.y = bounds.origin.y + self.searchBar.bounds.size.height;
+    self.miTabla.bounds = bounds;
+    
 }
 
 
@@ -136,7 +140,7 @@
     [[[note userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
 
     CGRect tableViewFrame = self.miTabla.frame;
-    CGRect searchFrame = self.buscador.frame;
+    CGRect searchFrame = self.searchBar.frame;
     tableViewFrame.size.height = tableViewFrame.size.height - keyboardFrame.size.height + searchFrame.size.height;
     [self.miTabla setFrame:tableViewFrame];
 }
@@ -147,6 +151,7 @@
     [self.miTabla setFrame:self.tamano];
 }
 */
+
 - (void)viewDidUnload
 {
     [self setTodosPresentesAusentes:nil];
@@ -392,14 +397,6 @@
     return YES;
 
 }
-
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    //UISearchBar *searchBar = self.searchDisplayController.searchBar;
-    if(scrollView.contentOffset.y <= 0) {
-        self.searchBar.frame = CGRectMake(0, scrollView.contentOffset.y, self.searchBar.frame.size.width, searchBar.frame.size.height);
-    }
-}
- 
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {

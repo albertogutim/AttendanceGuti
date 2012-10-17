@@ -381,7 +381,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="75" sectionHeaderHeight="10" sectionFooterHeight="10" id="W2A-tF-XIu">
-                                <rect key="frame" x="0.0" y="29" width="320" height="390"/>
+                                <rect key="frame" x="0.0" y="28" width="320" height="344"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" id="Wrm-Dd-zSw">
