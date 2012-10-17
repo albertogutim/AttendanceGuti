@@ -13,6 +13,7 @@
 
 @implementation AttendanceStudentsVC
 
+@synthesize azButton = _azButton;
 @synthesize searchBar;
 @synthesize searchDisplayController;
 @synthesize todosPresentesAusentes = _todosPresentesAusentes;
@@ -76,10 +77,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.azButton setEnabled:NO];
     [self.addButton setEnabled:NO];
     [self.refreshButton setEnabled:NO];
     [self.informesButton setEnabled:NO];
     [self.resumenButton setEnabled:NO];
+    [self.todosPresentesAusentes setEnabled:NO];
     [self.randomButton setEnabled:NO];
     self.tamano = self.miTabla.frame;
     
@@ -101,7 +104,7 @@
     NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
     
     UIBarButtonItem* pasarAsistenciaButton = [[UIBarButtonItem alloc]
-                                  initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(pasarAsistenciaButtonAction)];
+                                              initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(pasarAsistenciaButtonAction)];
     pasarAsistenciaButton.style = UIBarButtonItemStyleBordered;
     [buttons addObject:pasarAsistenciaButton];
     
@@ -130,28 +133,6 @@
     
 }
 
-
-/*
--(void)keyboardShown: (NSNotification *)note
-{
-    
-    //[self.buscador setShowsCancelButton:YES];
-    CGRect keyboardFrame;
-    [[[note userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
-
-    CGRect tableViewFrame = self.miTabla.frame;
-    CGRect searchFrame = self.searchBar.frame;
-    tableViewFrame.size.height = tableViewFrame.size.height - keyboardFrame.size.height + searchFrame.size.height;
-    [self.miTabla setFrame:tableViewFrame];
-}
-
--(void)keyboardHidden: (NSNotification *)note
-{
-
-    [self.miTabla setFrame:self.tamano];
-}
-*/
-
 - (void)viewDidUnload
 {
     [self setTodosPresentesAusentes:nil];
@@ -163,6 +144,7 @@
     [self setCalendarButton:nil];
     [self setSearchBar:nil];
     [self setSearchDisplayController:nil];
+    [self setAzButton:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -558,6 +540,8 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     //animar boton pasar asistencia
+    [self.azButton setEnabled:YES];
+    [self.todosPresentesAusentes setEnabled:YES];
     [self.addButton setEnabled:YES];
     [self.refreshButton setEnabled:YES];
     [self.informesButton setEnabled:YES];
@@ -713,11 +697,13 @@
 {
     self.fecha = date;
     self.today = today;
+    [self.azButton setEnabled:NO];
     [self.calendarButton setEnabled:NO];
     [self.refreshButton setEnabled:NO];
     [self.informesButton setEnabled:NO];
     [self.resumenButton setEnabled:NO];
     [self.randomButton setEnabled:NO];
+    [self.todosPresentesAusentes setEnabled:NO];
     [self.addButton setEnabled:NO];
    
     
@@ -756,12 +742,14 @@
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
+        [self.azButton setEnabled:NO];
         [self.calendarButton setEnabled:NO];
         [self.refreshButton setEnabled:NO];
         [self.informesButton setEnabled:NO];
         [self.resumenButton setEnabled:NO];
         [self.randomButton setEnabled:NO];
         [self.addButton setEnabled:NO];
+        [self.todosPresentesAusentes setEnabled:NO];
 
         //Tenemos que pintar de nuevo la tabla añadiendo el alumno nuevo.
         
@@ -796,10 +784,12 @@
     if(cambios)
     {
         
+        [self.azButton setEnabled:NO];
         [self.calendarButton setEnabled:NO];
         [self.refreshButton setEnabled:NO];
         [self.informesButton setEnabled:NO];
         [self.resumenButton setEnabled:NO];
+        [self.todosPresentesAusentes setEnabled:NO];
         [self.randomButton setEnabled:NO];
         [self.addButton setEnabled:NO];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -813,7 +803,7 @@
 
 }
 
-- (void)pasarAsistenciaButtonAction {
+- (void)pasarAsistenciaButtonAction{
     
     
     //TODO: habrá que controlar si le ha dado al boton para pasar asistencia o para hacer el update.
@@ -842,10 +832,16 @@
     
     //habilitar tocar celdas
     
-    [self.miTabla setUserInteractionEnabled:YES];
+    if(self.miTabla.userInteractionEnabled)
+       [self.miTabla setUserInteractionEnabled:NO];
+    else
+        [self.miTabla setUserInteractionEnabled:YES];
+        
+        
     
 
 }
+
 
 - (IBAction)changeSegmentedControl:(id)sender {
     if(self.todosPresentesAusentes.selectedSegmentIndex == 0) {
@@ -1082,7 +1078,40 @@
 
 
 
+- (IBAction)azButtonPressed:(id)sender {
+    
+    if([self.azButton.title isEqualToString:  @"Z-A"])
+    {
+       
+        
+        NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:nil ascending:NO selector:@selector(localizedCompare:)];
+        NSArray* sortedArray = [self.miListaAlumnos.allKeys sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+        
+         self.sortedKeys = sortedArray;
+        
+        [self.miTabla reloadData];
+        
+        
+        [(UIBarButtonItem *)sender setTitle:@"A-Z"];
+        
+        //[(UILabel *)[[self.toolbarItems objectAtIndex:1] view] setText:@"Z-A"];
+        
+        //[self.azButton setTitle:@"Z-A"];
+    }
+    else
+    {
 
+        NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+        
+        self.sortedKeys = sortedKeys;
+        
+        [self.miTabla reloadData];
+        
+        [(UIBarButtonItem *)sender setTitle:@"Z-A"];
+        
+        //[self.azButton setTitle:@"A-Z"];
+        
 
-
+    }
+}
 @end

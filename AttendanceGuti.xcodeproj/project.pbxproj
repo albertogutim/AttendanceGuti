@@ -46,6 +46,8 @@
 		3AEFCBC215F6514300AD04E1 /* StudentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC115F6514300AD04E1 /* StudentVC.m */; };
 		3AEFCBC515FD0A3C00AD04E1 /* StadisticsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */; };
 		3AF1ADE0162DE7580062AB75 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1ADDF162DE7580062AB75 /* ViewController.m */; };
+		3AF1ADF1162F254A0062AB75 /* redBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AF1ADEF162F254A0062AB75 /* redBackground@2x.png */; };
+		3AF1ADF2162F254A0062AB75 /* redBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 3AF1ADF0162F254A0062AB75 /* redBackground.png */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
@@ -114,6 +116,8 @@
 		3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StadisticsVC.m; sourceTree = "<group>"; };
 		3AF1ADDE162DE7580062AB75 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		3AF1ADDF162DE7580062AB75 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3AF1ADEF162F254A0062AB75 /* redBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "redBackground@2x.png"; sourceTree = "<group>"; };
+		3AF1ADF0162F254A0062AB75 /* redBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redBackground.png; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3AFF0CA215CBE4B700CD01E4 /* GData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GData.h; sourceTree = "<group>"; };
@@ -466,6 +470,8 @@
 		3AD0AEC415C944FA00B67EED /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AF1ADEF162F254A0062AB75 /* redBackground@2x.png */,
+				3AF1ADF0162F254A0062AB75 /* redBackground.png */,
 				3A238E7D15D3AC65003C8C0C /* curlButt.png */,
 				3AD0AEDE15C9590800B67EED /* hoja.png */,
 				3AD0AEDC15C9557000B67EED /* lapiz2.png */,
@@ -961,6 +967,8 @@
 				3AD0CC9015CA994400FDE7E5 /* vistaConexion.xib in Resources */,
 				3A4462E015CAAF4B008B1FA3 /* Localizable.strings in Resources */,
 				3A238E7E15D3AC65003C8C0C /* curlButt.png in Resources */,
+				3AF1ADF1162F254A0062AB75 /* redBackground@2x.png in Resources */,
+				3AF1ADF2162F254A0062AB75 /* redBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,7 +21,7 @@
 - (void)respuestaNewStudent: (NSError *) error;
 - (void)respuestaInsertResumen: (NSError *) error;
 - (void)respuestaExisteResumen: (BOOL) existe resumen: (NSString*) resumen error: (NSError *) error;
-- (void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error;
+- (void)respuestaAusencias:(NSMutableDictionary *)feed arrayFechas:(NSMutableArray *) arrayFechas error:(NSError *)error;
 - (void)respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados: (NSMutableArray *) retrasados todos:(NSMutableArray *) todos error:(NSError *)error;
 
 

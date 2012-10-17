@@ -30,6 +30,8 @@
 @synthesize cambios = _cambios;
 @synthesize nombreClase = _nombreClase;
 @synthesize nombreAsignatura = _nombreAsignatura;
+@synthesize fechasRetrasos = _fechasRetrasos;
+@synthesize fechasAusencias = _fechasAusencias;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -229,7 +231,10 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
         }
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        theCellLbl.text = [self.pintarAusencias.allKeys objectAtIndex:indexPath.row];
+        //theCellLbl.text = [self.pintarAusencias.allKeys objectAtIndex:indexPath.row];
+        
+        theCellLbl.text =[self.fechasAusencias objectAtIndex:indexPath.row];
+        theCellLbl.textAlignment = UITextAlignmentCenter;
         return cell;
         
     }
@@ -243,7 +248,9 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
         }
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        theCellLbl.text = [self.pintarRetrasos.allKeys objectAtIndex:indexPath.row];
+        //theCellLbl.text = [self.pintarRetrasos.allKeys objectAtIndex:indexPath.row];
+        
+        theCellLbl.text =[self.fechasRetrasos objectAtIndex:indexPath.row];
         theCellLbl.textAlignment = UITextAlignmentCenter;
         return cell;
         
@@ -257,9 +264,18 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"eliminarAlumno"];
         }
+                
+        /*UIButton *sampleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [sampleButton setFrame:[cell.contentView frame]];
+        [sampleButton setFrame:CGRectMake(10, 1, cell.bounds.size.width-20, 44)];
+        [sampleButton setBackgroundImage:[UIImage imageNamed:@"redBackground.png"] forState:UIControlStateNormal];
+        [cell addSubview:sampleButton];
+         */
+        
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:3];
         theCellLbl.text = [NSString stringWithFormat:@"Eliminar Alumno"];
         theCellLbl.textAlignment = UITextAlignmentCenter;
+
         return cell;
         
     }
@@ -279,7 +295,7 @@
     {
         self.cambios = YES;
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"SURE", nil) delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"SURE?", nil) delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
         
         [alertView show];
     }
@@ -325,32 +341,38 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    return 44;
+    
+    if(indexPath.section == 3)
+        return 36;
+    else if ((indexPath.section == 0)|| (indexPath.section == 1) || (indexPath.section == 2))
+        return 44;
 }
 
 #pragma mark - My Methods
 
 
--(void)respuestaAusencias:(NSMutableDictionary *)feed error:(NSError *)error
+-(void)respuestaAusencias:(NSMutableDictionary *)feed arrayFechas: (NSMutableArray *) arrayFechas error:(NSError *)error
 {
     //responde a listadoFechasConAsistencia
     
     
     
     self.mail = [feed objectForKey:@"Email"];
-    self.ausencias = [feed objectForKey:@"Estadistica"];
+    //esto seria si utilizaramos la celda con la formula
+    //self.ausencias = [feed objectForKey:@"Estadistica"];
     
     self.datosAlumno = [NSArray arrayWithObjects:self.alumno,self.mail, nil];
     
     [feed removeObjectForKey:@"Email"];
-    [feed removeObjectForKey:@"Estadistica"];
+    //[feed removeObjectForKey:@"Estadistica"];
     
     self.pintar = feed;
     
     
     NSInteger cuantasAusencias = 0;
+    //esto seria si utilizaramos la celda con la formula
     //return [self.ausencias intValue] ;
-    for (int i=0; i<[self.pintar count]; i++) {
+    for (int i=3; i<[self.pintar count]; i++) {
         
         if([[self.pintar.allValues objectAtIndex:i] isEqualToString:@"2"])
         {
@@ -360,8 +382,9 @@
     self.cuantasAusencias = cuantasAusencias;
     
     NSInteger cuantosRetrasos = 0;
+    //esto seria si utilizaramos la celda con la formula
     //return [self.ausencias intValue] ;
-    for (int i=0; i<[self.pintar count]; i++) {
+    for (int i=3; i<[self.pintar count]; i++) {
         
         if([[self.pintar.allValues objectAtIndex:i] isEqualToString:@"3"])
         {
@@ -374,9 +397,34 @@
     ausencias = [self filtrarAusentes:ausencias];
     self.pintarAusencias = ausencias;
     
+    
+    NSMutableArray *fechasAusencias = [NSMutableArray arrayWithCapacity: [feed count]];
+    NSMutableArray *fechasRetrasos = [NSMutableArray arrayWithCapacity: [feed count]];
+    for(int i=0;i<[arrayFechas count];i++)
+    {
+        if([self.pintarAusencias valueForKey:[arrayFechas objectAtIndex:i]]!=nil)
+        {
+            [fechasAusencias addObject:[arrayFechas objectAtIndex:i]];
+        }
+    }
+    
+   
+    self.fechasAusencias = fechasAusencias;
+    
     NSMutableDictionary *retrasos = [NSMutableDictionary dictionaryWithDictionary:self.pintar];
     retrasos = [self filtrarRetrasos:retrasos];
     self.pintarRetrasos = retrasos;
+    
+    
+    for(int i=0;i<[arrayFechas count];i++)
+    {
+        if([self.pintarRetrasos valueForKey:[arrayFechas objectAtIndex:i]]!=nil)
+        {
+            [fechasRetrasos addObject:[arrayFechas objectAtIndex:i]];
+        }
+    }
+    
+    self.fechasRetrasos = fechasRetrasos;
     
     [self.datosAlumnoTable reloadData];
     [MBProgressHUD hideHUDForView:self.view animated:YES];

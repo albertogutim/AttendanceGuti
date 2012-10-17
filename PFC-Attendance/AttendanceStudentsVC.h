@@ -24,7 +24,9 @@
     NSMutableDictionary *searchResults;
 
 }
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *azButton;
     
+- (IBAction)azButtonPressed:(id)sender;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @property (strong, nonatomic) IBOutlet UISearchDisplayController *searchDisplayController;
@@ -63,9 +65,6 @@
 
 - (IBAction)updateSpreadsheet:(id)sender;
 - (IBAction)randomStudent:(id)sender;
-//-(void)keyboardShown: (NSNotification *)note;
-//-(void)keyboardHidden: (NSNotification *)note;
-
 -(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
 
 

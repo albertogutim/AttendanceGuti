@@ -36,6 +36,8 @@
 @property (strong, nonatomic) NSArray *datosAlumno;
 @property (assign, nonatomic) BOOL cambios;
 @property (nonatomic, weak) id <StudentVCDelegate> delegate;
+@property (strong, nonatomic) NSMutableArray *fechasAusencias;
+@property (strong, nonatomic) NSMutableArray *fechasRetrasos;
 
 
 

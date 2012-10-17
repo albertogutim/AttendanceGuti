@@ -1191,7 +1191,7 @@ finishedWithFeed:(GDataFeedBase *)feed
     NSMutableDictionary *AsistenciasConFechas = [NSMutableDictionary dictionaryWithObjects:self.attendance forKeys:[NSArray arrayWithArray:fechas]];
      //NSDictionary * AsistenciasConFechasDictionary = [NSDictionary dictionaryWithDictionary:AsistenciasConFechas];
     
-    [self.delegate respuestaAusencias: AsistenciasConFechas error:error];
+    [self.delegate respuestaAusencias: AsistenciasConFechas arrayFechas: fechas error:error];
 
 
 }
