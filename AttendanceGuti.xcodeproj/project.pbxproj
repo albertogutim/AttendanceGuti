@@ -45,6 +45,7 @@
 		3AEFCBBF15F0DDB000AD04E1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AEFCBBE15F0DDB000AD04E1 /* MessageUI.framework */; };
 		3AEFCBC215F6514300AD04E1 /* StudentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC115F6514300AD04E1 /* StudentVC.m */; };
 		3AEFCBC515FD0A3C00AD04E1 /* StadisticsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */; };
+		3AF1ADE0162DE7580062AB75 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1ADDF162DE7580062AB75 /* ViewController.m */; };
 		3AFF0A1715CBDCE300CD01E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1615CBDCE300CD01E4 /* Security.framework */; };
 		3AFF0A1915CBDCF200CD01E4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
@@ -111,6 +112,8 @@
 		3AEFCBC115F6514300AD04E1 /* StudentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudentVC.m; sourceTree = "<group>"; };
 		3AEFCBC315FD0A3B00AD04E1 /* StadisticsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StadisticsVC.h; sourceTree = "<group>"; };
 		3AEFCBC415FD0A3C00AD04E1 /* StadisticsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StadisticsVC.m; sourceTree = "<group>"; };
+		3AF1ADDE162DE7580062AB75 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		3AF1ADDF162DE7580062AB75 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		3AFF0A1615CBDCE300CD01E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3AFF0A1815CBDCF200CD01E4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3AFF0CA215CBE4B700CD01E4 /* GData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GData.h; sourceTree = "<group>"; };
@@ -543,6 +546,8 @@
 				3A846C9E15ECD8D1007D06B5 /* AddStudentTVC.m */,
 				3A238E6A15D2D8C2003C8C0C /* AttendanceStudentsVC.h */,
 				3A238E6B15D2D8C2003C8C0C /* AttendanceStudentsVC.m */,
+				3AF1ADDE162DE7580062AB75 /* ViewController.h */,
+				3AF1ADDF162DE7580062AB75 /* ViewController.m */,
 				3AEFCBC015F6514200AD04E1 /* StudentVC.h */,
 				3AEFCBC115F6514300AD04E1 /* StudentVC.m */,
 				3A238E7F15D3EA06003C8C0C /* PickerVC.h */,
@@ -985,6 +990,7 @@
 				3A93E7AA1602250300320DB0 /* ResumenSeleccionadoVC.m in Sources */,
 				3A60ABAE16203C3D00EB8298 /* PickerFirstVC.m in Sources */,
 				3A7F3E6C162784BD0028425D /* MBProgressHUD.m in Sources */,
+				3AF1ADE0162DE7580062AB75 /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

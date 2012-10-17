@@ -17,31 +17,31 @@
 
 @interface AttendanceStudentsVC : UIViewController <GDocsHelperDelegate, UISearchDisplayDelegate, UISearchBarDelegate, PickerVCDelegate, AddStudentTVCDelegate, StudentVCDelegate, MFMailComposeViewControllerDelegate>
 {
-    BOOL searching;
-    BOOL letUserSelectRow;
+
+
+    UISearchDisplayController *searchDisplayController;
+    UISearchBar *searchBar;
+    NSMutableDictionary *searchResults;
+
 }
+    
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 
-- (void) searchTableView;
-- (void) doneSearching_Clicked:(id)sender;
-
-@property (strong, nonatomic) IBOutlet UISearchBar *buscador;
+@property (strong, nonatomic) IBOutlet UISearchDisplayController *searchDisplayController;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *todosPresentesAusentes;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *attendanceButton;
-
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addButton;
-
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *informesButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *randomButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *resumenButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *calendarButton;
-
 @property (weak, nonatomic) IBOutlet UITableView *miTabla;
 @property (strong, nonatomic) NSString *clase;
 @property (strong, nonatomic) NSString *nombreClase;
 @property (strong, nonatomic) NSString *nombreAsignatura;
 @property (strong, nonatomic) NSMutableDictionary *miListaAlumnos;
+@property (strong, nonatomic) NSMutableDictionary *searchResults;
 @property (nonatomic, strong) NSDate *fecha;
 @property (nonatomic, strong) NSDate *today;
 @property (nonatomic, assign) NSInteger columna;
@@ -52,8 +52,10 @@
 @property (strong, nonatomic) NSString *fechaCompleta;
 @property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
 @property (strong, nonatomic) NSArray *sortedKeys;
+@property (strong, nonatomic) NSArray *sortedKeysSearch;
+
 @property (assign, nonatomic) CGRect tamano;
-- (IBAction)attendance:(id)sender;
+
 - (IBAction)changeSegmentedControl:(id)sender;
 -(NSMutableDictionary *) filtrarAusentes:(NSMutableDictionary *) alumnos;
 -(NSMutableDictionary *) filtrarPresentes:(NSMutableDictionary *) alumnos;
@@ -63,6 +65,8 @@
 - (IBAction)randomStudent:(id)sender;
 //-(void)keyboardShown: (NSNotification *)note;
 //-(void)keyboardHidden: (NSNotification *)note;
+
+-(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
 
 
 

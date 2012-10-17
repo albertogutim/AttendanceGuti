@@ -13,10 +13,9 @@
 
 @implementation AttendanceStudentsVC
 
-
-@synthesize buscador = _buscador;
+@synthesize searchBar;
+@synthesize searchDisplayController;
 @synthesize todosPresentesAusentes = _todosPresentesAusentes;
-@synthesize attendanceButton = _attendanceButton;
 @synthesize addButton = _addButton;
 @synthesize refreshButton = _refreshButton;
 @synthesize informesButton = _informesButton;
@@ -39,6 +38,8 @@
 @synthesize nombreAsignatura = _nombreAsignatura;
 @synthesize sortedKeys = _sortedKeys;
 @synthesize tamano = _tamano;
+@synthesize searchResults = _searchResults;
+@synthesize sortedKeysSearch = _sortedKeysSearch;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -75,7 +76,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.attendanceButton setEnabled:NO];
     [self.addButton setEnabled:NO];
     [self.refreshButton setEnabled:NO];
     [self.informesButton setEnabled:NO];
@@ -84,8 +84,8 @@
     self.tamano = self.miTabla.frame;
     
     
-    searching = NO;
-    letUserSelectRow = YES;
+    //searching = NO;
+    //letUserSelectRow = YES;
     
     //self.miTabla.tableHeaderView = self.buscador;
     //self.buscador.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -123,135 +123,10 @@
     
     UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
     self.navigationItem.rightBarButtonItem = rightButtonBar;
-}
-
-
-
-
-- (void) searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
-    
-    [self.buscador setShowsCancelButton:YES animated:YES];
-    searching = YES;
-    letUserSelectRow = NO;
-    self.miTabla.scrollEnabled = NO;
-    
-    //Add the done button.
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                               initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                               target:self action:@selector(doneSearching_Clicked:)];
-}
-
-- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if(letUserSelectRow)
-        return indexPath;
-    else
-        return nil;
-}
-
-- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
-    
-    //Remove all objects first.
-    //[copyListOfItems removeAllObjects];
-    
-    if([searchText length]>0) {
-        
-        searching = YES;
-        letUserSelectRow = YES;
-        self.miTabla.scrollEnabled = YES;
-        [self searchTableView];
-    }
-    else {
-        
-        searching = NO;
-        letUserSelectRow = NO;
-        self.miTabla.scrollEnabled = NO;
-    }
-    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
-    
-    self.sortedKeys = sortedKeys;
-    
-    [self.miTabla reloadData];
-}
-
-
-- (void) searchBarSearchButtonClicked:(UISearchBar *)theSearchBar {
-    
-    [self.buscador setShowsCancelButton:YES animated:YES];
-    [self.buscador resignFirstResponder];
     
 }
 
--(void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-    [self.buscador setShowsCancelButton:NO animated:NO];
-    self.buscador.text = @"";
-    [self.buscador resignFirstResponder];
-    
-    letUserSelectRow = YES;
-    searching = NO;
-    self.navigationItem.rightBarButtonItem = nil;
-    self.miTabla.scrollEnabled = YES;
-    
-    self.miListaAlumnos = self.todos;
-    
-    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
-    
-    self.sortedKeys = sortedKeys;
-    [self.miTabla reloadData];
 
-}
-
-- (void) searchTableView {
-    
-    
-    NSString *searchText = self.buscador.text;
-    NSMutableArray *searchArray = [[NSMutableArray alloc] init];
-    NSMutableArray *copy = [[NSMutableArray alloc] init];
-    NSMutableArray *value = [[NSMutableArray alloc] init];
-    
-    
-    //nos guardamos en searchArray todos los nombres de los alumnos
-    for (NSString *str in self.miListaAlumnos.allKeys)
-    {
-        [searchArray addObject:str];
-    }
-    
-    //Ahora buscamos lo que se ha escrito en el buscardor en los nombres de los alumnos
-    for (NSString *sTemp in searchArray)
-    {
-        NSRange titleResultsRange = [sTemp rangeOfString:searchText options:NSCaseInsensitiveSearch];
-        
-        if (titleResultsRange.length > 0)
-        {
-            [copy addObject:sTemp];
-            [value addObject:[self.miListaAlumnos valueForKey:sTemp]];
-        }
-    }
-    
-    NSMutableDictionary *copyListOfItems = [NSMutableDictionary dictionaryWithObjects:value forKeys:copy];
-    searchArray = nil;
-    self.miListaAlumnos = copyListOfItems;
-}
-
-
-- (void) doneSearching_Clicked:(id)sender {
-    
-    self.buscador.text = @"";
-    [self.buscador resignFirstResponder];
-    
-    letUserSelectRow = YES;
-    searching = NO;
-    self.navigationItem.rightBarButtonItem = nil;
-    self.miTabla.scrollEnabled = YES;
-    
-    self.miListaAlumnos = self.todos;
-    
-    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
-    
-    self.sortedKeys = sortedKeys;
-    [self.miTabla reloadData];
-}
 /*
 -(void)keyboardShown: (NSNotification *)note
 {
@@ -274,7 +149,6 @@
 */
 - (void)viewDidUnload
 {
-    [self setAttendanceButton:nil];
     [self setTodosPresentesAusentes:nil];
     [self setAddButton:nil];
     [self setRefreshButton:nil];
@@ -282,7 +156,8 @@
     [self setRandomButton:nil];
     [self setResumenButton:nil];
     [self setCalendarButton:nil];
-    [self setBuscador:nil];
+    [self setSearchBar:nil];
+    [self setSearchDisplayController:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -304,7 +179,11 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     //self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
-    [self.navigationController dismissModalViewControllerAnimated:YES];
+    
+    //ESTO no se que coño hace aqui!!
+    //[self.navigationController dismissModalViewControllerAnimated:YES];
+    
+    
 
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"LOADING", nil);
@@ -314,6 +193,7 @@
 
     ConfigHelper *configH = [ConfigHelper sharedInstance];
     [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
+ 
 
     [super viewWillAppear:animated];
 }
@@ -324,102 +204,219 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    //if ([self.miListaAlumnos count]) {
-       
+    //determinamos el numero de filas en funcion de si estamos trabajando con la tabla del searchDisplayController o con la tabla de datos.
+    if(tableView == self.searchDisplayController.searchResultsTableView)
+        return [self.searchResults count];
+ 
+    else
         return [self.miListaAlumnos count];
-        //return [[self filterContactsWithLastName:searchString]count];
-        
-    
-    //} else{
-      //  return 1;
-    //}
     
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
-
-    if ([self.miListaAlumnos count]){
-        
-        
-       cell = [tableView 
-                                 dequeueReusableCellWithIdentifier:@"alumnos"];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
+    
+     if (tableView != self.searchDisplayController.searchResultsTableView) //tengo que pintar en la tabla utilizando el dictionary miListaAlumnos
+    {
+        if ([self.miListaAlumnos count]){
+            
+            
+            cell = [self.miTabla
+                    dequeueReusableCellWithIdentifier:@"alumnos"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
+            }
+            
+            
+            //rellenamos las celdas con el nombre de la asignatura.
+            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+            UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
+            
+            //theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
+            
+            theCellLbl.text =[self.sortedKeys objectAtIndex:indexPath.row];
+            
+            //theCellLbl.text = [[self filterContactsWithLastName:searchString]objectAtIndex:indexPath.row];
+            
+            
+            //switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
+            switch ([[self.miListaAlumnos valueForKey:[self.sortedKeys objectAtIndex:indexPath.row]]integerValue]) {
+                case 1: //Atendió
+                    iv.image = [UIImage imageNamed:@"check.png"];
+                    break;
+                case 2: //Faltó
+                    iv.image = [UIImage imageNamed:@"cross.png"];
+                    break;
+                    
+                case 3: //Retraso
+                    iv.image = [UIImage imageNamed:@"late.png"];
+                    break;
+                case 4: //Vacío
+                    iv.image = nil;
+                    break;
+                default:
+                    iv.image = nil;
+                    break;
+            }
         }
         
-       
-        //rellenamos las celdas con el nombre de la asignatura.
-        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
-        
-        //theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
-        
-        theCellLbl.text =[self.sortedKeys objectAtIndex:indexPath.row];
-        
-        //theCellLbl.text = [[self filterContactsWithLastName:searchString]objectAtIndex:indexPath.row];
-                            
-        
-        //switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
-        switch ([[self.miListaAlumnos valueForKey:[self.sortedKeys objectAtIndex:indexPath.row]]integerValue]) {
-            case 1: //Atendió
-                iv.image = [UIImage imageNamed:@"check.png"];
-                break;
-            case 2: //Faltó
-                iv.image = [UIImage imageNamed:@"cross.png"];
-                break;
-                
-            case 3: //Retraso
-                iv.image = [UIImage imageNamed:@"late.png"];
-                break;
-            case 4: //Vacío
-                iv.image = nil;
-                break;
-            default:
-                iv.image = nil;
-                break;
+        else
+            
+        {
+            
+            cell = [self.miTabla
+                    dequeueReusableCellWithIdentifier:@"noAlumnos"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"noAlumnos"];
+            }
+            
+            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
+            theCellLbl.text = NSLocalizedString(@"NO_STUDENTS", nil);
         }
     }
-    else
-    
+    else //tengo que pintar en la tabla del searchDisplayController
     {
     
-        cell = [tableView
-                dequeueReusableCellWithIdentifier:@"noAlumnos"];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"noAlumnos"];
+        if ([self.searchResults count]){
+            
+            
+            cell = [self.miTabla
+                    dequeueReusableCellWithIdentifier:@"alumnos"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"alumnos"];
+            }
+            
+            
+            //rellenamos las celdas con el nombre de la asignatura.
+            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+            UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
+            
+            
+            theCellLbl.text =[self.sortedKeysSearch objectAtIndex:indexPath.row];
+            
+            switch ([[self.searchResults valueForKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]]integerValue]) {
+                case 1: //Atendió
+                    iv.image = [UIImage imageNamed:@"check.png"];
+                    break;
+                case 2: //Faltó
+                    iv.image = [UIImage imageNamed:@"cross.png"];
+                    break;
+                    
+                case 3: //Retraso
+                    iv.image = [UIImage imageNamed:@"late.png"];
+                    break;
+                case 4: //Vacío
+                    iv.image = nil;
+                    break;
+                default:
+                    iv.image = nil;
+                    break;
+            }
+        }
+        
+        else
+            
+        {
+            
+            cell = [self.miTabla
+                    dequeueReusableCellWithIdentifier:@"noAlumnos"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"noAlumnos"];
+            }
+            
+            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
+            theCellLbl.text = NSLocalizedString(@"NO_STUDENTS", nil);
         }
 
-         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
-         theCellLbl.text = NSLocalizedString(@"NO_STUDENTS", nil);
+    
     }
    
     return cell;
 }
 
+-(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+
+    NSArray *temp;
+    NSMutableArray *temp2 = [NSMutableArray arrayWithCapacity:[self.miListaAlumnos count]];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@",searchText];
+    [self.searchResults removeAllObjects];
+    
+    //en temp guardo un array con los nombres filtrados
+    temp = [self.miListaAlumnos.allKeys filteredArrayUsingPredicate:resultPredicate];
+    for (int i=0; i<[temp count]; i++) {
+        [temp2 addObject:[self.miListaAlumnos valueForKey:[temp objectAtIndex:i]]];
+        //en temp2 guardo los estados para esos nombres filtrados
+    }
+    
+    //en temp3 me construyo en dictionary con los arrays temp y temp2
+    NSMutableDictionary *temp3 = [NSMutableDictionary dictionaryWithObjects:temp2 forKeys:temp];
+
+    self.searchResults = temp3;
+    
+    NSArray * sortedKeysSearch = [[self.searchResults allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeysSearch = sortedKeysSearch;
+    
+
+}
+
+-(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+
+    [self.miTabla reloadData];
+
+}
+
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString scope:[[self.searchDisplayController.searchBar scopeButtonTitles]objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    return YES;
+
+
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+
+    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:[[self.searchDisplayController.searchBar scopeButtonTitles]objectAtIndex:searchOption]];
+    
+    return YES;
+
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    //UISearchBar *searchBar = self.searchDisplayController.searchBar;
+    if(scrollView.contentOffset.y <= 0) {
+        self.searchBar.frame = CGRectMake(0, scrollView.contentOffset.y, self.searchBar.frame.size.width, searchBar.frame.size.height);
+    }
+}
+ 
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     
-    NSDateFormatter *df = [NSDateFormatter new];
-    [df setTimeStyle:NSDateFormatterNoStyle];
-    [df setDateStyle:NSDateFormatterFullStyle];
-    NSLocale *theLocale = [NSLocale currentLocale];
-    [df setLocale:theLocale];
-    NSString *fechaHeader = [df stringFromDate:self.fecha];
-    self.fechaCompleta = fechaHeader;
-    return [NSString stringWithFormat:@"%@_%@\n%@",self.nombreAsignatura,self.nombreClase,fechaHeader];
-    
+    if (tableView != self.searchDisplayController.searchResultsTableView)
+    {
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *fechaHeader = [df stringFromDate:self.fecha];
+        self.fechaCompleta = fechaHeader;
+        return [NSString stringWithFormat:@"%@_%@\n%@",self.nombreAsignatura,self.nombreClase,fechaHeader];
+    }
+    else
+        return @"";
     
 
 }
@@ -436,24 +433,20 @@
     {
         iv.image = [UIImage imageNamed:@"cross.png"];
         //cambiar el valor del estado en self.miListaAlumnos para que cuando se repinte la tabla ponga la imagen correcta.
-        
-        
-        //[self.miListaAlumnos setObject:@"2" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
-        [self.miListaAlumnos setObject:@"2" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
-                
-        
-        
-        
-        
         //también tenemos que hacer el update de self.todos que es el NSDictionary que mantiene siempre una copia de la lista de alumnos completa, por si se da el caso de estar dentro de un filtro y hacer cambios en los estados.
+        
+        if (tableView != self.searchDisplayController.searchResultsTableView)
+        {
+            [self.miListaAlumnos setObject:@"2" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+            [self.todos setObject:@"2" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+        }
+        else
+        {
+            [self.searchResults setObject:@"2" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+            [self.todos setObject:@"2" forKey:[self.self.sortedKeysSearch objectAtIndex:indexPath.row]];
+             [self.miListaAlumnos setObject:@"2" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+        }
     
-                //buscamos por el nombre en self.todos
-        //TO DO: COMPRUEBA SI ESTO MISMO NO LO PUEDES HACER DIRECTAMENTE USANDO EL MÉTODO valueForKey DE self.todos
-                for (int i=0; i<[self.todos count]; i++) {
-                    if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.sortedKeys objectAtIndex:indexPath.row]])
-                        //cuando lo encuentra hace el update
-                        [self.todos setObject:@"2" forKey:[self.todos.allKeys objectAtIndex:i]];
-                }
         NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
         self.presentes = presentes;
         NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
@@ -464,18 +457,20 @@
     else if (iv.image == [UIImage imageNamed:@"cross.png"])
             {
                 iv.image = [UIImage imageNamed:@"late.png"];
-                //[self.miListaAlumnos setObject:@"3" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+                               
+                 if (tableView != self.searchDisplayController.searchResultsTableView)
+                 {
+                     [self.miListaAlumnos setObject:@"3" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                     [self.todos setObject:@"3" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                 }
+                 else
+                 {
+                     [self.searchResults setObject:@"3" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+                     [self.todos setObject:@"3" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+                      [self.miListaAlumnos setObject:@"3" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+                 }
                 
-                [self.miListaAlumnos setObject:@"3" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
                 
-                
-                    //buscamos por el nombre en self.todos
-                    for (int i=0; i<[self.todos count]; i++) {
-                        if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.sortedKeys objectAtIndex:indexPath.row]])
-                            //cuando lo encuentra hace el update
-                            [self.todos setObject:@"3" forKey:[self.todos.allKeys objectAtIndex:i]];
-                    }
-               
                 NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
                 self.presentes = presentes;
                 NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
@@ -486,16 +481,18 @@
             {
                 iv.image = [UIImage imageNamed:@"check.png"];
                 
-                //[self.miListaAlumnos setObject:@"1" forKey:[self.miListaAlumnos.allKeys objectAtIndex:indexPath.row]];
+                if (tableView != self.searchDisplayController.searchResultsTableView)
+                {
+                    [self.miListaAlumnos setObject:@"1" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                    [self.todos setObject:@"1" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
+                }
+                else
+                {
+                    [self.miListaAlumnos setObject:@"1" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+                    [self.todos setObject:@"1" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+                    [self.miListaAlumnos setObject:@"1" forKey:[self.sortedKeysSearch objectAtIndex:indexPath.row]];
+                }
                 
-                [self.miListaAlumnos setObject:@"1" forKey:[self.sortedKeys objectAtIndex:indexPath.row]];
-                
-                    //buscamos por el nombre en self.todos
-                    for (int i=0; i<[self.todos count]; i++) {
-                        if([[self.todos.allKeys objectAtIndex:i] isEqualToString:[self.sortedKeys objectAtIndex:indexPath.row]])
-                            //cuando lo encuentra hace el update
-                            [self.todos setObject:@"1" forKey:[self.todos.allKeys objectAtIndex:i]];
-                    }
                 NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
                 self.presentes = presentes;
                 NSMutableDictionary *ausentes = [self filtrarAusentes:self.todos];
@@ -507,18 +504,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
    
-     if ([self.miListaAlumnos count]) {
-         
-         
+     if ([self.miListaAlumnos count]) 
          return 79;
 
+     else
+         return 100;
          
-     }
-     else{
-        
-          return 100;
-         
-     }
+     
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
@@ -550,7 +542,13 @@
     NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
     
     self.sortedKeys = sortedKeys;
-   
+    
+    /*self.searchResults = feed;
+    
+    NSArray * sortedKeysSearch = [[self.searchResults allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
+    
+    self.sortedKeysSearch = sortedKeysSearch;
+   */
     
     NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
     self.presentes = presentes;
@@ -563,7 +561,6 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     //animar boton pasar asistencia
-    [self.attendanceButton setEnabled:YES];
     [self.addButton setEnabled:YES];
     [self.refreshButton setEnabled:YES];
     [self.informesButton setEnabled:YES];
@@ -619,9 +616,6 @@
         
         
     }
-    
-    
-
 
 }
 
@@ -722,7 +716,6 @@
 {
     self.fecha = date;
     self.today = today;
-    [self.attendanceButton setEnabled:NO];
     [self.calendarButton setEnabled:NO];
     [self.refreshButton setEnabled:NO];
     [self.informesButton setEnabled:NO];
@@ -766,7 +759,6 @@
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
-        [self.attendanceButton setEnabled:NO];
         [self.calendarButton setEnabled:NO];
         [self.refreshButton setEnabled:NO];
         [self.informesButton setEnabled:NO];
@@ -807,7 +799,6 @@
     if(cambios)
     {
         
-        [self.attendanceButton setEnabled:NO];
         [self.calendarButton setEnabled:NO];
         [self.refreshButton setEnabled:NO];
         [self.informesButton setEnabled:NO];
@@ -1092,50 +1083,7 @@
     
 }
 
-/*
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
-    [searchBar resignFirstResponder];
-}
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-    [searchBar resignFirstResponder];
-}
- 
-
--(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-{
-    if([searchText length] == 0)
-    {
-        NSMutableDictionary *todoss = self.todos;
-        self.miListaAlumnos = todoss;
-    }
-    else
-    {
-        NSMutableDictionary *todoss = [NSMutableDictionary dictionaryWithCapacity:[self.todos count]];
-        for(NSString *string in self.todos.allKeys)
-        {
-            NSRange r = [string rangeOfString:searchText options:NSCaseInsensitiveSearch];
-            if(r.location != NSNotFound)
-            {
-                [todoss setObject:[self.todos valueForKey:string] forKey:string];
-            
-            }
-        
-        
-        }
-        self.miListaAlumnos = todoss;
-    }
-   
-    NSArray * sortedKeys = [[self.miListaAlumnos allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
-    self.sortedKeys = sortedKeys;
-    [self.miTabla reloadData];
-    
-
-
-}
-*/
 
 
 

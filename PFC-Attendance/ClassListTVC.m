@@ -137,6 +137,7 @@
     //guardo el nombre de la clase para pasárselo a la siguiente vista que lo necesite
     self.nombreClase = cell.textLabel.text;
     self.clase= [self.miListaClases.allKeys objectAtIndex:indexPath.row];
+    
     [self performSegueWithIdentifier:@"goToClassInform" sender:self];
     
 }
