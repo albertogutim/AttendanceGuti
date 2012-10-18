@@ -160,6 +160,25 @@
                                  error:(NSError *)error;
 
 
+- (void)updateNombreAlumno:(NSString *)clase paraRow:(NSInteger)row paraNombre: (NSString *) nombre;
+- (void)updateNombreAlumnoTicket:(GDataServiceTicket *)ticket
+                finishedWithFeed:(GDataFeedBase *)feed
+                           error:(NSError *)error;
+
+- (void)updateNombreAlumnoTicketDone:(GDataServiceTicket *)ticket
+                    finishedWithFeed:(GDataFeedBase *)feed
+                               error:(NSError *)error;
+
+- (void)updateMailAlumno:(NSString *)clase paraRow:(NSInteger)row paraMail: (NSString*) mail;
+
+
+- (void)updateMailAlumnoTicket:(GDataServiceTicket *)ticket
+              finishedWithFeed:(GDataFeedBase *)feed
+                         error:(NSError *)error;
+
+- (void)updateMailAlumnoTicketDone:(GDataServiceTicket *)ticket
+                  finishedWithFeed:(GDataFeedBase *)feed
+                             error:(NSError *)error;
 
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
 
@@ -196,6 +215,8 @@
 @property (nonatomic, strong) NSArray *attendance;
 @property (nonatomic, strong) NSArray *rowsAusentes;
 @property (nonatomic, strong) NSArray *rowsRetrasados;
+@property (nonatomic, strong) NSString *nombre;
+@property (nonatomic, strong) NSString *mail;
 
 
 

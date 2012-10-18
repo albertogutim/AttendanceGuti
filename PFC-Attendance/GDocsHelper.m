@@ -50,6 +50,8 @@
 @synthesize rowsAusentes = _rowsAusentes;
 @synthesize rowsRetrasados = _rowsRetrasados;
 @synthesize paraTodos = _paraTodos;
+@synthesize nombre = _nombre;
+@synthesize mail = _mail;
 
 
 
@@ -1429,10 +1431,86 @@ finishedWithFeed:(GDataFeedBase *)feed
 }
 
 
+- (void)updateNombreAlumno:(NSString *)clase paraRow:(NSInteger)row paraNombre: (NSString *) nombre
+{
+    
+    self.clase = clase;
+    self.row = row;
+    self.nombre = nombre;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:STUDENTS_COLUMN];
+    [q setMaximumColumn:STUDENTS_COLUMN];
+    [q setMinimumRow:self.row];
+    [q setMaximumColumn:self.row];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(updateNombreAlumnoTicket:finishedWithFeed:error:)];
+}
+
+- (void)updateNombreAlumnoTicket:(GDataServiceTicket *)ticket
+                finishedWithFeed:(GDataFeedBase *)feed
+                           error:(NSError *)error
+{
+    
+    [[[[feed entries] objectAtIndex:0] cell] setInputString:self.nombre];
+    [self.miService fetchEntryByUpdatingEntry:[[feed entries] objectAtIndex:0] delegate:self didFinishSelector:@selector(updateNombreAlumnoTicketDone:finishedWithFeed:error:)];
+    
+}
 
 
+- (void)updateNombreAlumnoTicketDone:(GDataServiceTicket *)ticket
+             finishedWithFeed:(GDataFeedBase *)feed
+                        error:(NSError *)error
+{
+    //NSLog(@"termino el update");
+    [self.delegate respuestaUpdate: error];
+    
+}
+
+- (void)updateMailAlumno:(NSString *)clase paraRow:(NSInteger)row paraMail: (NSString*) mail
+{
+    
+    self.clase = clase;
+    self.row = row;
+    self.mail = mail;
+    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
+    [q setMinimumColumn:MAIL_COLUMN];
+    [q setMaximumColumn:MAIL_COLUMN];
+    [q setMinimumRow:self.row];
+    [q setMaximumColumn:self.row];
+    
+    
+    [self.miService fetchFeedWithQuery:q
+                              delegate:self
+                     didFinishSelector:@selector(updateMailAlumnoTicket:finishedWithFeed:error:)];
+}
+
+- (void)updateMailAlumnoTicket:(GDataServiceTicket *)ticket
+                finishedWithFeed:(GDataFeedBase *)feed
+                           error:(NSError *)error
+{
+    [[[[feed entries] objectAtIndex:0] cell] setInputString:self.mail];
+    [self.miService fetchEntryByUpdatingEntry:[[feed entries] objectAtIndex:0] delegate:self didFinishSelector:@selector(updateMailAlumnoTicketDone:finishedWithFeed:error:)];
+    
+}
 
 
+- (void)updateMailAlumnoTicketDone:(GDataServiceTicket *)ticket
+                    finishedWithFeed:(GDataFeedBase *)feed
+                               error:(NSError *)error
+{
+    //NSLog(@"termino el update");
+    [self.delegate respuestaUpdate: error];
+    
+}
 
 
 
@@ -1495,6 +1573,7 @@ finishedWithFeed:(GDataFeedBase *)feed
     return 0; //es el mismo día
 
 }
+
 
 
 @end

@@ -23,4 +23,6 @@
 @property (strong, nonatomic) IBOutlet UITextField *emailField;
 @property (assign, nonatomic) NSInteger estado;
 @property (nonatomic, weak) id <AddStudentTVCDelegate> delegate;
+
+
 @end

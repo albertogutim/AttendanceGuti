@@ -778,12 +778,12 @@
 
 }
 
--(void) devolverTabla:(StudentVC *)controller huboCambios: (BOOL) cambios
+-(void) devolverTabla:(StudentVC *)controller huboCambios: (int) cambios
 {
-    [self.navigationController popViewControllerAnimated:YES];
-    if(cambios)
-    {
-        
+  
+    if(cambios==1)
+        [self.navigationController popViewControllerAnimated:YES];
+    
         [self.azButton setEnabled:NO];
         [self.calendarButton setEnabled:NO];
         [self.refreshButton setEnabled:NO];
@@ -799,7 +799,6 @@
         GDocsHelper *midh = [GDocsHelper sharedInstance];
         ConfigHelper *configH = [ConfigHelper sharedInstance];
         [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
-    }
 
 }
 

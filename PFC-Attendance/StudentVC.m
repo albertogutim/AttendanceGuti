@@ -16,6 +16,7 @@
 @implementation StudentVC
 
 @synthesize alumno =_alumno;
+@synthesize deTxtField = _deTxtField;
 @synthesize clase = _clase;
 @synthesize mail = _mail;
 @synthesize datosAlumnoTable = _datosAlumnoTable;
@@ -26,12 +27,13 @@
 @synthesize cuantosRetrasos = _cuantosRetrasos;
 @synthesize pintarAusencias = _pintarAusencias;
 @synthesize pintarRetrasos =_pintarRetrasos;
-@synthesize datosAlumno = _datosAlumno;
 @synthesize cambios = _cambios;
 @synthesize nombreClase = _nombreClase;
 @synthesize nombreAsignatura = _nombreAsignatura;
-@synthesize fechasRetrasos = _fechasRetrasos;
-@synthesize fechasAusencias = _fechasAusencias;
+@synthesize sortedAusencias = _sortedAusencias;
+@synthesize sortedRetrasos = _sortedRetrasos;
+//@synthesize fechasRetrasos = _fechasRetrasos;
+//@synthesize fechasAusencias = _fechasAusencias;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,9 +64,10 @@
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
     self.cambios = NO;
+    self.deTxtField = NO;
     
     
-    UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 105, 44.01)];
+    /*UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 105, 44.01)];
     
     // create the array to hold the buttons, which then gets added to the toolbar
     NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
@@ -92,7 +95,7 @@
     
     UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
     self.navigationItem.rightBarButtonItem = rightButtonBar;
-    
+    */
      
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -108,22 +111,34 @@
     [super viewWillAppear:animated];
 }
 
--(void)mailButtonAction
+
+-(void)viewWillDisappear:(BOOL)animated
 {
 
-    NSMutableString *ausenciasYretrasos = [NSMutableString stringWithCapacity:[self.pintarAusencias count]+[self.pintarRetrasos count]+2];
+    if(!self.cambios)
+    {
+        if(self.deTxtField)
+            [self.delegate devolverTabla:self huboCambios:2];
+    }
+        
+    [super viewWillDisappear:animated];
 
+}
+- (IBAction)mailButtonAction:(id)sender {
+    
+    NSMutableString *ausenciasYretrasos = [NSMutableString stringWithCapacity:[self.pintarAusencias count]+[self.pintarRetrasos count]+2];
+    
     
     if([self.pintarAusencias count]>0) //hay ausencias
     {
         [ausenciasYretrasos appendString:@"Ausencias:\n\n"];
         for (int i=0; i<[self.pintarAusencias count]; i++) {
-                [ausenciasYretrasos appendString:[NSString stringWithFormat:@"%@\n",[self.pintarAusencias.allKeys objectAtIndex:i]]];
-
+            [ausenciasYretrasos appendString:[NSString stringWithFormat:@"%@\n",[self.pintarAusencias.allKeys objectAtIndex:i]]];
+            
             
         }
-
-    
+        
+        
     }
     
     if([self.pintarRetrasos count]>0) //hay retrasos
@@ -134,7 +149,7 @@
             
             
         }
-
+        
     }
     
     NSMutableArray *mail = [[NSMutableArray alloc] init];
@@ -149,8 +164,9 @@
         [composer setMessageBody:ausenciasYretrasos isHTML:NO];
         [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
         [self presentModalViewController:composer animated:YES];
+        
+    }
 
-}
 }
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
@@ -209,16 +225,44 @@
     
     if(indexPath.section==0)
     {
-        UITableViewCell *cell;
-        cell = [tableView
-                dequeueReusableCellWithIdentifier:@"datos"];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
-        }
         
-        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        theCellLbl.text = [self.datosAlumno objectAtIndex:indexPath.row];
-        return cell;
+        if (indexPath.row==0)
+        {
+            
+        
+            UITableViewCell *cell;
+            cell = [tableView
+                    dequeueReusableCellWithIdentifier:@"nombre"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"nombre"];
+            }
+            
+            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+            theCellLbl.text = self.alumno;
+            [theCellLbl setHidden:NO];
+            UITextField *text = (UITextField *)[cell viewWithTag:4];
+            [text setHidden:YES];
+            
+            return cell;
+        }
+        else if(indexPath.row==1)
+        {
+            UITableViewCell *cell;
+            cell = [tableView
+                    dequeueReusableCellWithIdentifier:@"mail"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"mail"];
+            }
+            
+            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:7];
+            theCellLbl.text = self.mail;
+            [theCellLbl setHidden:NO];
+            UITextField *text = (UITextField *)[cell viewWithTag:6];
+            [text setHidden:YES];
+            
+            return cell;
+        
+        }
 
     }
     else if(indexPath.section==1)
@@ -226,14 +270,14 @@
     {
         UITableViewCell *cell;
         cell = [tableView
-                dequeueReusableCellWithIdentifier:@"datos"];
+                dequeueReusableCellWithIdentifier:@"AussenciasRetrasos"];
         if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AussenciasRetrasos"];
         }
-        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:5];
         //theCellLbl.text = [self.pintarAusencias.allKeys objectAtIndex:indexPath.row];
         
-        theCellLbl.text =[self.fechasAusencias objectAtIndex:indexPath.row];
+        theCellLbl.text =[self.sortedAusencias objectAtIndex:indexPath.row];
         theCellLbl.textAlignment = UITextAlignmentCenter;
         return cell;
         
@@ -243,14 +287,14 @@
 
         UITableViewCell *cell;
         cell = [tableView
-                dequeueReusableCellWithIdentifier:@"datos"];
+                dequeueReusableCellWithIdentifier:@"AussenciasRetrasos"];
         if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"datos"];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AussenciasRetrasos"];
         }
-        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
+        UILabel *theCellLbl = (UILabel *)[cell viewWithTag:5];
         //theCellLbl.text = [self.pintarRetrasos.allKeys objectAtIndex:indexPath.row];
         
-        theCellLbl.text =[self.fechasRetrasos objectAtIndex:indexPath.row];
+        theCellLbl.text =[self.sortedRetrasos objectAtIndex:indexPath.row];
         theCellLbl.textAlignment = UITextAlignmentCenter;
         return cell;
         
@@ -301,6 +345,98 @@
     }
     
     
+    UILabel *theCellLbl2 = (UILabel *)[cell viewWithTag:1];
+    if([cell.reuseIdentifier isEqualToString:@"nombre"])
+    {
+        
+        //Aquí queremos hacer aparecer el TextField para que el usuario pueda modificar el nombre y el mail del alumno.
+        
+        UITextField *text = (UITextField *)[cell viewWithTag:4];
+        [text setHidden:NO];
+        [text becomeFirstResponder];
+        [theCellLbl2 setHidden:YES];
+        
+    }
+    
+    UILabel *theCellLbl3 = (UILabel *)[cell viewWithTag:7];
+    if([cell.reuseIdentifier isEqualToString:@"mail"])
+    {
+        
+        //Aquí queremos hacer aparecer el TextField para que el usuario pueda modificar el nombre y el mail del alumno.
+        
+        UITextField *text = (UITextField *)[cell viewWithTag:6];
+        [text setHidden:NO];
+        [text becomeFirstResponder];
+        [theCellLbl3 setHidden:YES];
+        
+    }
+
+    
+    
+}
+
+
+#pragma mark - Text Field delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.
+    
+    //UITextField *yourTextField4 = (UITextField *)[self.view viewWithTag:4];
+    //UITextField *yourTextField6 = (UITextField *)[self.datosAlumnoTable viewWithTag:6];
+    
+    /*UITableViewCell *cell0 = [self.datosAlumnoTable cellForRowAtIndexPath:0];
+    
+    UITextField *getTextView0 = (UITextField*)[cell0.contentView viewWithTag:4];
+    
+    UITableViewCell *cell1 = [self.datosAlumnoTable cellForRowAtIndexPath:1];
+    UITextField *getTextView1 = (UITextField*)[cell1.contentView viewWithTag:6];
+    */
+    
+    if(theTextField.tag == 4)
+    {
+        self.alumno =theTextField.text;
+        //self.cambios = YES;
+        self.deTxtField =YES;
+        //update spreadsheet con el nuevo nombre
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"UPDATING", nil);
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        [midh updateNombreAlumno:self.clase paraRow:self.row paraNombre:self.alumno];
+
+        
+        
+        
+    }
+    else if(theTextField.tag == 6)
+    {
+        
+        self.mail =  theTextField.text;
+        //self.cambios = YES;
+        self.deTxtField =YES;
+        //update spreadsheet con el nuevo mail
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"UPDATING", nil);
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        GDocsHelper *midh = [GDocsHelper sharedInstance];
+        [midh updateMailAlumno:self.clase paraRow:self.row paraMail:self.mail];
+
+    }
+    
+    [theTextField resignFirstResponder];
+    [self.datosAlumnoTable reloadData];
+	return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    
+    //Quitamos espacios en blanco por delante y por detrás
+    textField.text = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
 }
 
 - (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -361,7 +497,7 @@
     //esto seria si utilizaramos la celda con la formula
     //self.ausencias = [feed objectForKey:@"Estadistica"];
     
-    self.datosAlumno = [NSArray arrayWithObjects:self.alumno,self.mail, nil];
+    //self.datosAlumno = [NSArray arrayWithObjects:self.alumno,self.mail, nil];
     
     [feed removeObjectForKey:@"Email"];
     //[feed removeObjectForKey:@"Estadistica"];
@@ -398,7 +534,45 @@
     self.pintarAusencias = ausencias;
     
     
-    NSMutableArray *fechasAusencias = [NSMutableArray arrayWithCapacity: [feed count]];
+    NSMutableArray *fechitas = [NSMutableArray arrayWithCapacity: [feed count]];
+    for (NSString *fechCad in self.pintarAusencias.allKeys) {
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        [df setDateFormat:@"dd/MM/yy"];
+        NSDate *nuevaFecha = [df dateFromString:fechCad];
+        
+        [fechitas addObject:nuevaFecha];
+        
+    }
+    
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES selector:@selector(compare:)];
+    NSMutableArray* sortedArray = [NSMutableArray arrayWithArray:[fechitas sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    
+    for (int i=0; i<[sortedArray count]; i++) {
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        [df setDateFormat:@"dd/MM/yy"];
+        
+        NSString *dateStr = [df stringFromDate:[sortedArray objectAtIndex:i]];
+        
+        [sortedArray replaceObjectAtIndex:i withObject:dateStr];
+    }
+    
+    self.sortedAusencias = sortedArray;
+    
+   /* NSMutableArray *fechasAusencias = [NSMutableArray arrayWithCapacity: [feed count]];
     NSMutableArray *fechasRetrasos = [NSMutableArray arrayWithCapacity: [feed count]];
     for(int i=0;i<[arrayFechas count];i++)
     {
@@ -410,12 +584,51 @@
     
    
     self.fechasAusencias = fechasAusencias;
-    
+    */
     NSMutableDictionary *retrasos = [NSMutableDictionary dictionaryWithDictionary:self.pintar];
     retrasos = [self filtrarRetrasos:retrasos];
     self.pintarRetrasos = retrasos;
     
     
+    NSMutableArray *fechitas2 = [NSMutableArray arrayWithCapacity: [feed count]];
+    for (NSString *fechCad in self.pintarAusencias.allKeys) {
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        [df setDateFormat:@"dd/MM/yy"];
+        NSDate *nuevaFecha = [df dateFromString:fechCad];
+        
+        [fechitas2 addObject:nuevaFecha];
+        
+    }
+    
+    NSMutableArray* sortedArray2 = [NSMutableArray arrayWithArray:[fechitas2 sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    
+    for (int i=0; i<[sortedArray2 count]; i++) {
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterShortStyle];
+        
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        [df setDateFormat:@"dd/MM/yy"];
+        
+        NSString *dateStr = [df stringFromDate:[sortedArray2 objectAtIndex:i]];
+        
+        [sortedArray2 replaceObjectAtIndex:i withObject:dateStr];
+    }
+
+    
+    self.sortedRetrasos = sortedArray2;
+    
+    /*
     for(int i=0;i<[arrayFechas count];i++)
     {
         if([self.pintarRetrasos valueForKey:[arrayFechas objectAtIndex:i]]!=nil)
@@ -425,6 +638,7 @@
     }
     
     self.fechasRetrasos = fechasRetrasos;
+     */
     
     [self.datosAlumnoTable reloadData];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -438,8 +652,9 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-
-    [self.delegate devolverTabla:self huboCambios:self.cambios];
+    
+    if(!self.deTxtField)
+        [self.delegate devolverTabla:self huboCambios:1];
 
 }
 

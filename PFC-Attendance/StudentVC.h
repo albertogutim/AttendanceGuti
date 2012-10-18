@@ -14,11 +14,12 @@
 
 @protocol StudentVCDelegate <NSObject>
 
--(void) devolverTabla: (StudentVC *) controller huboCambios: (BOOL) cambios;
+-(void) devolverTabla: (StudentVC *) controller huboCambios: (int) cambios;
 
 @end
 
-@interface StudentVC : UIViewController <GDocsHelperDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
+@interface StudentVC : UIViewController <GDocsHelperDelegate, UIAlertViewDelegate, MFMailComposeViewControllerDelegate, UITextFieldDelegate>
+
 
 @property (strong, nonatomic) NSString *alumno;
 @property (strong, nonatomic) NSString *clase;
@@ -33,15 +34,14 @@
 @property (strong, nonatomic) NSDictionary *pintar;
 @property (strong, nonatomic) NSMutableDictionary *pintarAusencias;
 @property (strong, nonatomic) NSMutableDictionary *pintarRetrasos;
-@property (strong, nonatomic) NSArray *datosAlumno;
 @property (assign, nonatomic) BOOL cambios;
+@property (strong, nonatomic) NSMutableArray *sortedAusencias;
+@property (strong, nonatomic) NSMutableArray *sortedRetrasos;
 @property (nonatomic, weak) id <StudentVCDelegate> delegate;
-@property (strong, nonatomic) NSMutableArray *fechasAusencias;
-@property (strong, nonatomic) NSMutableArray *fechasRetrasos;
-
-
-
-- (IBAction)eliminarAlumno:(id)sender;
+//@property (strong, nonatomic) NSMutableArray *fechasAusencias;
+//@property (strong, nonatomic) NSMutableArray *fechasRetrasos;
+@property (assign, nonatomic) BOOL deTxtField;
+- (IBAction)mailButtonAction:(id)sender;
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) asistencias;
 -(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
