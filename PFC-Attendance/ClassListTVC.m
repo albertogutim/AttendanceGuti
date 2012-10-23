@@ -240,6 +240,7 @@
         attendanceStudentsvc.today = self.today;
         attendanceStudentsvc.nombreAsignatura = self.nombreAsignatura;
         attendanceStudentsvc.nombreClase = self.nombreClase;
+        attendanceStudentsvc.hacerEsto = YES;
         
     }
     

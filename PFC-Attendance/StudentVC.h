@@ -45,5 +45,5 @@
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) asistencias;
 -(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
-
+-(void)cancelButton:(id)sender;
 @end

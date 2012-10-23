@@ -28,6 +28,8 @@
     
 - (IBAction)azButtonPressed:(id)sender;
 @property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
+- (IBAction)sendmail:(id)sender;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *mailbutton;
 
 @property (strong, nonatomic) IBOutlet UISearchDisplayController *searchDisplayController;
 
@@ -55,7 +57,7 @@
 @property (strong, nonatomic) NSMutableDictionary *alumnosConOrden;
 @property (strong, nonatomic) NSArray *sortedKeys;
 @property (strong, nonatomic) NSArray *sortedKeysSearch;
-
+@property (assign, nonatomic) BOOL hacerEsto;
 @property (assign, nonatomic) CGRect tamano;
 
 - (IBAction)changeSegmentedControl:(id)sender;

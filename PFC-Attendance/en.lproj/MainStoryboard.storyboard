@@ -53,7 +53,7 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="oWN-fo-h3Q"/>
-                        <barButtonItem systemItem="play" id="xs8-NF-dsQ">
+                        <barButtonItem image="conf.png" style="plain" id="xs8-NF-dsQ">
                             <connections>
                                 <segue destination="EHT-GH-jLV" kind="modal" identifier="goToConfig" modalTransitionStyle="flipHorizontal" id="gbz-GR-Vl7"/>
                             </connections>
@@ -380,7 +380,7 @@
                                     <action selector="changeSegmentedControl:" destination="gL0-ve-xDd" eventType="valueChanged" id="axn-cX-8gk"/>
                                 </connections>
                             </segmentedControl>
-                            <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="75" sectionHeaderHeight="10" sectionFooterHeight="10" id="W2A-tF-XIu">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="75" sectionHeaderHeight="10" sectionFooterHeight="10" id="W2A-tF-XIu">
                                 <rect key="frame" x="0.0" y="28" width="320" height="344"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -394,7 +394,7 @@
                                 </searchBar>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="alumnos" rowHeight="75" id="GL1-Oo-Gs7">
-                                        <rect key="frame" x="0.0" y="80" width="320" height="76"/>
+                                        <rect key="frame" x="0.0" y="80" width="320" height="77"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="267" height="74"/>
@@ -408,56 +408,13 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFit" image="check.png" id="Qim-2w-LHy">
-                                                    <rect key="frame" x="210" y="22" width="30" height="30"/>
+                                                    <rect key="frame" x="217" y="22" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </tableViewCell>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="infoCell" rowHeight="100" id="4Ph-gx-klR">
-                                        <rect key="frame" x="0.0" y="156" width="320" height="100"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="0.0" width="300" height="99"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="DcH-Ly-oW6">
-                                                    <rect key="frame" x="111" y="30" width="169" height="40"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </tableViewCell>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="noAlumnos" rowHeight="60" id="Lwd-9U-Uuh">
-                                        <rect key="frame" x="0.0" y="256" width="320" height="61"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="0.0" width="300" height="59"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" text="" lineBreakMode="tailTruncation" minimumFontSize="10" id="Qff-b7-4zp">
-                                                    <rect key="frame" x="111" y="30" width="169" height="40"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="8" contentMode="center" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Hb2-xc-8jg">
-                                                    <rect key="frame" x="20" y="30" width="260" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
@@ -470,38 +427,40 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="reply" id="Lqh-kp-Qbz">
+                        <barButtonItem image="save.png" style="plain" id="Lqh-kp-Qbz">
                             <connections>
                                 <action selector="updateSpreadsheet:" destination="gL0-ve-xDd" id="mre-V9-r3G"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="Z-A" id="bd4-ia-DGR">
+                        <barButtonItem width="29" style="plain" systemItem="fixedSpace" id="cSc-fy-s25"/>
+                        <barButtonItem title="Z-A" style="plain" id="bd4-ia-DGR">
                             <connections>
                                 <action selector="azButtonPressed:" destination="gL0-ve-xDd" id="1Iu-WX-18A"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem image="lapiz2.png" id="kAy-Pa-kSN">
+                        <barButtonItem image="document.png" style="plain" id="kAy-Pa-kSN">
                             <connections>
                                 <segue destination="DdU-dP-SnP" kind="push" identifier="goToResumen" id="ARV-Ar-8SU"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="R" id="qir-vL-HvC">
+                        <barButtonItem image="man.png" style="plain" id="qir-vL-HvC">
                             <connections>
                                 <action selector="randomStudent:" destination="gL0-ve-xDd" id="GtY-tj-yM7"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="S" id="Jb6-xe-41b">
+                        <barButtonItem image="chart_line.png" style="plain" id="Jb6-xe-41b">
                             <connections>
                                 <segue destination="C5P-Ao-qYk" kind="push" identifier="goToStadistics" id="Bvg-pi-cus"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="pageCurl" id="M7I-Ui-Lyx">
+                        <barButtonItem image="calendar.png" style="plain" id="M7I-Ui-Lyx">
                             <connections>
                                 <action selector="goToPickerView:" destination="gL0-ve-xDd" id="i1e-6V-Dqf"/>
                                 <segue destination="Yg7-RB-d7a" kind="modal" identifier="goToPicker" modalTransitionStyle="partialCurl" id="Nb7-a8-qw4"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="add" id="6nP-Tv-uin">
+                        <barButtonItem width="29" style="plain" systemItem="fixedSpace" id="cWA-ny-xqk"/>
+                        <barButtonItem style="plain" systemItem="add" id="6nP-Tv-uin">
                             <connections>
                                 <action selector="addStudent:" destination="gL0-ve-xDd" id="xUC-wq-Pje"/>
                                 <segue destination="Hg9-Xn-Wq6" kind="push" identifier="goToAddStudent" id="jO5-hO-B8r"/>
@@ -509,7 +468,11 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="CK8-EM-Ggx">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="bX8-7E-dN0"/>
+                        <barButtonItem key="rightBarButtonItem" image="mail_2.png" id="8bh-2d-qCv">
+                            <connections>
+                                <action selector="sendmail:" destination="gL0-ve-xDd" id="yL5-5G-W2f"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -518,6 +481,7 @@
                         <outlet property="azButton" destination="bd4-ia-DGR" id="3Ne-Kf-Ir2"/>
                         <outlet property="calendarButton" destination="M7I-Ui-Lyx" id="Tg1-6Q-9G4"/>
                         <outlet property="informesButton" destination="Jb6-xe-41b" id="S1X-zO-Odu"/>
+                        <outlet property="mailbutton" destination="8bh-2d-qCv" id="uIj-Lt-OhX"/>
                         <outlet property="miTabla" destination="W2A-tF-XIu" id="REb-Gt-Qgc"/>
                         <outlet property="randomButton" destination="qir-vL-HvC" id="HfE-hO-YL2"/>
                         <outlet property="refreshButton" destination="Lqh-kp-Qbz" id="qyt-Gz-smE"/>
@@ -594,7 +558,7 @@
                     <navigationItem key="navigationItem" id="N1h-gf-atJ">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="zUI-Uy-ogn">
-                            <rect key="frame" x="27" y="7" width="237" height="30"/>
+                            <rect key="frame" x="26" y="7" width="237" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Ambos"/>
@@ -602,7 +566,7 @@
                                 <segment title="Retrasos"/>
                             </segments>
                         </segmentedControl>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="A8J-tg-fkT">
+                        <barButtonItem key="rightBarButtonItem" image="mail_2.png" id="A8J-tg-fkT">
                             <connections>
                                 <action selector="sendMail:" destination="C5P-Ao-qYk" id="49W-lq-sCe"/>
                             </connections>
@@ -642,7 +606,7 @@
                     <navigationItem key="navigationItem" id="Y1d-FV-5fO">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="AhT-gO-QcT">
-                            <rect key="frame" x="46" y="7" width="218" height="30"/>
+                            <rect key="frame" x="45" y="7" width="218" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Todos"/>
@@ -653,7 +617,7 @@
                                 <action selector="changeSegmentedControl:" destination="DdU-dP-SnP" eventType="valueChanged" id="aYG-BR-ZO9"/>
                             </connections>
                         </segmentedControl>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Dvp-0U-n1Z">
+                        <barButtonItem key="rightBarButtonItem" image="mail_2.png" id="Dvp-0U-n1Z">
                             <connections>
                                 <action selector="sendResumen:" destination="DdU-dP-SnP" id="gjw-zB-ntO"/>
                             </connections>
@@ -779,6 +743,7 @@
                                         </view>
                                     </tableViewCell>
                                 </prototypes>
+                                <sections/>
                                 <connections>
                                     <outlet property="dataSource" destination="zxp-Oh-Eep" id="PPi-Kz-QYO"/>
                                     <outlet property="delegate" destination="zxp-Oh-Eep" id="7dm-8Q-BNy"/>
@@ -790,7 +755,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="pS8-a1-ey8">
                         <nil key="title"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Fhx-2z-9eP">
+                        <barButtonItem key="rightBarButtonItem" image="mail_2.png" id="Fhx-2z-9eP">
                             <connections>
                                 <action selector="mailButtonAction:" destination="zxp-Oh-Eep" id="plC-Ek-ZJT"/>
                             </connections>
@@ -1089,9 +1054,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="PoY-CS-sMC">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="q7j-20-T36"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="PoY-CS-sMC"/>
                     <connections>
                         <outlet property="miTabla" destination="WQW-rt-zhz" id="mTj-hX-BDh"/>
                         <segue destination="1iF-ty-GzR" kind="push" identifier="goToResumenList" id="cQt-eq-3WR"/>
@@ -1634,7 +1597,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Resumenes Diarios" id="WQ6-SN-e4J">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="lHW-P7-q1h">
+                        <barButtonItem key="rightBarButtonItem" image="mail_2.png" id="lHW-P7-q1h">
                             <connections>
                                 <action selector="enviarResumenes:" destination="1iF-ty-GzR" id="l9I-AR-Tvf"/>
                             </connections>
@@ -1694,10 +1657,16 @@
         </scene>
     </scenes>
     <resources>
+        <image name="calendar.png" width="24" height="24"/>
+        <image name="chart_line.png" width="24" height="24"/>
         <image name="check.png" width="30" height="30"/>
+        <image name="conf.png" width="24" height="24"/>
         <image name="cross.png" width="30" height="30"/>
-        <image name="lapiz2.png" width="20" height="20"/>
+        <image name="document.png" width="24" height="24"/>
+        <image name="mail_2.png" width="24" height="24"/>
+        <image name="man.png" width="24" height="24"/>
         <image name="redBackground.png" width="301" height="43"/>
+        <image name="save.png" width="24" height="24"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

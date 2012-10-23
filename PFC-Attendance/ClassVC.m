@@ -8,6 +8,7 @@
 
 #import "ClassVC.h"
 #import "ConfigHelper.h"
+#import "MBProgressHUD.h"
 
 @interface ClassVC ()
 
@@ -71,6 +72,8 @@
     self.contadorPresenciasGlobal = 0;
     self.contadorAusenciasGlobal = 0;
     self.contadorNoMatriculadoGlobal = 0;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"LOADING", nil);
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:nil yParaAlumnosRetrasados:nil paraTodos:YES];
@@ -328,7 +331,9 @@
     UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
     //guardo el nombre del alumno para pasárselo a la siguiente vista (StudentVC)
     self.alumno = theCellLbl.text;
-    self.row = indexPath.row+1;
+    self.row=[self.nombres indexOfObject:self.alumno];
+    
+    //self.row = indexPath.row+1;
     [self performSegueWithIdentifier:@"goToStudentInfo" sender:self];
     
 }
@@ -343,7 +348,7 @@
             studentVC.clase = self.clase;
             studentVC.alumno = self.alumno;
             studentVC.delegate = self;
-            studentVC.row = self.row+2;
+            studentVC.row = self.row+3;
             studentVC.nombreClase = self.nombreClase;
             studentVC.nombreAsignatura = self.nombreAsignatura;
     
@@ -420,24 +425,24 @@
     self.presenciasArray = contadoresPresenciasArray;
     self.noMatriculadosArray = contadoresNoMatriculadoArray;
 
+    
     [self.miTabla reloadData];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    
 
 }
 
--(void) devolverTabla:(StudentVC *)controller huboCambios: (BOOL) cambios
+-(void) devolverTabla:(StudentVC *)controller huboCambios: (int) cambios
 {
     [self.navigationController popViewControllerAnimated:YES];
-    if(cambios)
-    {
-        
+   
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         GDocsHelper *midh = [GDocsHelper sharedInstance];
        [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:nil yParaAlumnosRetrasados:nil paraTodos:YES];
-    }
-    
+   
 }
 -(void) respuestaFechasValidas:(NSArray *)fechas error:(NSError *)error
 {

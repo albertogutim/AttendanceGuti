@@ -10,11 +10,13 @@
 #import "GDocsHelper.h"
 #import "ConfigHelper.h"
 #import "MBProgressHUD.h"
+#import "ClassListTVC.h"
 
 @implementation AttendanceStudentsVC
 
 @synthesize azButton = _azButton;
 @synthesize searchBar;
+@synthesize mailbutton = _mailbutton;
 @synthesize searchDisplayController;
 @synthesize todosPresentesAusentes = _todosPresentesAusentes;
 @synthesize addButton = _addButton;
@@ -41,6 +43,7 @@
 @synthesize tamano = _tamano;
 @synthesize searchResults = _searchResults;
 @synthesize sortedKeysSearch = _sortedKeysSearch;
+@synthesize hacerEsto = _hacerEsto;
 //@synthesize mail = _mail;
 //@synthesize ausencias = _ausencias;
 //@synthesize pintar = _pintar;
@@ -84,6 +87,9 @@
     [self.resumenButton setEnabled:NO];
     [self.todosPresentesAusentes setEnabled:NO];
     [self.randomButton setEnabled:NO];
+    [self.mailbutton setEnabled:NO];
+    [self.calendarButton setEnabled:NO];
+    //[self.mailbutton setStyle:UIBarButtonItemStylePlain];
     self.tamano = self.miTabla.frame;
     
     
@@ -98,34 +104,37 @@
     //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHidden:) name:UIKeyboardWillHideNotification object:nil];
     
     
-    UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 105, 44.01)];
+    //UIToolbar* tools = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 105, 44.01)];
     
     // create the array to hold the buttons, which then gets added to the toolbar
-    NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
+    //NSMutableArray* buttons = [[NSMutableArray alloc] initWithCapacity:2];
     
-    UIBarButtonItem* pasarAsistenciaButton = [[UIBarButtonItem alloc]
-                                              initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(pasarAsistenciaButtonAction)];
-    pasarAsistenciaButton.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:pasarAsistenciaButton];
+    //UIBarButtonItem* fixButton = [[UIBarButtonItem alloc]
+      //                                        initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    //pasarAsistenciaButton.style = UIBarButtonItemStyleBordered;
+    //[buttons addObject:fixButton];
     
     
    
-    UIBarButtonItem* mailButton =[[UIBarButtonItem alloc]
+    /*UIBarButtonItem* mailButton =[[UIBarButtonItem alloc]
                                   initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(mailButtonAction)];
     mailButton.style = UIBarButtonItemStyleBordered;
+    */
+    //UIBarButtonItem* mailButton =[[UIBarButtonItem alloc]
+      //                            initWithImage:[UIImage imageNamed:@"mail.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(mailButtonAction)];
 
-    [buttons addObject:mailButton];
+    //[buttons addObject:mailButton];
 
     
     // stick the buttons in the toolbar
-    [tools setItems:buttons animated:NO];
+    //[tools setItems:buttons animated:NO];
     
  
     
     // and put the toolbar in the nav bar
     
-    UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
-    self.navigationItem.rightBarButtonItem = rightButtonBar;
+    //UIBarButtonItem* rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:tools];
+    //self.navigationItem.rightBarButtonItem = rightButtonBar;
     
     CGRect bounds = self.miTabla.bounds;
     bounds.origin.y = bounds.origin.y + self.searchBar.bounds.size.height;
@@ -145,6 +154,7 @@
     [self setSearchBar:nil];
     [self setSearchDisplayController:nil];
     [self setAzButton:nil];
+    [self setMailbutton:nil];
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
@@ -170,19 +180,29 @@
     //ESTO no se que coño hace aqui!!
     //[self.navigationController dismissModalViewControllerAnimated:YES];
     
+    if (self.hacerEsto)
+    {
+       
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"LOADING", nil);
+        
+        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        ConfigHelper *configH = [ConfigHelper sharedInstance];
+        [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
+    }
     
-
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = NSLocalizedString(@"LOADING", nil);
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-
-    ConfigHelper *configH = [ConfigHelper sharedInstance];
-    [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
- 
-
     [super viewWillAppear:animated];
+        
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+
+
+    self.hacerEsto = NO;
+    [super viewWillDisappear:animated];
 }
 
 
@@ -211,9 +231,7 @@
     
      if (tableView != self.searchDisplayController.searchResultsTableView) //tengo que pintar en la tabla utilizando el dictionary miListaAlumnos
     {
-        if ([self.miListaAlumnos count]){
-            
-            
+        
             cell = [self.miTabla
                     dequeueReusableCellWithIdentifier:@"alumnos"];
             if (cell == nil) {
@@ -253,26 +271,9 @@
             }
         }
         
-        else
-            
-        {
-            
-            cell = [self.miTabla
-                    dequeueReusableCellWithIdentifier:@"noAlumnos"];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"noAlumnos"];
-            }
-            
-            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
-            theCellLbl.text = NSLocalizedString(@"NO_STUDENTS", nil);
-        }
-    }
     else //tengo que pintar en la tabla del searchDisplayController
     {
     
-        if ([self.searchResults count]){
-            
-            
             cell = [self.miTabla
                     dequeueReusableCellWithIdentifier:@"alumnos"];
             if (cell == nil) {
@@ -305,23 +306,6 @@
                     iv.image = nil;
                     break;
             }
-        }
-        
-        else
-            
-        {
-            
-            cell = [self.miTabla
-                    dequeueReusableCellWithIdentifier:@"noAlumnos"];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"noAlumnos"];
-            }
-            
-            UILabel *theCellLbl = (UILabel *)[cell viewWithTag:8];
-            theCellLbl.text = NSLocalizedString(@"NO_STUDENTS", nil);
-        }
-
-    
     }
    
     return cell;
@@ -548,6 +532,8 @@
     [self.resumenButton setEnabled:YES];
     [self.randomButton setEnabled:YES];
     [self.calendarButton setEnabled:YES];
+    [self.mailbutton setEnabled:YES];
+    [self.calendarButton setEnabled:YES];
     
     //QUITAR ESTO: Es para probar que funcionaba bien el update de estados en la spreadsheet.
     /*NSArray *alum = [[NSArray alloc] initWithObjects:@"Ana Gutierrez Esguevillas", @"Raquel Gutierrez Esguevillas", @"Aday Perera Rodriguez", @"Raul Suarez Rodriguez", @"Berta Galvan", @"Ana Rios Cabrera", @"Isabel Mayor Guerra", nil];
@@ -705,6 +691,8 @@
     [self.randomButton setEnabled:NO];
     [self.todosPresentesAusentes setEnabled:NO];
     [self.addButton setEnabled:NO];
+    [self.mailbutton setEnabled:YES];
+    [self.calendarButton setEnabled:YES];
    
     
     
@@ -749,6 +737,8 @@
         [self.resumenButton setEnabled:NO];
         [self.randomButton setEnabled:NO];
         [self.addButton setEnabled:NO];
+        [self.mailbutton setEnabled:NO];
+        [self.calendarButton setEnabled:NO];
         [self.todosPresentesAusentes setEnabled:NO];
 
         //Tenemos que pintar de nuevo la tabla añadiendo el alumno nuevo.
@@ -792,6 +782,8 @@
         [self.todosPresentesAusentes setEnabled:NO];
         [self.randomButton setEnabled:NO];
         [self.addButton setEnabled:NO];
+        [self.mailbutton setEnabled:NO];
+        [self.calendarButton setEnabled:NO];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.labelText = NSLocalizedString(@"LOADING", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
@@ -881,7 +873,7 @@
     
 }
 
-- (void)mailButtonAction
+/*- (void)mailButtonAction
 {
     
     if(self.todosPresentesAusentes.selectedSegmentIndex == 0)
@@ -994,6 +986,7 @@
     }
 
 }
+ */
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) alumnos
 {
@@ -1058,7 +1051,7 @@
    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@""
      message:[NSString stringWithFormat:@"%@", randomKey]
      delegate:self
-     cancelButtonTitle:@"Dismiss"
+     cancelButtonTitle:@"OK"
      otherButtonTitles:nil];
      
      [alertView show];
@@ -1112,5 +1105,117 @@
         
 
     }
+}
+- (IBAction)sendmail:(id)sender {
+    
+    if(self.todosPresentesAusentes.selectedSegmentIndex == 0)
+    {
+        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *dateStr = [df stringFromDate:self.fecha];
+        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
+        [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
+        [presentes appendString:@"Presentes\n\n"];
+        for (int i=0; i<[self.presentes count]; i++) {
+            if([[self.presentes.allValues objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%d",3]])
+                [presentes appendString:[NSString stringWithFormat:@"%@ (Llegó tarde)\n",[self.presentes.allKeys objectAtIndex:i]]];
+            else
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.presentes.allKeys objectAtIndex:i]]];
+            
+        }
+        
+        if([self.ausentes count]>0)
+        {
+            [presentes appendString:@"\n\nAusentes\n\n"];
+            for (int i=0; i<[self.ausentes count]; i++) {
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.ausentes.allKeys objectAtIndex:i]]];
+                
+            }
+        }
+        
+        
+        
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
+            [composer setMessageBody:presentes isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+    }
+    
+    if(self.todosPresentesAusentes.selectedSegmentIndex == 1)
+    {
+        
+        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *dateStr = [df stringFromDate:self.fecha];
+        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
+        [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
+        [presentes appendString:@"Presentes\n\n"];
+        for (int i=0; i<[self.presentes count]; i++) {
+            if([[self.presentes.allValues objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%d",3]])
+                [presentes appendString:[NSString stringWithFormat:@"%@ (Llegó tarde)\n",[self.presentes.allKeys objectAtIndex:i]]];
+            else
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.presentes.allKeys objectAtIndex:i]]];
+            
+        }
+        
+        
+        
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
+            [composer setMessageBody:presentes isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+        
+    }
+    
+    if(self.todosPresentesAusentes.selectedSegmentIndex == 2)
+    {
+        
+        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
+        
+        NSDateFormatter *df = [NSDateFormatter new];
+        [df setTimeStyle:NSDateFormatterNoStyle];
+        [df setDateStyle:NSDateFormatterFullStyle];
+        NSLocale *theLocale = [NSLocale currentLocale];
+        [df setLocale:theLocale];
+        NSString *dateStr = [df stringFromDate:self.fecha];
+        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
+        [presentes appendString:dateStr];
+        if([self.ausentes count]>0)
+        {
+            [presentes appendString:@"\n\nAusentes\n\n"];
+            for (int i=0; i<[self.ausentes count]; i++) {
+                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.ausentes.allKeys objectAtIndex:i]]];
+                
+            }
+        }
+        
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if ([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
+            [composer setMessageBody:presentes isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+            [self presentModalViewController:composer animated:YES];
+        }
+    }
+
 }
 @end
