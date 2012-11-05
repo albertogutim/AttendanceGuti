@@ -160,7 +160,7 @@
                                  error:(NSError *)error;
 
 
-- (void)updateNombreAlumno:(NSString *)clase paraRow:(NSInteger)row paraNombre: (NSString *) nombre;
+- (void)updateNombreAlumno:(NSString *)clase paraRow:(NSInteger)row paraNombre: (NSString *) nombre paraMail: (NSString*) mail;
 - (void)updateNombreAlumnoTicket:(GDataServiceTicket *)ticket
                 finishedWithFeed:(GDataFeedBase *)feed
                            error:(NSError *)error;
@@ -169,16 +169,9 @@
                     finishedWithFeed:(GDataFeedBase *)feed
                                error:(NSError *)error;
 
-- (void)updateMailAlumno:(NSString *)clase paraRow:(NSInteger)row paraMail: (NSString*) mail;
-
-
-- (void)updateMailAlumnoTicket:(GDataServiceTicket *)ticket
-              finishedWithFeed:(GDataFeedBase *)feed
-                         error:(NSError *)error;
-
-- (void)updateMailAlumnoTicketDone:(GDataServiceTicket *)ticket
-                  finishedWithFeed:(GDataFeedBase *)feed
-                             error:(NSError *)error;
+- (void)updateNombreAlumnoTicketDoneFin:(GDataServiceTicket *)ticket
+                       finishedWithFeed:(GDataFeedBase *)feed
+                                  error:(NSError *)error;
 
 -(int)compareDay:(NSDate *)date1 withDay:(NSDate *)date2;
 

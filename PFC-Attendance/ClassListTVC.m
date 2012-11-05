@@ -68,7 +68,7 @@
     //NSLog(@"%@", [self.asignatura description]); 
     
     [self connectIntent];
-    self.title = self.nombreAsignatura;
+    //self.title = self.nombreAsignatura;
     
     [super viewWillAppear:animated];
 }
@@ -142,6 +142,10 @@
     
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return self.nombreAsignatura;
+}
 
 #pragma mark - My Methods
 

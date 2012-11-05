@@ -214,7 +214,7 @@
     NSString *todayStr = [dff stringFromDate:today];
     [dff setTimeStyle:NSDateFormatterNoStyle];
     [dff setDateStyle:NSDateFormatterShortStyle];
-    [dff setDateFormat:@"dd/MM/yy"];
+    //[dff setDateFormat:@"dd/MM/yy"];
     NSDate *todayOk = [dff dateFromString:todayStr];
     self.today = todayOk;
     
@@ -231,7 +231,9 @@
         NSDate *nuevaFecha = [df dateFromString:fechCad];
         
         //si encuentra la fecha de hoy
-        if([todayOk isEqualToDate:nuevaFecha])
+        GDocsHelper *dh = [GDocsHelper sharedInstance];
+        if([dh compareDay: todayOk withDay:nuevaFecha] == 0)
+        //if([todayOk isEqualToDate:nuevaFecha])
             encontradoHoy=YES;
         
         [df setTimeStyle:NSDateFormatterNoStyle];
@@ -254,14 +256,19 @@
     [df setDateFormat:@"dd/MM/yy"];
     NSDate *ultimaFecha = [df dateFromString:[fechas lastObject]];
     int contador;
-    if(![ultimaFecha isEqualToDate:self.today])
+    GDocsHelper *dh = [GDocsHelper sharedInstance];
+    if([dh compareDay: ultimaFecha withDay:self.today] != 0)
+    //if(![ultimaFecha isEqualToDate:self.today])
     {
         contador=0;
         int daysToAdd = 1;
         while ([ultimaFecha earlierDate:self.today]) {
             NSDate *newDate1 = [ultimaFecha dateByAddingTimeInterval:60*60*24*daysToAdd];
             
-            if(![newDate1 isEqualToDate:self.today])
+            
+            
+            if([dh compareDay: newDate1 withDay:self.today] != 0)
+            //if(![newDate1 isEqualToDate:self.today])
             {
                 [df setTimeStyle:NSDateFormatterNoStyle];
                 [df setDateStyle:NSDateFormatterFullStyle];
@@ -300,7 +307,7 @@
     
     if ([fechas count] !=0)
     {
-        if([[self.fechas objectAtIndex:0] isEqualToString:@"HOY"])
+        if([[self.fechas objectAtIndex:0] isEqualToString:NSLocalizedString(@"TODAY", nil)])
         {
             self.fecha = todayOk;
         }

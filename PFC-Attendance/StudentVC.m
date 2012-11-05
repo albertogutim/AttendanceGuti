@@ -237,11 +237,12 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"nombre"];
             }
             
+            UITextField *text = (UITextField *)[cell viewWithTag:4];
+            [text setHidden:YES];
             UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
             theCellLbl.text = self.alumno;
             [theCellLbl setHidden:NO];
-            UITextField *text = (UITextField *)[cell viewWithTag:4];
-            [text setHidden:YES];
+            
             
             return cell;
         }
@@ -254,11 +255,12 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"mail"];
             }
             
+            UITextField *text = (UITextField *)[cell viewWithTag:6];
+            [text setHidden:YES];
             UILabel *theCellLbl = (UILabel *)[cell viewWithTag:7];
             theCellLbl.text = self.mail;
             [theCellLbl setHidden:NO];
-            UITextField *text = (UITextField *)[cell viewWithTag:6];
-            [text setHidden:YES];
+            
             
             return cell;
         
@@ -395,41 +397,40 @@
     
     if(theTextField.tag == 4)
     {
-        self.alumno =theTextField.text;
-        //self.cambios = YES;
-        self.deTxtField =YES;
-        //update spreadsheet con el nuevo nombre
+           
+        if([theTextField.text length]>0)
+        {
+            self.deTxtField =YES;
+            self.alumno = theTextField.text;
+        }
         
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = NSLocalizedString(@"UPDATING", nil);
-        [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
-        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        GDocsHelper *midh = [GDocsHelper sharedInstance];
-        [midh updateNombreAlumno:self.clase paraRow:self.row paraNombre:self.alumno];
-
-        
-        
-        
+ 
     }
     else if(theTextField.tag == 6)
     {
-        
-        self.mail =  theTextField.text;
-        //self.cambios = YES;
-        self.deTxtField =YES;
-        //update spreadsheet con el nuevo mail
+
+        if([theTextField.text length]>0)
+        {
+            self.deTxtField =YES;
+            self.mail = theTextField.text;
+        }
+
+    }
+     
+    if(self.deTxtField)
+    {
+        //update spreadsheet
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.labelText = NSLocalizedString(@"UPDATING", nil);
         [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         GDocsHelper *midh = [GDocsHelper sharedInstance];
-        [midh updateMailAlumno:self.clase paraRow:self.row paraMail:self.mail];
-
+        [midh updateNombreAlumno:self.clase paraRow:self.row paraNombre:self.alumno paraMail:self.mail];
     }
-    
+    //else
+    //    [self.datosAlumnoTable reloadData];
     [theTextField resignFirstResponder];
-    [self.datosAlumnoTable reloadData];
 	return YES;
 }
 
@@ -437,6 +438,39 @@
     
     //Quitamos espacios en blanco por delante y por detrás
     textField.text = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if([textField.text length]>0)
+    {
+        
+        self.deTxtField = YES;
+        if(textField.tag == 4)
+            self.alumno = textField.text;
+        else if(textField.tag == 6)
+            self.mail = textField.text;
+        
+    }
+    else
+    {
+        if(textField.tag == 4)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            NSMutableArray *path = [NSMutableArray arrayWithCapacity:1];
+            [path addObject:indexPath];
+            [self.datosAlumnoTable reloadRowsAtIndexPaths:path withRowAnimation:UITableViewRowAnimationNone];
+        
+        }
+            
+        else if(textField.tag == 6)
+        {
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+            NSMutableArray *path = [NSMutableArray arrayWithCapacity:1];
+            [path addObject:indexPath];
+            [self.datosAlumnoTable reloadRowsAtIndexPaths:path withRowAnimation:UITableViewRowAnimationNone];
+        }
+            
+    
+    }
+        
 
 }
 
@@ -656,6 +690,11 @@
     
     if(!self.deTxtField)
         [self.delegate devolverTabla:self huboCambios:1];
+    else
+    {
+        [self.datosAlumnoTable reloadData];
+        self.deTxtField=NO;
+    }
 
 }
 

@@ -1062,9 +1062,23 @@
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-    if (!error) {
+    if (!error) 
         [self dismissModalViewControllerAnimated:YES];
+        
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[NSString stringWithFormat:@"error %@", [error description]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil,nil];
+        [alert show];
+        [self dismissModalViewControllerAnimated:YES];
+        
     }
+
+            
+    
     
 }
 

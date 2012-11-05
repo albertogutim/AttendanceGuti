@@ -317,13 +317,16 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
+       // NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        [df setDateFormat:@"dd/MM/yy"];
         
         for (GDataEntrySpreadsheetCell *fech in [self.mListFechas entries]) {
             
             GDataSpreadsheetCell *theCell = [fech cell];
             NSDate *nuevaFecha = [df dateFromString:theCell.inputString];
-            if([nuevaFecha isEqualToDate:self.fecha])
-            //if([self compareDay: nuevaFecha withDay:self.fecha] == 0)
+            //if([nuevaFecha isEqualToDate:self.fecha])
+            if([self compareDay: nuevaFecha withDay:self.fecha] == 0)
             {
                 //NSLog(@"Se compara bien la fecha");
             //encontro la fecha seleccionada en la spreadsheet. Hay que devolver la lista de alumnos y sus estados
@@ -362,12 +365,14 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             [df setDateStyle:NSDateFormatterShortStyle];
             NSLocale *theLocale = [NSLocale currentLocale];
             [df setLocale:theLocale];
+            [df setDateFormat:@"dd/MM/yy"];
             
             
             NSDate *d =[NSDate date];
             NSString *dateStr = [[NSString alloc] init];
             
-            if([self.fecha isEqualToDate:d])
+            if([self compareDay: self.fecha withDay:d] == 0)
+            //if([self.fecha isEqualToDate:d])
             {
                 //es el dia de hoy
                 dateStr = [df stringFromDate:d];
@@ -449,16 +454,19 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     //Creamos la fecha en español para el día de hoy
     //TODO: Generalizarlo para cualquier fecha
     self.encontrada=NO;
-    NSDateFormatter *df = [NSDateFormatter new];
-    [df setDateFormat:@"dd/MM/yy"];
-    [df setTimeStyle:NSDateFormatterNoStyle];
-    [df setDateStyle:NSDateFormatterShortStyle];
-    NSLocale *theLocale = [NSLocale currentLocale];
-    [df setLocale:theLocale];
+    
     
     self.columna = DATES_START;
     
     NSDate *d =[NSDate date];
+    
+    NSDateFormatter *df = [NSDateFormatter new];
+    
+    [df setTimeStyle:NSDateFormatterNoStyle];
+    [df setDateStyle:NSDateFormatterShortStyle];
+    NSLocale *theLocale = [NSLocale currentLocale];
+    [df setLocale:theLocale];
+    [df setDateFormat:@"dd/MM/yy"];
     NSString *dateStr = [df stringFromDate:d];
     
     GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:DATES_START inputString:dateStr numericValue:nil resultString:nil];
@@ -1102,6 +1110,8 @@ finishedWithFeed:(GDataFeedBase *)feed
                        error:(NSError *)error
 {
    
+    
+    //TODO: aqui en vez de recorrer los mails por columna podria recorrerlos por filas para asi permitir que hubiera un alumno sin mail y que no se trastocara todo. Lo que no se que pasaria si el framework del mail se encontrara un mail vacio.
     NSMutableArray *mails = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
     
     for (GDataEntrySpreadsheetCell *cs in [feed entries]) {
@@ -1431,18 +1441,19 @@ finishedWithFeed:(GDataFeedBase *)feed
 }
 
 
-- (void)updateNombreAlumno:(NSString *)clase paraRow:(NSInteger)row paraNombre: (NSString *) nombre
+- (void)updateNombreAlumno:(NSString *)clase paraRow:(NSInteger)row paraNombre: (NSString *) nombre paraMail: (NSString*) mail
 {
     
     self.clase = clase;
     self.row = row;
     self.nombre = nombre;
+    self.mail = mail;
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
     [q setMinimumColumn:STUDENTS_COLUMN];
-    [q setMaximumColumn:STUDENTS_COLUMN];
+    [q setMaximumColumn:MAIL_COLUMN];
     [q setMinimumRow:self.row];
     [q setMaximumColumn:self.row];
     
@@ -1458,58 +1469,53 @@ finishedWithFeed:(GDataFeedBase *)feed
 {
     
     [[[[feed entries] objectAtIndex:0] cell] setInputString:self.nombre];
-    [self.miService fetchEntryByUpdatingEntry:[[feed entries] objectAtIndex:0] delegate:self didFinishSelector:@selector(updateNombreAlumnoTicketDone:finishedWithFeed:error:)];
+    [[[[feed entries] objectAtIndex:1] cell] setInputString:self.mail];
+    
+    
+    NSString *eTag = feed.ETag;
+    self.eTag = eTag;
+    
+    NSArray *updatedEntries = [feed entries];
+    self.updatedEntries = updatedEntries;
+    
+    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
+    [self.miService fetchFeedWithURL:feedURL
+                            delegate:self
+                   didFinishSelector:@selector(updateNombreAlumnoTicketDone:finishedWithFeed:error:)];
+    
     
 }
-
 
 - (void)updateNombreAlumnoTicketDone:(GDataServiceTicket *)ticket
              finishedWithFeed:(GDataFeedBase *)feed
                         error:(NSError *)error
 {
-    //NSLog(@"termino el update");
-    [self.delegate respuestaUpdate: error];
+   
     
-}
-
-- (void)updateMailAlumno:(NSString *)clase paraRow:(NSInteger)row paraMail: (NSString*) mail
-{
+    NSURL *batchUrl = [[feed batchLink] URL];
+    GDataFeedSpreadsheetCell *batchFeed = [GDataFeedSpreadsheetCell spreadsheetCellFeed];
     
-    self.clase = clase;
-    self.row = row;
-    self.mail = mail;
-    self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
+    [batchFeed setEntriesWithEntries:self.updatedEntries];
     
-    NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
-    GDataQuerySpreadsheet *q = [GDataQuerySpreadsheet spreadsheetQueryWithFeedURL:feedURL];
-    [q setMinimumColumn:MAIL_COLUMN];
-    [q setMaximumColumn:MAIL_COLUMN];
-    [q setMinimumRow:self.row];
-    [q setMaximumColumn:self.row];
+    GDataBatchOperation *op;
+    op = [GDataBatchOperation batchOperationWithType:kGDataBatchOperationUpdate];
+    [batchFeed setBatchOperation:op];
+    [batchFeed setETag:self.eTag];
     
+    [self.miService fetchFeedWithBatchFeed:batchFeed forBatchFeedURL:batchUrl delegate:self didFinishSelector:@selector(updateNombreAlumnoTicketDoneFin:finishedWithFeed:error:)];
     
-    [self.miService fetchFeedWithQuery:q
-                              delegate:self
-                     didFinishSelector:@selector(updateMailAlumnoTicket:finishedWithFeed:error:)];
-}
-
-- (void)updateMailAlumnoTicket:(GDataServiceTicket *)ticket
-                finishedWithFeed:(GDataFeedBase *)feed
-                           error:(NSError *)error
-{
-    [[[[feed entries] objectAtIndex:0] cell] setInputString:self.mail];
-    [self.miService fetchEntryByUpdatingEntry:[[feed entries] objectAtIndex:0] delegate:self didFinishSelector:@selector(updateMailAlumnoTicketDone:finishedWithFeed:error:)];
+   
     
 }
 
 
-- (void)updateMailAlumnoTicketDone:(GDataServiceTicket *)ticket
+- (void)updateNombreAlumnoTicketDoneFin:(GDataServiceTicket *)ticket
                     finishedWithFeed:(GDataFeedBase *)feed
                                error:(NSError *)error
+
 {
-    //NSLog(@"termino el update");
-    [self.delegate respuestaUpdate: error];
-    
+
+     [self.delegate respuestaUpdate: error];
 }
 
 
