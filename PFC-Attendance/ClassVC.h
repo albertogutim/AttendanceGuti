@@ -33,6 +33,7 @@
 @property (strong, nonatomic) NSArray *fechas;
 @property (strong, nonatomic) NSArray *sortedKeys;
 @property (strong, nonatomic) NSMutableArray *nombres;
+@property (assign, nonatomic) BOOL hacerEsto;
 
 
 

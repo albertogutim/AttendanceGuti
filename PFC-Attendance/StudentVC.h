@@ -38,12 +38,9 @@
 @property (strong, nonatomic) NSMutableArray *sortedAusencias;
 @property (strong, nonatomic) NSMutableArray *sortedRetrasos;
 @property (nonatomic, weak) id <StudentVCDelegate> delegate;
-//@property (strong, nonatomic) NSMutableArray *fechasAusencias;
-//@property (strong, nonatomic) NSMutableArray *fechasRetrasos;
 @property (assign, nonatomic) BOOL deTxtField;
 - (IBAction)mailButtonAction:(id)sender;
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) asistencias;
 -(NSMutableDictionary *) filtrarRetrasos: (NSMutableDictionary *) asistencias;
--(void)cancelButton:(id)sender;
 @end

@@ -32,14 +32,12 @@
 @synthesize nombreAsignatura = _nombreAsignatura;
 @synthesize sortedAusencias = _sortedAusencias;
 @synthesize sortedRetrasos = _sortedRetrasos;
-//@synthesize fechasRetrasos = _fechasRetrasos;
-//@synthesize fechasAusencias = _fechasAusencias;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+       
     }
     return self;
 }
@@ -47,7 +45,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
 }
 
 - (void)viewDidUnload
@@ -56,7 +54,7 @@
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
-    // Release any retained subviews of the main view.
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -171,30 +169,42 @@
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-    if (!error) {
+    if (!error)
         [self dismissModalViewControllerAnimated:YES];
+    
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[NSString stringWithFormat:@"error %@", [error description]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil,nil];
+        [alert show];
+        [self dismissModalViewControllerAnimated:YES];
+        
     }
     
+    
+    
+    
 }
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    // Return YES for supported orientations
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
+   
     return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
+   
     if(section==0)
     {
         return 2;
@@ -277,7 +287,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AussenciasRetrasos"];
         }
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:5];
-        //theCellLbl.text = [self.pintarAusencias.allKeys objectAtIndex:indexPath.row];
+        
         
         theCellLbl.text =[self.sortedAusencias objectAtIndex:indexPath.row];
         theCellLbl.textAlignment = UITextAlignmentCenter;
@@ -294,7 +304,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AussenciasRetrasos"];
         }
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:5];
-        //theCellLbl.text = [self.pintarRetrasos.allKeys objectAtIndex:indexPath.row];
+        
         
         theCellLbl.text =[self.sortedRetrasos objectAtIndex:indexPath.row];
         theCellLbl.textAlignment = UITextAlignmentCenter;
@@ -310,13 +320,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"eliminarAlumno"];
         }
-                
-        /*UIButton *sampleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [sampleButton setFrame:[cell.contentView frame]];
-        [sampleButton setFrame:CGRectMake(10, 1, cell.bounds.size.width-20, 44)];
-        [sampleButton setBackgroundImage:[UIImage imageNamed:@"redBackground.png"] forState:UIControlStateNormal];
-        [cell addSubview:sampleButton];
-         */
+        
         
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:3];
         theCellLbl.text = [NSString stringWithFormat:@"Eliminar Alumno"];
@@ -382,18 +386,6 @@
 #pragma mark - Text Field delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
-	// When the user presses return, take focus away from the text field so that the keyboard is dismissed.
-    
-    //UITextField *yourTextField4 = (UITextField *)[self.view viewWithTag:4];
-    //UITextField *yourTextField6 = (UITextField *)[self.datosAlumnoTable viewWithTag:6];
-    
-    /*UITableViewCell *cell0 = [self.datosAlumnoTable cellForRowAtIndexPath:0];
-    
-    UITextField *getTextView0 = (UITextField*)[cell0.contentView viewWithTag:4];
-    
-    UITableViewCell *cell1 = [self.datosAlumnoTable cellForRowAtIndexPath:1];
-    UITextField *getTextView1 = (UITextField*)[cell1.contentView viewWithTag:6];
-    */
     
     if(theTextField.tag == 4)
     {
@@ -428,8 +420,7 @@
         GDocsHelper *midh = [GDocsHelper sharedInstance];
         [midh updateNombreAlumno:self.clase paraRow:self.row paraNombre:self.alumno paraMail:self.mail];
     }
-    //else
-    //    [self.datosAlumnoTable reloadData];
+    
     [theTextField resignFirstResponder];
 	return YES;
 }
@@ -526,16 +517,54 @@
 {
     //responde a listadoFechasConAsistencia
     
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }    else
+    {
     
     
     self.mail = [feed objectForKey:@"Email"];
     //esto seria si utilizaramos la celda con la formula
     //self.ausencias = [feed objectForKey:@"Estadistica"];
     
-    //self.datosAlumno = [NSArray arrayWithObjects:self.alumno,self.mail, nil];
     
     [feed removeObjectForKey:@"Email"];
-    //[feed removeObjectForKey:@"Estadistica"];
     
     self.pintar = feed;
     
@@ -576,9 +605,12 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
+       
         [df setDateFormat:@"dd/MM/yy"];
         NSDate *nuevaFecha = [df dateFromString:fechCad];
         
@@ -595,9 +627,12 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
+       
         [df setDateFormat:@"dd/MM/yy"];
         
         NSString *dateStr = [df stringFromDate:[sortedArray objectAtIndex:i]];
@@ -607,19 +642,7 @@
     
     self.sortedAusencias = sortedArray;
     
-   /* NSMutableArray *fechasAusencias = [NSMutableArray arrayWithCapacity: [feed count]];
-    NSMutableArray *fechasRetrasos = [NSMutableArray arrayWithCapacity: [feed count]];
-    for(int i=0;i<[arrayFechas count];i++)
-    {
-        if([self.pintarAusencias valueForKey:[arrayFechas objectAtIndex:i]]!=nil)
-        {
-            [fechasAusencias addObject:[arrayFechas objectAtIndex:i]];
-        }
-    }
-    
-   
-    self.fechasAusencias = fechasAusencias;
-    */
+
     NSMutableDictionary *retrasos = [NSMutableDictionary dictionaryWithDictionary:self.pintar];
     retrasos = [self filtrarRetrasos:retrasos];
     self.pintarRetrasos = retrasos;
@@ -632,9 +655,12 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
+    
         [df setDateFormat:@"dd/MM/yy"];
         NSDate *nuevaFecha = [df dateFromString:fechCad];
         
@@ -650,9 +676,12 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
+    
         [df setDateFormat:@"dd/MM/yy"];
         
         NSString *dateStr = [df stringFromDate:[sortedArray2 objectAtIndex:i]];
@@ -663,27 +692,57 @@
     
     self.sortedRetrasos = sortedArray2;
     
-    /*
-    for(int i=0;i<[arrayFechas count];i++)
-    {
-        if([self.pintarRetrasos valueForKey:[arrayFechas objectAtIndex:i]]!=nil)
-        {
-            [fechasRetrasos addObject:[arrayFechas objectAtIndex:i]];
-        }
-    }
-    
-    self.fechasRetrasos = fechasRetrasos;
-     */
-    
     [self.datosAlumnoTable reloadData];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-    
+    }
 }
 
 -(void) respuestaUpdate:(NSError *)error
 {
+    
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -694,6 +753,7 @@
     {
         [self.datosAlumnoTable reloadData];
         self.deTxtField=NO;
+    }
     }
 
 }

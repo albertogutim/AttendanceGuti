@@ -597,7 +597,7 @@
                         </connections>
                     </textView>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="reply" id="3pe-fN-zW8">
+                        <barButtonItem image="save.png" style="plain" id="3pe-fN-zW8">
                             <connections>
                                 <action selector="updateResumen:" destination="DdU-dP-SnP" id="eAQ-MX-rDt"/>
                             </connections>
@@ -960,7 +960,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem style="plain" systemItem="reply" id="4t3-FB-I0P"/>
+                        <barButtonItem image="save.png" style="plain" id="4t3-FB-I0P"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="Oxl-vp-j1y"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -1668,6 +1668,137 @@
         <image name="redBackground.png" width="301" height="43"/>
         <image name="save.png" width="24" height="24"/>
     </resources>
+    <classes>
+        <class className="AddStudentTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddStudentTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="done:"/>
+                <relationship kind="outlet" name="emailField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="nameField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="AttendanceStudentsVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AttendanceStudentsVC.h"/>
+            <relationships>
+                <relationship kind="action" name="azButtonPressed:"/>
+                <relationship kind="action" name="changeSegmentedControl:"/>
+                <relationship kind="action" name="randomStudent:"/>
+                <relationship kind="action" name="sendmail:"/>
+                <relationship kind="action" name="updateSpreadsheet:"/>
+                <relationship kind="outlet" name="addButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="azButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="calendarButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="informesButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="mailbutton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="randomButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="refreshButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="resumenButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
+                <relationship kind="outlet" name="searchDisplayController" candidateClass="UISearchDisplayController"/>
+                <relationship kind="outlet" name="todosPresentesAusentes" candidateClass="UISegmentedControl"/>
+            </relationships>
+        </class>
+        <class className="ClassListTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassListTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ClassVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassVC.h"/>
+            <relationships>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ConfigTVC" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ConfigTVC.h"/>
+            <relationships>
+                <relationship kind="action" name="goBack:"/>
+                <relationship kind="action" name="guardarChanged:"/>
+                <relationship kind="action" name="masdeXausencias:"/>
+                <relationship kind="action" name="masdeXretrasos:"/>
+                <relationship kind="action" name="presentesChanged:"/>
+                <relationship kind="outlet" name="guardarSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="presentesSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="stepperAusencias" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperAusenciaslbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="stepperRetrasos" candidateClass="UIStepper"/>
+                <relationship kind="outlet" name="stepperRetrasosLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="usrField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="PickerFirstVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PickerFirstVC.h"/>
+            <relationships>
+                <relationship kind="action" name="aceptarfecha:"/>
+                <relationship kind="action" name="cancelarFecha:"/>
+                <relationship kind="outlet" name="miPicker" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="PickerVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PickerVC.h"/>
+            <relationships>
+                <relationship kind="action" name="aceptarFecha:"/>
+                <relationship kind="action" name="cancelarFecha:"/>
+                <relationship kind="outlet" name="miPicker" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="ResumenSeleccionadoVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ResumenSeleccionadoVC.h"/>
+            <relationships>
+                <relationship kind="outlet" name="fechalbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nombreAsignaturaGrupolbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="resumenView" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+        <class className="ResumenVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ResumenVC.h"/>
+            <relationships>
+                <relationship kind="action" name="changeSegmentedControl:"/>
+                <relationship kind="action" name="sendResumen:"/>
+                <relationship kind="action" name="updateResumen:"/>
+                <relationship kind="outlet" name="refreshButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="resumenText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="sendButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="todosPresentesAusentes" candidateClass="UISegmentedControl"/>
+            </relationships>
+        </class>
+        <class className="ResumenesVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ResumenesVC.h"/>
+            <relationships>
+                <relationship kind="action" name="enviarResumenes:"/>
+            </relationships>
+        </class>
+        <class className="StadisticsVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/StadisticsVC.h"/>
+            <relationships>
+                <relationship kind="action" name="sendMail:"/>
+                <relationship kind="outlet" name="ambosAusentesImpuntuales" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="StudentVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/StudentVC.h"/>
+            <relationships>
+                <relationship kind="action" name="mailButtonAction:"/>
+                <relationship kind="outlet" name="datosAlumnoTable" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="SubjectsListVC" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SubjectsListVC.h"/>
+            <relationships>
+                <relationship kind="action" name="refreshData:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="infoLbl" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="listaTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miTabla" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="miVistaTunning" candidateClass="UIView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

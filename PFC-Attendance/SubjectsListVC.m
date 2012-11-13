@@ -24,7 +24,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
+    
 }
 
 #pragma mark - View lifecycle
@@ -32,7 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	
     //Cargamos un NIB con la jerarquía de vistas para el custom ButtonItem
     [[NSBundle mainBundle] loadNibNamed:@"vistaConexion" owner:self options:nil];
     self.title = NSLocalizedString(@"SUBJECTS_TITLE", nil);
@@ -59,8 +59,7 @@
     midh.delegate=nil;
     
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -81,7 +80,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-   // NSLog(@"%@",[self.asignatura description]);
+   
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -142,13 +141,6 @@
     self.asignatura= [self.miListaAsignaturas.allKeys objectAtIndex:indexPath.row];
     self.nombreAsignatura = [self.miListaAsignaturas.allValues objectAtIndex:indexPath.row];
     
-    /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"SubjectsView"
-                                                         message:[NSString stringWithFormat:@"asignatura: %@", self.asignatura]
-                                                        delegate:self
-                                               cancelButtonTitle:@"Dismiss"
-                                               otherButtonTitles:nil];
-    
-    [alertView show];*/
     [self performSegueWithIdentifier:@"goToWorksheetsView" sender:self];
 
 }
@@ -192,13 +184,11 @@
 //implementacion protocolo
 - (void)respuesta:(NSDictionary *)feed error:(NSError *)error
 {
-    //TODO: Controlar errores
     if (error) {
         
         switch (error.code) {
             case 403:
                 NSLog(@"Error de login");
-                //TODO: Comprobar si al meter mal la clave y guardar las credenciales en el keychain, se puede corregir la clave (también guardada en keychain) y funciona. Creo que he tenido que meter un e-mail inventado antes de poner la clave bien otra vez porque no había manera.
                 //mostramos mensaje ERROR y paramos la ruedita.
                 self.infoLbl.text = NSLocalizedString(@"LOGIN_ERR", NIL);
                 [self.activity stopAnimating];
@@ -213,6 +203,7 @@
                 [self.activity stopAnimating];
                 [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                [self.miTabla reloadData];
 
                 break;
                 

@@ -44,39 +44,30 @@
 @synthesize searchResults = _searchResults;
 @synthesize sortedKeysSearch = _sortedKeysSearch;
 @synthesize hacerEsto = _hacerEsto;
-//@synthesize mail = _mail;
-//@synthesize ausencias = _ausencias;
-//@synthesize pintar = _pintar;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
+    
     [super didReceiveMemoryWarning];
     
-    // Release any cached data, images, etc that aren't in use.
+   
 }
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
 
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -89,7 +80,7 @@
     [self.randomButton setEnabled:NO];
     [self.mailbutton setEnabled:NO];
     [self.calendarButton setEnabled:NO];
-    //[self.mailbutton setStyle:UIBarButtonItemStylePlain];
+   
     self.tamano = self.miTabla.frame;
     
     
@@ -158,8 +149,7 @@
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    
     
     
 
@@ -168,14 +158,13 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate = self;
-    //self.title = [NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase];
     
     //ESTO no se que coño hace aqui!!
     //[self.navigationController dismissModalViewControllerAnimated:YES];
@@ -243,14 +232,11 @@
             UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
             UIImageView *iv = (UIImageView *)[cell viewWithTag:2];
             
-            //theCellLbl.text = [self.miListaAlumnos.allKeys objectAtIndex:indexPath.row];
+            
             
             theCellLbl.text =[self.sortedKeys objectAtIndex:indexPath.row];
             
-            //theCellLbl.text = [[self filterContactsWithLastName:searchString]objectAtIndex:indexPath.row];
-            
-            
-            //switch ([[self.miListaAlumnos.allValues objectAtIndex:indexPath.row] integerValue]) {
+           
             switch ([[self.miListaAlumnos valueForKey:[self.sortedKeys objectAtIndex:indexPath.row]]integerValue]) {
                 case 1: //Atendió
                     iv.image = [UIImage imageNamed:@"check.png"];
@@ -372,8 +358,11 @@
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
         NSString *fechaHeader = [df stringFromDate:self.fecha];
         self.fechaCompleta = fechaHeader;
         return [NSString stringWithFormat:@"%@_%@\n%@",self.nombreAsignatura,self.nombreClase,fechaHeader];
@@ -496,6 +485,48 @@
 - (void)respuestaConColumna:(NSMutableDictionary *) feed alumnosConOrden: (NSMutableDictionary *) alumnosConOrden enColumna: (NSInteger) columna error: (NSError *) error
 
 {
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
+    
     self.miListaAlumnos = feed;
     //Mantenemos una copia con todos los alumnos para poder gestionar el segmented control
     self.todos = feed;
@@ -506,12 +537,6 @@
     
     self.sortedKeys = sortedKeys;
     
-    /*self.searchResults = feed;
-    
-    NSArray * sortedKeysSearch = [[self.searchResults allKeys] sortedArrayUsingSelector: @selector(caseInsensitiveCompare:)];
-    
-    self.sortedKeysSearch = sortedKeysSearch;
-   */
     
     NSMutableDictionary *presentes = [self filtrarPresentes:self.todos];
     self.presentes = presentes;
@@ -535,26 +560,50 @@
     [self.mailbutton setEnabled:YES];
     [self.calendarButton setEnabled:YES];
     
-    //QUITAR ESTO: Es para probar que funcionaba bien el update de estados en la spreadsheet.
-    /*NSArray *alum = [[NSArray alloc] initWithObjects:@"Ana Gutierrez Esguevillas", @"Raquel Gutierrez Esguevillas", @"Aday Perera Rodriguez", @"Raul Suarez Rodriguez", @"Berta Galvan", @"Ana Rios Cabrera", @"Isabel Mayor Guerra", nil];
-    
-    NSArray *est = [[NSArray alloc] initWithObjects:@"3", @"3",
-                    @"2", @"2", @"1", @"1", @"3", nil];
-    
-    NSDictionary *prueba = [NSDictionary dictionaryWithObjects:est forKeys:alum];
-    
-    GDocsHelper *midh = [GDocsHelper sharedInstance];
-    [midh updateAlumnosConEstados:self.clase paraUpdate:prueba paraColumna:5];
-
-    */
-    
+    }
 }
 
 - (void)respuestaUpdate: (NSError *) error
 
 {
-    if(error){
-        //TODO: actuar si error
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
     }
     else
     {
@@ -570,8 +619,44 @@
 - (void)respuestaNewStudent: (NSError *) error
 {
    
-    if(error){
-        //TODO: actuar si error
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
     }
     else
     {
@@ -755,15 +840,6 @@
         [midh addStudent: self.clase paraColumna:self.columna conNombre: nombre paraEstadosPorDefecto: configH.presentesDefecto conEmail: mail];
         
 
-
-    /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"datos alumno"
-                                                         message:[NSString stringWithFormat:@"nombre: %@ mail: %@", nombre, mail]
-                                                        delegate:self
-                                               cancelButtonTitle:@"Dismiss"
-                                               otherButtonTitles:nil];
-    
-    [alertView show];
-     */
     }
 
 }
@@ -791,45 +867,6 @@
         GDocsHelper *midh = [GDocsHelper sharedInstance];
         ConfigHelper *configH = [ConfigHelper sharedInstance];
         [midh listadoAlumnosClase:self.clase paraFecha:self.fecha paraEstadosPorDefecto: configH.presentesDefecto];
-
-}
-
-- (void)pasarAsistenciaButtonAction{
-    
-    
-    //TODO: habrá que controlar si le ha dado al boton para pasar asistencia o para hacer el update.
-    //si es la primera vez se habilita tocar las celdas. si es para el update hay que deshabilitarlas otra vez.
-    
-    //cambiar apariencia del boton para que cuando se termine de pasar asistencia se pulse de nuevo y se vuelque la información
-    
-    //INTENTO DE CAMBIAR EL BOTON COMPOSE POR UNO QUE PONGA OK
-    /*NSMutableArray *newButton = [[NSMutableArray alloc] initWithCapacity:1];
-    UIToolbar *tools = [[UIToolbar alloc]
-                        initWithFrame:CGRectMake(0.0f, 0.0f, 50.0f, 53.0f)];
-    
-    UIBarButtonItem *bi1 = [[UIBarButtonItem alloc] initWithTitle:@"OK" style:UIBarButtonItemStylePlain target:self action:@selector(Edit:)];
-    bi1.style = UIBarButtonItemStyleBordered;
-    bi1.width = 45;
-    [newButton addObject:bi1];
-    
-    
-    // Add button to toolbar and toolbar to nav bar.
-    [tools setItems:newButton animated:NO];
-    
-    // Add toolbar to nav bar.
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithCustomView:tools];
-    self.navigationItem.rightBarButtonItem = button;
-*/
-    
-    //habilitar tocar celdas
-    
-    if(self.miTabla.userInteractionEnabled)
-       [self.miTabla setUserInteractionEnabled:NO];
-    else
-        [self.miTabla setUserInteractionEnabled:YES];
-        
-        
-    
 
 }
 
@@ -873,120 +910,7 @@
     
 }
 
-/*- (void)mailButtonAction
-{
-    
-    if(self.todosPresentesAusentes.selectedSegmentIndex == 0)
-    {
-        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
-        
-        NSDateFormatter *df = [NSDateFormatter new];
-        [df setTimeStyle:NSDateFormatterNoStyle];
-        [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        NSString *dateStr = [df stringFromDate:self.fecha];
-        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
-        [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
-        [presentes appendString:@"Presentes\n\n"];
-        for (int i=0; i<[self.presentes count]; i++) {
-            if([[self.presentes.allValues objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%d",3]])
-                [presentes appendString:[NSString stringWithFormat:@"%@ (Llegó tarde)\n",[self.presentes.allKeys objectAtIndex:i]]];
-            else
-                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.presentes.allKeys objectAtIndex:i]]];
 
-        }
-        
-        if([self.ausentes count]>0)
-        {
-        [presentes appendString:@"\n\nAusentes\n\n"];
-        for (int i=0; i<[self.ausentes count]; i++) {
-            [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.ausentes.allKeys objectAtIndex:i]]];
-            
-        }
-        }
-        
-        
-        
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-        [composer setMailComposeDelegate:self];
-        if ([MFMailComposeViewController canSendMail]) {
-            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
-            [composer setMessageBody:presentes isHTML:NO];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-            [self presentModalViewController:composer animated:YES];
-        }
-    }
-    
-    if(self.todosPresentesAusentes.selectedSegmentIndex == 1)
-    {
-        
-        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
-        
-        NSDateFormatter *df = [NSDateFormatter new];
-        [df setTimeStyle:NSDateFormatterNoStyle];
-        [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        NSString *dateStr = [df stringFromDate:self.fecha];
-        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
-        [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
-        [presentes appendString:@"Presentes\n\n"];
-        for (int i=0; i<[self.presentes count]; i++) {
-            if([[self.presentes.allValues objectAtIndex:i] isEqualToString:[NSString stringWithFormat:@"%d",3]])
-                [presentes appendString:[NSString stringWithFormat:@"%@ (Llegó tarde)\n",[self.presentes.allKeys objectAtIndex:i]]];
-            else
-                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.presentes.allKeys objectAtIndex:i]]];
-            
-        }
-
-
-        
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-        [composer setMailComposeDelegate:self];
-        if ([MFMailComposeViewController canSendMail]) {
-            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
-            [composer setMessageBody:presentes isHTML:NO];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-            [self presentModalViewController:composer animated:YES];
-        }
-
-    }
-    
-    if(self.todosPresentesAusentes.selectedSegmentIndex == 2)
-    {
-        
-        NSMutableString *presentes = [NSMutableString stringWithCapacity:[self.presentes count]];
-        
-        NSDateFormatter *df = [NSDateFormatter new];
-        [df setTimeStyle:NSDateFormatterNoStyle];
-        [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        NSString *dateStr = [df stringFromDate:self.fecha];
-        [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
-        [presentes appendString:dateStr];
-        if([self.ausentes count]>0)
-        {
-             [presentes appendString:@"\n\nAusentes\n\n"];
-            for (int i=0; i<[self.ausentes count]; i++) {
-                [presentes appendString:[NSString stringWithFormat:@"%@\n",[self.ausentes.allKeys objectAtIndex:i]]];
-                
-            }
-        }
-        
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-        [composer setMailComposeDelegate:self];
-        if ([MFMailComposeViewController canSendMail]) {
-            [composer setSubject:[NSString stringWithFormat:[[NSBundle mainBundle] localizedStringForKey:@"TODAY_STUDENTS_LIST" value:@"" table:nil],[NSString stringWithFormat:@"%@_%@",self.nombreAsignatura,self.nombreClase],dateStr]];
-            [composer setMessageBody:presentes isHTML:NO];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-            [self presentModalViewController:composer animated:YES];
-        }
-    }
-
-}
- */
 
 -(NSMutableDictionary *) filtrarAusentes: (NSMutableDictionary *) alumnos
 {
@@ -1129,8 +1053,12 @@
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
+        
         NSString *dateStr = [df stringFromDate:self.fecha];
         [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
         [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
@@ -1172,8 +1100,11 @@
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
         NSString *dateStr = [df stringFromDate:self.fecha];
         [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
         [presentes appendString:[NSString stringWithFormat:@"%@\n\n",dateStr]];
@@ -1207,8 +1138,11 @@
         NSDateFormatter *df = [NSDateFormatter new];
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
         NSString *dateStr = [df stringFromDate:self.fecha];
         [presentes appendString:[NSString stringWithFormat:@"%@_%@\n",self.nombreAsignatura,self.nombreClase]];
         [presentes appendString:dateStr];

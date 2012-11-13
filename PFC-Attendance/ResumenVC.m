@@ -31,7 +31,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
@@ -39,7 +39,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
 }
 
 - (void)viewDidUnload
@@ -51,7 +51,7 @@
     [self setClase:nil];
     [self setResumenText:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -62,8 +62,6 @@
     
     
     //mirar si existía ya un resumen en la spreadsheet. Porque puede que estemos consultando un día anterior.
-
-    //UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleDone target:self.resumenText action:@selector(resignFirstResponder)];
     
     UIBarButtonItem *b = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"DONE_BUTTON", nil) style:UIBarButtonItemStyleDone target:self.resumenText action:@selector(resignFirstResponder)];
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
@@ -91,7 +89,8 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    // Return YES for supported orientations
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 - (IBAction)changeSegmentedControl:(id)sender {
@@ -107,10 +106,24 @@
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-    if (!error) {
+    if (!error)
         [self dismissModalViewControllerAnimated:YES];
+    
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[NSString stringWithFormat:@"error %@", [error description]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil,nil];
+        [alert show];
+        [self dismissModalViewControllerAnimated:YES];
+        
     }
-
+    
+    
+    
+    
 }
 
 - (IBAction)updateResumen:(id)sender {
@@ -132,14 +145,104 @@
 
 - (void)respuestaInsertResumen: (NSError *) error
 {
+    
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                
+                
+                break;
+            }
+        }
+    }
+    else
+    {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        
+    }
 }
 
 - (void) respuestaExisteResumen:(BOOL)existe resumen:(NSString *)resumen error:(NSError *)error
 {
+    
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                NSLog(@"Error desconocido");
+                //Error desconocido. Poner el localized description del NSError
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
@@ -149,12 +252,51 @@
         //habrá que mostrarlo
         self.resumenText.text = resumen;
     }
+    else //no existe resumen. Hay que mostrar ya el teclado para escribir.
+    {
+        [self.resumenText becomeFirstResponder];
+    }
+            
+    }
 
 }
 
 -(void) respuesta:(NSDictionary *)feed error:(NSError *)error
 {
 
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                
+                break;
+            }
+        }
+    }    else
+    {
     
     NSMutableArray *mails = [NSMutableArray arrayWithCapacity: [self.alumnos count]];
     if (self.todosPresentesAusentes.selectedSegmentIndex == 0) {
@@ -198,8 +340,11 @@
     NSDateFormatter *df = [NSDateFormatter new];
     [df setTimeStyle:NSDateFormatterNoStyle];
     [df setDateStyle:NSDateFormatterFullStyle];
-    NSLocale *theLocale = [NSLocale currentLocale];
-    [df setLocale:theLocale];
+    //NSLocale *theLocale = [NSLocale currentLocale];
+    //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
     NSString *dateStr = [df stringFromDate:self.fecha];
     
     MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
@@ -211,7 +356,7 @@
         [composer setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
         [self presentModalViewController:composer animated:YES];
     }
-
+    }
 }
 
 #pragma mark - TextView Field delegate

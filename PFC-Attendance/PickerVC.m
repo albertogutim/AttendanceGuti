@@ -24,30 +24,20 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
+    
     [super didReceiveMemoryWarning];
     
-    // Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
 
-/*
- // Implement loadView to create a view hierarchy programmatically, without using a nib.
- - (void)loadView
- {
- }
- */
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -64,9 +54,6 @@
     GDocsHelper *dh = [GDocsHelper sharedInstance];
     dh.delegate = nil;
     
-    
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -87,7 +74,7 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark Picker DataSource methods
@@ -103,13 +90,6 @@
 }
 
 #pragma mark Picker Delegate methods
-/*-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    
-    return [self.fechas objectAtIndex:row];
-    
-}
-*/
-
 
 - (UIView *)pickerView:(UIPickerView *)pickerView
             viewForRow:(NSInteger)row
@@ -183,31 +163,67 @@
         self.fecha = nuevaFecha;
     }
     
-    /*UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"Picker"
-     message:[NSString stringWithFormat:@"fecha: %@", nuevaFecha]
-     delegate:self
-     cancelButtonTitle:@"Dismiss"
-     otherButtonTitles:nil];
-     
-     [alertView show];
-     */
-    
-    
     
 }
 
 
 #pragma mark My methods
 - (void)respuestaFechasValidas:(NSArray *) fechas error: (NSError *) error {
-    //TODO: Controlar error
+    
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
+    
+    
     NSMutableArray *fechaLong = [NSMutableArray arrayWithCapacity:[fechas count]];
     BOOL encontradoHoy=NO;
     
     NSDateFormatter *dff = [NSDateFormatter new];
     [dff setTimeStyle:NSDateFormatterNoStyle];
     [dff setDateStyle:NSDateFormatterShortStyle];
-    NSLocale *theLocalee = [NSLocale currentLocale];
-    [dff setLocale:theLocalee];
+    //NSLocale *theLocalee = [NSLocale currentLocale];
+    //[dff setLocale:theLocalee];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [dff setTimeZone:timeZone];
     
     
     NSDate *today =[NSDate date];
@@ -224,23 +240,26 @@
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterShortStyle];
         
-        NSLocale *theLocale = [NSLocale currentLocale];
-        [df setLocale:theLocale];
-        //TODO: Ojo! Si pones el iPhone en inglés devuelve nil porque 13/08/02 se refiere al mes 13 y no existe obviamente.
+        //NSLocale *theLocale = [NSLocale currentLocale];
+        //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
         [df setDateFormat:@"dd/MM/yy"];
         NSDate *nuevaFecha = [df dateFromString:fechCad];
         
         //si encuentra la fecha de hoy
         GDocsHelper *dh = [GDocsHelper sharedInstance];
         if([dh compareDay: todayOk withDay:nuevaFecha] == 0)
-        //if([todayOk isEqualToDate:nuevaFecha])
             encontradoHoy=YES;
         
         [df setTimeStyle:NSDateFormatterNoStyle];
         [df setDateStyle:NSDateFormatterFullStyle];
         
-        [df setLocale:theLocale];
-        //TODO: Como nuevaFecha vale nil peta al añadir a fechaLong un nil
+        
+        //NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
+        //[df setLocale:theLocale];
         NSString *dateStr = [df stringFromDate:nuevaFecha];
         [fechaLong addObject:dateStr];
         
@@ -251,14 +270,16 @@
     NSDateFormatter *df = [NSDateFormatter new];
     [df setTimeStyle:NSDateFormatterNoStyle];
     [df setDateStyle:NSDateFormatterShortStyle];
-    NSLocale *theLocale = [NSLocale currentLocale];
-    [df setLocale:theLocale];
+    //NSLocale *theLocale = [NSLocale currentLocale];
+    //[df setLocale:theLocale];
+        
+       // NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
     [df setDateFormat:@"dd/MM/yy"];
     NSDate *ultimaFecha = [df dateFromString:[fechas lastObject]];
     int contador;
     GDocsHelper *dh = [GDocsHelper sharedInstance];
     if([dh compareDay: ultimaFecha withDay:self.today] != 0)
-    //if(![ultimaFecha isEqualToDate:self.today])
     {
         contador=0;
         int daysToAdd = 1;
@@ -268,12 +289,14 @@
             
             
             if([dh compareDay: newDate1 withDay:self.today] != 0)
-            //if(![newDate1 isEqualToDate:self.today])
             {
                 [df setTimeStyle:NSDateFormatterNoStyle];
                 [df setDateStyle:NSDateFormatterFullStyle];
-                NSLocale *theLocale = [NSLocale currentLocale];
-                [df setLocale:theLocale];
+                //NSLocale *theLocale = [NSLocale currentLocale];
+                //[df setLocale:theLocale];
+                
+                NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+                [df setTimeZone:timeZone];
                 NSString *dateStr = [df stringFromDate:newDate1];
                 [fechaLong addObject:dateStr];
                 
@@ -328,6 +351,8 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     [self.miPicker reloadAllComponents];
+    }
+    
 }
 
 

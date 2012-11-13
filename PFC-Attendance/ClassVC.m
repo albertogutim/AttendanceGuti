@@ -35,12 +35,13 @@
 @synthesize nombres = _nombres;
 @synthesize noMatriculadosArray = _noMatriculadosArray;
 @synthesize contadorNoMatriculadoGlobal = _contadorNoMatriculadoGlobal;
+@synthesize hacerEsto = _hacerEsto;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
@@ -48,7 +49,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+
 }
 
 - (void)viewDidUnload
@@ -57,14 +58,14 @@
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
-    // Release any retained subviews of the main view.
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    // Return YES for supported orientations
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
-
 - (void)viewWillAppear:(BOOL)animated
 {
     GDocsHelper *midh = [GDocsHelper sharedInstance];
@@ -72,13 +73,26 @@
     self.contadorPresenciasGlobal = 0;
     self.contadorAusenciasGlobal = 0;
     self.contadorNoMatriculadoGlobal = 0;
+    
+    
+    if (self.hacerEsto)
+    {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"LOADING", nil);
     [UIApplication sharedApplication].networkActivityIndicatorVisible=YES;
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     [midh obtenerEstadisticasTodos:self.clase paraAlumnosAusentes:nil yParaAlumnosRetrasados:nil paraTodos:YES];
+    }
     
     [super viewWillAppear:animated];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    
+    
+    self.hacerEsto = NO;
+    [super viewWillDisappear:animated];
 }
 
 
@@ -86,15 +100,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
+    
     return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
+    
     if(section==0)
     {
         return self.cuantos;
@@ -127,7 +139,7 @@
 
         //mostramos el nombre del alumno
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
-        //theCellLbl.text = [[self.todos objectAtIndex:indexPath.row +1] objectAtIndex:0];
+        
         
         theCellLbl.text = [self.sortedKeys objectAtIndex:indexPath.row];
         
@@ -138,24 +150,7 @@
         [numPresencias setTextColor:[UIColor blackColor]];
         [numAusencias setTextColor:[UIColor blackColor]];
         
-        //int contadorAusencias = 0;
-        //int contadorPresencias = 0;
-
-        
-        /*for(int u=2; u<[[self.todos objectAtIndex:indexPath.row +1] count]; u++)
-            {
-            
-                if([[[self.todos objectAtIndex:indexPath.row +1] objectAtIndex:u] isEqualToString:@"2"])
-                {contadorAusencias++;
-                    self.contadorAusenciasGlobal++;}
-                
-                if([[[self.todos objectAtIndex:indexPath.row +1] objectAtIndex:u] isEqualToString:@"3"])
-                {contadorPresencias++;
-                    self.contadorPresenciasGlobal++;}
-
-            }
-         */
-            
+                   
         float total = [[self.todos objectAtIndex:indexPath.row +1] count]-2;
         if([[self.noMatriculadosArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] integerValue] > 0)
         {
@@ -168,8 +163,7 @@
             float porcentaje1 = [[self.ausenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] floatValue]/ total;
             float porcentaje2 = [[self.presenciasArray objectAtIndex:[self.nombres indexOfObject:[self.sortedKeys objectAtIndex:indexPath.row]]] floatValue]/ total;
             
-            //float porcentaje1 = [[self.ausenciasArray objectAtIndex:indexPath.row] floatValue]/ total;
-            //float porcentaje2 = [[self.presenciasArray objectAtIndex:indexPath.row] floatValue]/ total;
+            
             porcentaje1 = porcentaje1 * 100;
             porcentaje2 = porcentaje2 * 100;
             
@@ -333,7 +327,7 @@
     self.alumno = theCellLbl.text;
     self.row=[self.nombres indexOfObject:self.alumno];
     
-    //self.row = indexPath.row+1;
+    
     [self performSegueWithIdentifier:@"goToStudentInfo" sender:self];
     
 }
@@ -370,6 +364,47 @@
 
 -(void) respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados:(NSMutableArray *)retrasados todos:(NSMutableArray *)todos error:(NSError *)error
 {
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
 
     self.todos = todos;
     self.cuantos = [todos count]-1;
@@ -431,7 +466,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
-
+    }
 }
 
 -(void) devolverTabla:(StudentVC *)controller huboCambios: (int) cambios
@@ -447,8 +482,49 @@
 -(void) respuestaFechasValidas:(NSArray *)fechas error:(NSError *)error
 {
 
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
     self.fechas = fechas;
     [self performSegueWithIdentifier:@"goToResumenList" sender:self];
+    }
         
 }
 

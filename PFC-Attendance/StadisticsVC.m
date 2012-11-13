@@ -34,7 +34,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
     }
     return self;
 }
@@ -42,7 +42,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
 }
 
 - (void)viewDidUnload
@@ -52,12 +52,13 @@
     [super viewDidUnload];
     GDocsHelper *midh = [GDocsHelper sharedInstance];
     midh.delegate=nil;
-    // Release any retained subviews of the main view.
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    // Return YES for supported orientations
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -90,15 +91,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
+    
     return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
+    
     if(section==0)
     {
         return [self.ausentes count];
@@ -127,7 +126,7 @@
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         
         theCellLbl.text = [self.sortedKeysAusentes objectAtIndex:indexPath.row];
-       // theCellLbl.text = [self.ausentes.allKeys objectAtIndex:indexPath.row];
+       
         
         UILabel *num = (UILabel *)[cell viewWithTag:2];
         [num setTextColor:[UIColor blackColor]];
@@ -136,7 +135,7 @@
             
             
             if([[self.sortedKeysAusentes objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]])
-            //if([[self.ausentes.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorAusentes objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
+                //comparando el nombre
                 //si coincide tengo que hacer la cuenta
                 for(int u=1; u<[[self.contadorAusentes objectAtIndex:i] count]; u++)
                 {
@@ -145,7 +144,7 @@
                 }
                 
         }
-        //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.ausentes.allKeys objectAtIndex:indexPath.row],contador];
+        
         num.text = [NSString stringWithFormat:@"(%d)",contador];
         ConfigHelper *configH = [ConfigHelper sharedInstance];
         if(contador>=configH.ausencias)
@@ -162,7 +161,7 @@
         UILabel *theCellLbl = (UILabel *)[cell viewWithTag:1];
         
         theCellLbl.text = [self.sortedKeysRetrasos objectAtIndex:indexPath.row];
-        //theCellLbl.text = [self.retrasos.allKeys objectAtIndex:indexPath.row];
+       
         UILabel *num = (UILabel *)[cell viewWithTag:2];
         [num setTextColor:[UIColor blackColor]];
         int contador = 0;
@@ -170,7 +169,7 @@
             
             
             if([[self.sortedKeysRetrasos objectAtIndex:indexPath.row] isEqualToString:[[self.contadorRetrasos objectAtIndex:i] objectAtIndex:0]])
-            //if([[self.retrasos.allKeys objectAtIndex:indexPath.row] isEqualToString:[[self.contadorRetrasos objectAtIndex:i] objectAtIndex:0]]) //comparando el nombre
+                //comparando el nombre
                 //si coincide tengo que hace la cuenta
                 for(int u=1; u<[[self.contadorRetrasos objectAtIndex:i] count]; u++)
                 {
@@ -179,7 +178,7 @@
                 }
             
         }
-        //theCellLbl.text = [NSString stringWithFormat:@"%@ (%d)",[self.retrasos.allKeys objectAtIndex:indexPath.row],contador];
+        
         num.text = [NSString stringWithFormat:@"(%d)",contador];
         ConfigHelper *configH = [ConfigHelper sharedInstance];
         if(contador>=configH.retrasos)
@@ -211,12 +210,55 @@
 
 -(void) respuestaEstadisticas:(NSMutableArray *)ausentes yRetrasados:(NSMutableArray *)retrasados todos: (NSMutableArray *) todos error:(NSError *)error 
 {
+    
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
     self.contadorAusentes = ausentes;
     self.contadorRetrasos = retrasados;
     [self.miTabla reloadData];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    }
 }
 
 
@@ -229,7 +271,46 @@
 -(void) respuesta:(NSDictionary *)feed error:(NSError *)error
 {
     
-    
+    if (error) {
+        
+        switch (error.code) {
+            case 403:
+            {
+                NSLog(@"Error de login");
+                break;
+            }
+                
+            case -1009:
+            {
+                NSLog(@"Error de conexión");
+                [UIApplication sharedApplication].networkActivityIndicatorVisible=NO;
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:NSLocalizedString(@"CONN_ERR", NIL)
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+            default:
+            {
+                //Error desconocido. Poner el localized description del NSError
+                UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"error %@", [error description]]
+                                                                     message:nil
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil];
+                
+                [alertView show];
+                break;
+            }
+        }
+    }
+    else
+    {
     NSMutableArray *mails = [NSMutableArray arrayWithCapacity: [feed count]];
     if (self.ambosAusentesImpuntuales.selectedSegmentIndex == 0) {
        
@@ -328,15 +409,29 @@
         }
 
     }
-    
+    }
         
 }
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-    if (!error) {
+    if (!error)
         [self dismissModalViewControllerAnimated:YES];
+    
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[NSString stringWithFormat:@"error %@", [error description]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil,nil];
+        [alert show];
+        [self dismissModalViewControllerAnimated:YES];
+        
     }
+    
+    
+    
     
 }
 

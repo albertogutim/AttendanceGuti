@@ -16,8 +16,6 @@
 #define MAIL_COLUMN 2
 #define STUDENTS_COLUMN 1
 #define RESUMEN_ROW 2
-//#define MAIL_COLUMN 2
-//#define STADISTICS_COLUMN 3
 #define ASISTENCIAS_COLUMN 3
 #define AUSENCIAS_COLUMN 4
 #define PORCENTAJE_COLUMN 5
@@ -109,22 +107,7 @@
 finishedWithFeed: (GDataFeedSpreadsheet *)feed
           error: (NSError *) error {
     
-    
-    //NSLog(@"%@",[error description]);
     self.mSpreadsheetFeed = feed;
-    
-    
-    /*GDataEntrySpreadsheet *doc = [[self.mSpreadsheetFeed entries] objectAtIndex:0];
-    
-    NSString *ttitle = [[doc title] stringValue];
-    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"primer doc"
-                                                         message:[NSString stringWithFormat:@"titulo: %@", ttitle]
-                                                        delegate:self
-                                               cancelButtonTitle:@"Dismiss"
-                                               otherButtonTitles:nil];
-    
-    [alertView show];
-    */
     
     
     //creamos una lista de feeds conteniendo solo las asignaturas que empiecen por AT_
@@ -181,19 +164,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     self.mWorksheetFeed = feed;
     
-    
-    /*NSArray *Worksheets = [feed entries];
-    GDataEntryWorksheet *Worksheet = [Worksheets objectAtIndex:0];
-    
-    NSString *ttitleworksheet = [[Worksheet title] stringValue];
-    UIAlertView *alertView = [ [UIAlertView alloc] initWithTitle:@"worksheet"
-                                                         message:[NSString stringWithFormat:@"titulo: %@", ttitleworksheet]
-                                                        delegate:self
-                                               cancelButtonTitle:@"Dismiss"
-                                               otherButtonTitles:nil];
-    
-    [alertView show];*/
-     
     
     //nos vamos creando los arrays de identificadores y de nombres de las clases.
     NSMutableArray *listaWorksheetFeeds = [NSMutableArray arrayWithCapacity: [[self.mWorksheetFeed entries] count]];
@@ -284,7 +254,7 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     self.clase = clase;
     
     //Primero buscamos la fecha para saber si existe
-    //TO DO: Controlar error si no existe el identifier
+    //TODO: Controlar error si no existe el identifier
     self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:clase];
     
     NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
@@ -319,16 +289,17 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         [df setDateStyle:NSDateFormatterShortStyle];
        // NSLocale *theLocale = [NSLocale currentLocale];
         //[df setLocale:theLocale];
+        
+        NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+        [df setTimeZone:timeZone];
         [df setDateFormat:@"dd/MM/yy"];
         
         for (GDataEntrySpreadsheetCell *fech in [self.mListFechas entries]) {
             
             GDataSpreadsheetCell *theCell = [fech cell];
             NSDate *nuevaFecha = [df dateFromString:theCell.inputString];
-            //if([nuevaFecha isEqualToDate:self.fecha])
             if([self compareDay: nuevaFecha withDay:self.fecha] == 0)
             {
-                //NSLog(@"Se compara bien la fecha");
             //encontro la fecha seleccionada en la spreadsheet. Hay que devolver la lista de alumnos y sus estados
                 self.encontrada = YES;
                 self.columna = COLUMN_START+col;
@@ -353,18 +324,18 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         // si despues de la búsqueda no encontró la fecha significa q es el día de hoy. hay que crear la columna con la fecha y los estados por defecto.
         if (!self.encontrada)
         {
-           // NSLog(@"no encontrada es el dia de hoy");
-            
-            
-            //OJO. con el cambio del tutor tambien se permite ingresar una fecha comprendida entre el ultimo dia que aparece en la spreadsheet y el dia de hoy. Por lo tanto hay que comprobar si es hoy u otro dia anterior.
+        //OJO. con el cambio del tutor tambien se permite ingresar una fecha comprendida entre el ultimo dia que aparece en la spreadsheet y el dia de hoy. Por lo tanto hay que comprobar si es hoy u otro dia anterior.
             
             
 
             NSDateFormatter *df = [NSDateFormatter new];
             [df setTimeStyle:NSDateFormatterNoStyle];
             [df setDateStyle:NSDateFormatterShortStyle];
-            NSLocale *theLocale = [NSLocale currentLocale];
-            [df setLocale:theLocale];
+            //NSLocale *theLocale = [NSLocale currentLocale];
+            //[df setLocale:theLocale];
+            
+            NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+            [df setTimeZone:timeZone];
             [df setDateFormat:@"dd/MM/yy"];
             
             
@@ -372,7 +343,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
             NSString *dateStr = [[NSString alloc] init];
             
             if([self compareDay: self.fecha withDay:d] == 0)
-            //if([self.fecha isEqualToDate:d])
             {
                 //es el dia de hoy
                 dateStr = [df stringFromDate:d];
@@ -452,7 +422,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
 
     
     //Creamos la fecha en español para el día de hoy
-    //TODO: Generalizarlo para cualquier fecha
     self.encontrada=NO;
     
     
@@ -464,15 +433,16 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     
     [df setTimeStyle:NSDateFormatterNoStyle];
     [df setDateStyle:NSDateFormatterShortStyle];
-    NSLocale *theLocale = [NSLocale currentLocale];
-    [df setLocale:theLocale];
+    //NSLocale *theLocale = [NSLocale currentLocale];
+    //[df setLocale:theLocale];
+    
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    [df setTimeZone:timeZone];
     [df setDateFormat:@"dd/MM/yy"];
     NSString *dateStr = [df stringFromDate:d];
     
     GDataSpreadsheetCell *newSC= [GDataSpreadsheetCell cellWithRow:1 column:DATES_START inputString:dateStr numericValue:nil resultString:nil];
     GDataEntrySpreadsheetCell *newESC= [GDataEntrySpreadsheetCell spreadsheetCellEntryWithCell:newSC];
-    
-    //NSURL *feedURL = [[self.miClaseWs cellsLink] URL];
     
     [self.miService fetchEntryByInsertingEntry:newESC forFeedURL:feedURL delegate:self didFinishSelector:@selector(columnaConFechaDeHoyCreada:finishedWithFeed:error:)];
 }
@@ -487,7 +457,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
     if (error) {
         //TODO: Avisar de fallo al crear la celda
     } else {
-        //NSLog(@"Se ha creado con éxito");
         
         //query para buscar los alumnos
         self.miClaseWs = [self.mWorksheetFeed entryForIdentifier:self.clase];
@@ -533,10 +502,8 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
         i++;
             if(!self.encontrada){
                 if(self.estados)
-                    //[estados addObject:[NSNumber numberWithInteger:1]];
                     [estados addObject:@"1"];
                 else
-                    //[estados addObject:[NSNumber numberWithInteger:2]];
                     [estados addObject:@"2"];
             
             }
@@ -626,7 +593,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
            finishedWithFeed:(GDataFeedBase *)feed
                       error:(NSError *)error
 {
-    //NSLog(@"termino el insert");
     if (error)
         NSLog(@"ocurrió un error en la inserción de celdas");
     
@@ -723,7 +689,6 @@ finishedWithFeed: (GDataFeedSpreadsheet *)feed
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error
 {
-    //NSLog(@"termino el update");
     [self.delegate respuestaUpdate: error];
     
 }
@@ -964,7 +929,6 @@ finishedWithFeed:(GDataFeedBase *)feed
 
     
     //TODO: controlar error
-    NSLog(@"Resumen subido");
     [self.delegate respuestaInsertResumen:error];
     
 }
@@ -1201,7 +1165,6 @@ finishedWithFeed:(GDataFeedBase *)feed
     
     
     NSMutableDictionary *AsistenciasConFechas = [NSMutableDictionary dictionaryWithObjects:self.attendance forKeys:[NSArray arrayWithArray:fechas]];
-     //NSDictionary * AsistenciasConFechasDictionary = [NSDictionary dictionaryWithDictionary:AsistenciasConFechas];
     
     [self.delegate respuestaAusencias: AsistenciasConFechas arrayFechas: fechas error:error];
 
@@ -1324,6 +1287,7 @@ finishedWithFeed:(GDataFeedBase *)feed
     {
     
         NSMutableArray *alumnosTodos = [NSMutableArray arrayWithCapacity: [[feed entries] count]];
+        
         for (GDataEntrySpreadsheetList *listEntry in [feed entries]) {
             NSMutableArray *toditos = [NSMutableArray arrayWithCapacity:[[feed entries] count]];
             int o = 0;
@@ -1435,7 +1399,7 @@ finishedWithFeed:(GDataFeedBase *)feed
           finishedWithFeed:(GDataFeedBase *)feed
                      error:(NSError *)error
 {
-    //NSLog(@"termino el update");
+    
     [self.delegate respuestaUpdate: error];
     
 }
@@ -1529,7 +1493,7 @@ finishedWithFeed:(GDataFeedBase *)feed
     [yearDF setDateFormat:@"yyyy"];
     
     NSDateFormatter *monthDF = [[NSDateFormatter alloc] init];
-    [monthDF setDateFormat:@"mm"];
+    [monthDF setDateFormat:@"MM"];
     
     NSDateFormatter *dayDF = [[NSDateFormatter alloc] init];
     [dayDF setDateFormat:@"dd"];
